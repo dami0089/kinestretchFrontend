@@ -102,6 +102,8 @@ const ClientesProvider = ({ children }) => {
 
   // Este effect esta para buscar ej la base el listado de clientes al abrir la seccion clientes
 
+  const [clientes, setClientes] = useState([]);
+
   const obtenerClientes = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -287,6 +289,9 @@ const ClientesProvider = ({ children }) => {
         setNombreContactoEmergencia,
         celularContactoEmergencia,
         setCelularContactoEmergencia,
+        obtenerClientes,
+        clientes,
+        setClientes,
       }}
     >
       {children}

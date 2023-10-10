@@ -1,29 +1,7 @@
 import { React, useEffect } from "react";
-import {
-  Typography,
-  Card,
-  CardHeader,
-  CardBody,
-  Menu,
-  Button,
-} from "@material-tailwind/react";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import {
-  BanknotesIcon,
-  BookOpenIcon,
-  BuildingStorefrontIcon,
-  CalendarDaysIcon,
-  CheckBadgeIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  DocumentPlusIcon,
-  FingerPrintIcon,
-  HandThumbDownIcon,
-  PlusCircleIcon,
-  QueueListIcon,
-  UserPlusIcon,
-  UsersIcon,
-} from "@heroicons/react/24/solid";
+import { Card } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
+
 import { ToastContainer } from "react-toastify";
 
 import ModalNuevoCliente from "@/components/clientes/ModalNuevoCliente";
@@ -53,9 +31,8 @@ export function Clientes() {
     modalNuevoCliente,
 
     modalEditarCliente,
-
-    s,
   } = useClientes();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const obtenerUsers = async () => {
@@ -66,6 +43,11 @@ export function Clientes() {
     };
     obtenerUsers();
   }, [actualizoListado]);
+
+  const handleNavigate = (e) => {
+    e.preventDefault();
+    navigate("/inicio/clientes/activos");
+  };
 
   return (
     <>
@@ -115,7 +97,10 @@ export function Clientes() {
               </div>
             </div>
 
-            <div className="w-full p-2 hover:cursor-pointer md:w-1/3">
+            <div
+              className="w-full p-2 hover:cursor-pointer md:w-1/3"
+              onClick={(e) => handleNavigate(e)}
+            >
               <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
                 <div className="flex flex-row items-center justify-between gap-4">
                   <div className="flex-shrink-0">
@@ -191,10 +176,6 @@ export function Clientes() {
           </div>
           <div className="my-4 mt-10 h-0.5 bg-gray-300 shadow-md"></div>
         </>
-      ) : seleccion == 2 ? (
-        <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
-          <Card className="overflow-hidden xl:col-span-3"></Card>
-        </div>
       ) : seleccion == 3 ? (
         <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
           <Card className="overflow-hidden xl:col-span-3"></Card>

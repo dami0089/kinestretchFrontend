@@ -1,6 +1,7 @@
 import {
   Avatar,
   Button,
+  Card,
   CardBody,
   Progress,
   Tooltip,
@@ -53,126 +54,106 @@ const ListadodeClientes = () => {
 
   return (
     <>
-      <div className="ml-3 mt-3">
-        <button
-          type="button"
-          className="bg-red rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          onClick={(e) => setSeleccion(1)}
-        >
-          <ArrowLeftCircleIcon />
+      <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
+        <Card className="overflow-hidden xl:col-span-3">
+          <Typography className="mb-4 ml-4 mt-4 font-bold">
+            Listado de Clientes
+          </Typography>
+          <CardBody className="overflow-x-scroll px-0 pb-2 pt-0">
+            <table className="w-full min-w-[640px] table-auto">
+              <thead>
+                <tr>
+                  {["Nombre", "Email", "Celular", "Sede", "Accion"].map(
+                    (el) => (
+                      <th
+                        key={el}
+                        className="border-b border-blue-gray-50 px-6 py-3 text-left"
+                      >
+                        <Typography
+                          variant="small"
+                          className="text-[11px] font-medium uppercase text-blue-gray-400"
+                        >
+                          {el}
+                        </Typography>
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {clientes.map(
+                  ({ _id, nombre, apellido, email, celular, sede }, key) => {
+                    const className = `py-3 px-5 ${
+                      key === projectsTableData.length - 1
+                        ? ""
+                        : "border-b border-blue-gray-50"
+                    }`;
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          ></svg>
-        </button>
-      </div>
-      <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-        <table className="w-full min-w-[640px] table-auto">
-          <thead>
-            <tr>
-              {["Cliente", "Vencimiento", "Mail Factura", "Accion"].map(
-                (el) => (
-                  <th
-                    key={el}
-                    className="border-b border-blue-gray-50 py-3 px-6 text-left"
-                  >
-                    <Typography
-                      variant="small"
-                      className="text-[11px] font-medium uppercase text-blue-gray-400"
-                    >
-                      {el}
-                    </Typography>
-                  </th>
-                )
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {clientes
-              .filter((cliente) => cliente.isActivo) // filtrar solo los clientes con isActivo = true
-              .map(
-                (
-                  { _id, nombre, fechaVencimiento, mailFactura, usuarios },
-                  key
-                ) => {
-                  const className = `py-3 px-5 ${
-                    key === projectsTableData.length - 1
-                      ? ""
-                      : "border-b border-blue-gray-50"
-                  }`;
-
-                  return (
-                    <tr key={_id}>
-                      <td className={className}>
-                        <div className="flex items-center gap-4">
+                    return (
+                      <tr key={_id}>
+                        <td className={className}>
+                          <div className="flex items-center gap-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-bold"
+                            >
+                              {nombre} {apellido}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={className}>
                           <Typography
                             variant="small"
-                            color="blue-gray"
-                            className="font-bold"
+                            className="text-xs font-medium text-blue-gray-600"
                           >
-                            {nombre}
+                            {email}
                           </Typography>
-                        </div>
-                      </td>
-                      <td className={className}>
-                        <Typography
-                          variant="small"
-                          className="text-xs font-medium text-blue-gray-600"
-                        >
-                          {formatearFecha(fechaVencimiento)}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography
-                          variant="small"
-                          className="text-xs font-medium text-blue-gray-600"
-                        >
-                          {mailFactura}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography
-                          variant="small"
-                          className="mx-2 flex text-xs font-medium text-blue-gray-600"
-                        >
-                          <Button
-                            color="blue"
-                            className="mx-1 items-center gap-4 px-6 capitalize"
-                            fullWidth
-                            onClick={(e) => handleClick(e, _id, usuarios)}
+                        </td>
+                        <td className={className}>
+                          <Typography
+                            variant="small"
+                            className="text-xs font-medium text-blue-gray-600"
                           >
-                            <Typography
-                              color="inherit"
-                              className="font-medium capitalize"
-                            >
-                              ver
-                            </Typography>
-                          </Button>
-                          <Button
-                            color="gradient"
-                            className="items-center gap-4 px-6 capitalize"
-                            fullWidth
-                            onClick={(e) => handleClickEditar(e, _id)}
+                            {celular}
+                          </Typography>
+                        </td>
+                        <td className={className}>
+                          <Typography
+                            variant="small"
+                            className="text-xs font-medium text-blue-gray-600"
                           >
-                            <Typography
-                              color="inherit"
-                              className="font-medium capitalize"
+                            {sede ? sede : "Sin asignar"}
+                          </Typography>
+                        </td>
+                        <td className={className}>
+                          <Typography
+                            variant="small"
+                            className="mx-2 flex text-xs font-medium text-blue-gray-600"
+                          >
+                            <Button
+                              color="blue"
+                              className="mx-1 items-center gap-4 px-6 capitalize"
+                              fullWidth
                             >
-                              editar
-                            </Typography>
-                          </Button>
-                        </Typography>
-                      </td>
-                    </tr>
-                  );
-                }
-              )}
-          </tbody>
-        </table>
-      </CardBody>
+                              <Typography
+                                color="inherit"
+                                className="font-medium capitalize"
+                              >
+                                ver
+                              </Typography>
+                            </Button>
+                          </Typography>
+                        </td>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
+          </CardBody>
+        </Card>
+      </div>
     </>
   );
 };

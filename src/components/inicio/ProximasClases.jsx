@@ -52,19 +52,21 @@ const ProximasClases = () => {
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {["Fecha", "Profesor", "Hora", "Clientes"].map((el) => (
-                <th
-                  key={el}
-                  className="border-b border-blue-gray-50 px-6 py-3 text-left"
-                >
-                  <Typography
-                    variant="small"
-                    className="text-[11px] font-medium uppercase text-blue-gray-400"
+              {["Fecha, hora y Sede", "Alumnos", "Profe", "Ocupacion"].map(
+                (el) => (
+                  <th
+                    key={el}
+                    className="border-b border-blue-gray-50 px-6 py-3 text-left"
                   >
-                    {el}
-                  </Typography>
-                </th>
-              ))}
+                    <Typography
+                      variant="small"
+                      className="text-[11px] font-medium uppercase text-blue-gray-400"
+                    >
+                      {el}
+                    </Typography>
+                  </th>
+                )
+              )}
             </tr>
           </thead>
           <tbody>
@@ -80,7 +82,6 @@ const ProximasClases = () => {
                   <tr key={name}>
                     <td className={className}>
                       <div className="flex items-center gap-4">
-                        <Avatar src={img} alt={name} size="sm" />
                         <Typography
                           variant="small"
                           color="blue-gray"

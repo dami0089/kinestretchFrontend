@@ -8,6 +8,7 @@ import RutaProtegida from "./layouts/RutaProtegida";
 import { Home } from "./pages/inicio";
 
 import { Clientes } from "./pages/inicio/clientes";
+import ListadodeClientes from "./components/clientes/ListadodeClientes";
 
 //TODO:FALTA AGREGAR EL BAR AL MENU
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route index element={<Home />} />
 
         <Route path="clientes" element={<Clientes />} />
+        <Route path="clientes/activos" element={<ListadodeClientes />} />
       </Route>
     </Routes>
   );
