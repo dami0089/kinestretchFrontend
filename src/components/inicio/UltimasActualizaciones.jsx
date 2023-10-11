@@ -1,16 +1,8 @@
 import React from "react";
 import {
-  Avatar,
   Card,
   CardBody,
   CardHeader,
-  IconButton,
-  Menu,
-  MenuHandler,
-  MenuItem,
-  MenuList,
-  Progress,
-  Tooltip,
   Typography,
 } from "@material-tailwind/react";
 import { ordersOverviewData } from "@/data";
