@@ -7,35 +7,28 @@ import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-const ClientesContext = createContext();
+const ProfesoresContext = createContext();
 
-const ClientesProvider = ({ children }) => {
-  const [seleccion, setSeleccion] = useState(1);
-  const [modalNuevoCliente, setModalNuevoCliente] = useState(false);
-  const [nombreCliente, setNombreCliente] = useState("");
-  const [apellidoCliente, setApellidoCliente] = useState("");
-  const [dniCliente, setDniCliente] = useState("");
-  const [emailCliente, setEmailCliente] = useState("");
-  const [celularCliente, setCelularCliente] = useState("");
-  const [fechaNacimientoCliente, setFechaNacimientoCliente] = useState("");
-  const [diagnosticoCliente, setDiagnosticoCliente] = useState("");
-  const [aptoFisicoCliente, setAptoFisicoCliente] = useState("");
-  const [nombreContactoEmergencia, setNombreContactoEmergencia] = useState("");
-  const [celularContactoEmergencia, setCelularContactoEmergencia] =
-    useState("");
+const ProfesoresProvider = ({ children }) => {
+  const [modalNuevoProfe, setModalNuevoProfe] = useState(false);
+  const [nombreProfe, setNombreProfe] = useState("");
+  const [apellidoProfe, setApellidoProfe] = useState("");
+  const [dniProfe, setDniProfe] = useState("");
+  const [emailProfe, setEmailProfe] = useState("");
+  const [celuProfe, setCeluProfe] = useState("");
+  const [fechaNacimientoProfe, setFechaNacimientoProfe] = useState("");
+  const [domicilioProfe, setDomicilioProfe] = useState("");
+  const [profesores, setProfesores] = useState([]);
 
   //Envia a la base de datos la informacion para un nuevo cliente
-  const nuevoCliente = async (
+  const nuevoProfe = async (
     nombre,
     apellido,
     dni,
     email,
     celular,
     fechaNacimiento,
-    diagnostico,
-    aptoFisico,
-    nombreContactoEmergencia,
-    celularContactoEmergencia,
+    domicilio,
     creador
   ) => {
     const cliente = {
@@ -45,10 +38,7 @@ const ClientesProvider = ({ children }) => {
       email,
       celular,
       fechaNacimiento,
-      diagnostico,
-      aptoFisico,
-      nombreContactoEmergencia,
-      celularContactoEmergencia,
+      domicilio,
       creador,
     };
     try {
@@ -61,9 +51,9 @@ const ClientesProvider = ({ children }) => {
         },
       };
 
-      await clienteAxios.post("/clientes", cliente, config);
+      await clienteAxios.post("/profesores", cliente, config);
 
-      toast.success("Cliente creado correctamente", {
+      toast.success("Profesor creado correctamente", {
         position: "top-right",
         autoClose: 1500,
         hideProgressBar: false,
@@ -87,13 +77,7 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const { auth } = useAuth();
-
-  // Este effect esta para buscar ej la base el listado de clientes al abrir la seccion clientes
-
-  const [clientes, setClientes] = useState([]);
-
-  const obtenerClientes = async () => {
+  const obtenerProfesores = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -104,37 +88,17 @@ const ClientesProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clienteAxios("/clientes", config);
+      const { data } = await clienteAxios("/profesores", config);
       //guarda los datos de los clientes
-      setClientes(data);
-      //guarda la cantidad de clientes
-      const cuenta = data.length; // Contar los clientes
-      setConteo(cuenta);
-      //guarda los clientes de los ultimos 7 dias
-      // Convertir las fechas de string a objetos Date
-      const client = data.map((cliente) => ({
-        ...cliente,
-        fechaAlta: new Date(cliente.fechaAlta),
-      }));
-      // Filtrar los clientes que se dieron de alta en los últimos 7 días
-      const fechaActual = new Date();
-      const ultimosClientes = client.filter(
-        (cliente) =>
-          fechaActual.getTime() - cliente.fechaAlta.getTime() <=
-          7 * 24 * 60 * 60 * 1000
-      );
-      // Actualizar el estado de los clientes y del conteo
-      setClientesRecientes(ultimosClientes.length);
+      setProfesores(data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const navigate = useNavigate();
-
   //abre o cierra el modal nuevo cliente
-  const handleModalNuevoCliente = () => {
-    setModalNuevoCliente(!modalNuevoCliente);
+  const handleModalNuevoProfe = () => {
+    setModalNuevoProfe(!modalNuevoProfe);
   };
 
   const editarC = async (cliente) => {
@@ -250,44 +214,34 @@ const ClientesProvider = ({ children }) => {
   };
 
   return (
-    <ClientesContext.Provider
+    <ProfesoresContext.Provider
       value={{
-        handleModalNuevoCliente,
-        nuevoCliente,
-        seleccion,
-        setSeleccion,
-        setModalNuevoCliente,
-        modalNuevoCliente,
-        nombreCliente,
-        setNombreCliente,
-        apellidoCliente,
-        setApellidoCliente,
-        dniCliente,
-        setDniCliente,
-        emailCliente,
-        setEmailCliente,
-        celularCliente,
-        setCelularCliente,
-        fechaNacimientoCliente,
-        setFechaNacimientoCliente,
-        diagnosticoCliente,
-        setDiagnosticoCliente,
-        aptoFisicoCliente,
-        setAptoFisicoCliente,
-        nombreContactoEmergencia,
-        setNombreContactoEmergencia,
-        celularContactoEmergencia,
-        setCelularContactoEmergencia,
-        obtenerClientes,
-        clientes,
-        setClientes,
+        handleModalNuevoProfe,
+        modalNuevoProfe,
+        nuevoProfe,
+        nombreProfe,
+        setNombreProfe,
+        apellidoProfe,
+        setApellidoProfe,
+        dniProfe,
+        setDniProfe,
+        emailProfe,
+        setEmailProfe,
+        celuProfe,
+        setCeluProfe,
+        fechaNacimientoProfe,
+        setFechaNacimientoProfe,
+        domicilioProfe,
+        setDomicilioProfe,
+        obtenerProfesores,
+        profesores,
       }}
     >
       {children}
-    </ClientesContext.Provider>
+    </ProfesoresContext.Provider>
   );
 };
 
-export { ClientesProvider };
+export { ProfesoresProvider };
 
-export default ClientesContext;
+export default ProfesoresContext;

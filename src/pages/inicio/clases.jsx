@@ -18,7 +18,7 @@ import EditarCliente from "@/components/clientes/EditarCliente";
 import ListadodeClientesInactivos from "@/components/clientes/ListadodeClientesInactivos";
 import Cargando from "@/components/Cargando";
 
-export function Clientes() {
+export function Clases() {
   const {
     handleModalNuevoCliente,
     seleccion,
@@ -90,7 +90,7 @@ export function Clientes() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-lg font-medium text-gray-600 dark:text-white">
-                      Nuevo Cliente
+                      Nueva Clase
                     </span>
                   </div>
                 </div>
@@ -129,7 +129,7 @@ export function Clientes() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-lg font-medium text-gray-600 dark:text-white">
-                      Clientes Activos
+                      Listado de Clases
                     </span>
                   </div>
                 </div>
@@ -167,7 +167,7 @@ export function Clientes() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-lg font-medium text-gray-600 dark:text-white">
-                      Clientes Inactivos
+                      Clases por Sede
                     </span>
                   </div>
                 </div>
@@ -228,4 +228,4 @@ export function Clientes() {
   );
 }
 
-export default Clientes;
+export default Clases;

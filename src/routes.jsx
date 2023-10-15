@@ -5,8 +5,10 @@ import RutaProtegida from "@/layouts/RutaProtegida";
 
 import { Clientes } from "@/pages/inicio/clientes";
 
-import Salas from "@/pages/inicio/salas";
 import { Home } from "./pages/inicio";
+import Profesores from "./pages/inicio/profesores";
+import Sedes from "./pages/inicio/sedes";
+import Clases from "./pages/inicio/clases";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -40,7 +42,11 @@ export const routes = [
         path: "/",
         element: <Home />,
       },
-
+    ],
+  },
+  {
+    layout: "clientes",
+    pages: [
       {
         icon: (
           <svg
@@ -63,9 +69,14 @@ export const routes = [
           </svg>
         ),
         name: "Clientes",
-        path: "/clientes",
+        path: "/",
         element: <Clientes />,
       },
+    ],
+  },
+  {
+    layout: "profesores",
+    pages: [
       {
         icon: (
           <svg
@@ -91,9 +102,14 @@ export const routes = [
           </svg>
         ),
         name: "Profesores",
-        path: "/profesores",
-        element: <Salas />,
+        path: "/",
+        element: <Profesores />,
       },
+    ],
+  },
+  {
+    layout: "sedes",
+    pages: [
       {
         icon: (
           <svg
@@ -119,10 +135,14 @@ export const routes = [
           </svg>
         ),
         name: "Sedes",
-        path: "/sedes",
-        element: <Salas />,
+        path: "/",
+        element: <Sedes />,
       },
-
+    ],
+  },
+  {
+    layout: "clases",
+    pages: [
       {
         icon: (
           <svg
@@ -144,8 +164,8 @@ export const routes = [
           </svg>
         ),
         name: "Clases",
-        path: "/clases",
-        element: <Salas />,
+        path: "/",
+        element: <Clases />,
       },
     ],
   },

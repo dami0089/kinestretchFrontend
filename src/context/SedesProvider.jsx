@@ -7,48 +7,35 @@ import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-const ClientesContext = createContext();
+const SedesContext = createContext();
 
-const ClientesProvider = ({ children }) => {
-  const [seleccion, setSeleccion] = useState(1);
-  const [modalNuevoCliente, setModalNuevoCliente] = useState(false);
-  const [nombreCliente, setNombreCliente] = useState("");
-  const [apellidoCliente, setApellidoCliente] = useState("");
-  const [dniCliente, setDniCliente] = useState("");
-  const [emailCliente, setEmailCliente] = useState("");
-  const [celularCliente, setCelularCliente] = useState("");
-  const [fechaNacimientoCliente, setFechaNacimientoCliente] = useState("");
-  const [diagnosticoCliente, setDiagnosticoCliente] = useState("");
-  const [aptoFisicoCliente, setAptoFisicoCliente] = useState("");
-  const [nombreContactoEmergencia, setNombreContactoEmergencia] = useState("");
-  const [celularContactoEmergencia, setCelularContactoEmergencia] =
-    useState("");
+const SedesProvider = ({ children }) => {
+  const [modalNuevaSede, setModalNuevaSede] = useState(false);
+
+  const [nombreSede, setNombreSede] = useState("");
+  const [direccionSede, setDireccionSede] = useState("");
+  const [localidadSede, setLocalidadSede] = useState("");
+  const [provinciaSede, setProvinciaSede] = useState("");
+  const [sedes, setSedes] = useState([]);
+
+  //abre o cierra el modal nuevo sede
+  const handleModalNuevaSede = () => {
+    setModalNuevaSede(!modalNuevaSede);
+  };
 
   //Envia a la base de datos la informacion para un nuevo cliente
-  const nuevoCliente = async (
+  const nuevaSede = async (
     nombre,
-    apellido,
-    dni,
-    email,
-    celular,
-    fechaNacimiento,
-    diagnostico,
-    aptoFisico,
-    nombreContactoEmergencia,
-    celularContactoEmergencia,
+    direccion,
+    localidad,
+    provincia,
     creador
   ) => {
     const cliente = {
       nombre,
-      apellido,
-      dni,
-      email,
-      celular,
-      fechaNacimiento,
-      diagnostico,
-      aptoFisico,
-      nombreContactoEmergencia,
-      celularContactoEmergencia,
+      direccion,
+      localidad,
+      provincia,
       creador,
     };
     try {
@@ -61,9 +48,9 @@ const ClientesProvider = ({ children }) => {
         },
       };
 
-      await clienteAxios.post("/clientes", cliente, config);
+      await clienteAxios.post("/sedes", cliente, config);
 
-      toast.success("Cliente creado correctamente", {
+      toast.success("Sede creada correctamente", {
         position: "top-right",
         autoClose: 1500,
         hideProgressBar: false,
@@ -87,13 +74,7 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const { auth } = useAuth();
-
-  // Este effect esta para buscar ej la base el listado de clientes al abrir la seccion clientes
-
-  const [clientes, setClientes] = useState([]);
-
-  const obtenerClientes = async () => {
+  const obtenerSedes = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -104,37 +85,12 @@ const ClientesProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clienteAxios("/clientes", config);
+      const { data } = await clienteAxios("/sedes", config);
       //guarda los datos de los clientes
-      setClientes(data);
-      //guarda la cantidad de clientes
-      const cuenta = data.length; // Contar los clientes
-      setConteo(cuenta);
-      //guarda los clientes de los ultimos 7 dias
-      // Convertir las fechas de string a objetos Date
-      const client = data.map((cliente) => ({
-        ...cliente,
-        fechaAlta: new Date(cliente.fechaAlta),
-      }));
-      // Filtrar los clientes que se dieron de alta en los últimos 7 días
-      const fechaActual = new Date();
-      const ultimosClientes = client.filter(
-        (cliente) =>
-          fechaActual.getTime() - cliente.fechaAlta.getTime() <=
-          7 * 24 * 60 * 60 * 1000
-      );
-      // Actualizar el estado de los clientes y del conteo
-      setClientesRecientes(ultimosClientes.length);
+      setSedes(data);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const navigate = useNavigate();
-
-  //abre o cierra el modal nuevo cliente
-  const handleModalNuevoCliente = () => {
-    setModalNuevoCliente(!modalNuevoCliente);
   };
 
   const editarC = async (cliente) => {
@@ -250,44 +206,28 @@ const ClientesProvider = ({ children }) => {
   };
 
   return (
-    <ClientesContext.Provider
+    <SedesContext.Provider
       value={{
-        handleModalNuevoCliente,
-        nuevoCliente,
-        seleccion,
-        setSeleccion,
-        setModalNuevoCliente,
-        modalNuevoCliente,
-        nombreCliente,
-        setNombreCliente,
-        apellidoCliente,
-        setApellidoCliente,
-        dniCliente,
-        setDniCliente,
-        emailCliente,
-        setEmailCliente,
-        celularCliente,
-        setCelularCliente,
-        fechaNacimientoCliente,
-        setFechaNacimientoCliente,
-        diagnosticoCliente,
-        setDiagnosticoCliente,
-        aptoFisicoCliente,
-        setAptoFisicoCliente,
-        nombreContactoEmergencia,
-        setNombreContactoEmergencia,
-        celularContactoEmergencia,
-        setCelularContactoEmergencia,
-        obtenerClientes,
-        clientes,
-        setClientes,
+        handleModalNuevaSede,
+        modalNuevaSede,
+        nuevaSede,
+        nombreSede,
+        setNombreSede,
+        direccionSede,
+        setDireccionSede,
+        localidadSede,
+        setLocalidadSede,
+        provinciaSede,
+        setProvinciaSede,
+        obtenerSedes,
+        sedes,
       }}
     >
       {children}
-    </ClientesContext.Provider>
+    </SedesContext.Provider>
   );
 };
 
-export { ClientesProvider };
+export { SedesProvider };
 
-export default ClientesContext;
+export default SedesContext;

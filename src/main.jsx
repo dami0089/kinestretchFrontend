@@ -7,8 +7,8 @@ import { MaterialTailwindControllerProvider } from "@/context";
 import "../public/css/tailwind.css";
 import { AuthProvider } from "./context/AuthProvider";
 import { ClientesProvider } from "./context/ClientesProvider";
-
-import { SalasProvider } from "./context/SalasProvider";
+import { ProfesoresProvider } from "./context/ProfesoresProvider";
+import { SedesProvider } from "./context/SedesProvider";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
@@ -17,9 +17,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <MaterialTailwindControllerProvider>
           <AuthProvider>
             <ClientesProvider>
-              <SalasProvider>
-                <App />
-              </SalasProvider>
+              <ProfesoresProvider>
+                <SedesProvider>
+                  <App />
+                </SedesProvider>
+              </ProfesoresProvider>
             </ClientesProvider>
           </AuthProvider>
         </MaterialTailwindControllerProvider>
