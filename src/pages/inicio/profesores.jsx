@@ -4,18 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import { ToastContainer } from "react-toastify";
 
-import ModalNuevoCliente from "@/components/clientes/ModalNuevoCliente";
-
-import useClientes from "@/hooks/useClientes";
-
-import ListadodeClientes from "../../components/clientes/ListadodeClientes";
-import ListadoUsuarios from "../../components/clientes/ListadoUsuarios";
-
-import Profile from "@/components/clientes/Profile";
-
-import EditarCliente from "@/components/clientes/EditarCliente";
-
-import ListadodeClientesInactivos from "@/components/clientes/ListadodeClientesInactivos";
 import Cargando from "@/components/Cargando";
 import useProfesores from "@/hooks/useProfesores";
 import ModalNuevoProfesor from "@/components/profesores/ModalNuevoProfesor";

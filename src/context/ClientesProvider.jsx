@@ -23,6 +23,9 @@ const ClientesProvider = ({ children }) => {
   const [nombreContactoEmergencia, setNombreContactoEmergencia] = useState("");
   const [celularContactoEmergencia, setCelularContactoEmergencia] =
     useState("");
+  const [cliente, setCliente] = useState([]);
+  const [idClienteEditar, setIdClienteEditar] = useState("");
+  const [obtenerClasesCliente, setObtenerClasesCliente] = useState([]);
 
   //Envia a la base de datos la informacion para un nuevo cliente
   const nuevoCliente = async (
@@ -191,16 +194,28 @@ const ClientesProvider = ({ children }) => {
       };
 
       const { data } = await clienteAxios(`/clientes/obtener/${id}`, config);
-      console.log("obteniendo cliente");
-      console.log(data);
-      setEditarCliente(data.cliente);
-      setTipo(data.cliente.tipo);
-      setNombre(data.cliente.nombre);
-      setCuit(data.cliente.cuit);
-      setDomicilio(data.cliente.domicilio);
-      setEmailFactura(data.cliente.mailFactura);
-      setFechaVencimiento(data.cliente.fechaVencimiento);
-      setIsActivo(data.cliente.isActivo);
+      setCliente(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const obtenerClasesClienteProfile = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clientes/clases-cliente/${id}`,
+        config
+      );
+      setObtenerClasesCliente(data);
     } catch (error) {
       console.log(error);
     }
@@ -281,6 +296,13 @@ const ClientesProvider = ({ children }) => {
         obtenerClientes,
         clientes,
         setClientes,
+        obtenerCliente,
+        cliente,
+        idClienteEditar,
+        setIdClienteEditar,
+        setCliente,
+        obtenerClasesClienteProfile,
+        obtenerClasesCliente,
       }}
     >
       {children}

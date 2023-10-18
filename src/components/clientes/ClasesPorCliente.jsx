@@ -15,12 +15,12 @@ import { formatearFecha } from "@/helpers/formatearFecha";
 import { useNavigate } from "react-router-dom";
 import { setOpenConfigurator } from "@/context";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
+import useClases from "@/hooks/useClases";
 import useAuth from "@/hooks/useAuth";
-import Cargando from "../Cargando";
 
-const ListadodeClientes = () => {
+const ClasesPorCliente = () => {
   const {
-    clientes,
+    cliente,
     setObtenerUs,
     setSeleccion,
     handleModalEditarCliente,
@@ -34,20 +34,36 @@ const ListadodeClientes = () => {
     setCliente,
   } = useClientes();
 
+  const {
+    asignarClienteAClase,
+    obtenerClasesCliente,
+    clasesCliente,
+    actualizoClasesCliente,
+    setActualizoClasesCliente,
+  } = useClases();
+
   const { handleCargando } = useAuth();
 
   useEffect(() => {
     const obtenerInfo = async () => {
       handleCargando();
-      await obtenerClientes();
+      await obtenerClasesCliente(cliente._id);
       handleCargando();
     };
     obtenerInfo();
   }, []);
 
   useEffect(() => {
-    setCliente([]);
-  }, []);
+    const obtenerInfo = async () => {
+      if (actualizoClasesCliente) {
+        handleCargando();
+        await obtenerClasesCliente(cliente._id);
+        handleCargando();
+        setActualizoClasesCliente(false);
+      }
+    };
+    obtenerInfo();
+  }, [actualizoClasesCliente]);
 
   const navigate = useNavigate();
 
@@ -61,33 +77,37 @@ const ListadodeClientes = () => {
     <>
       <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-3">
-          <Typography className="mb-4 ml-4 mt-4 font-bold">
-            Listado de Clientes
-          </Typography>
           <CardBody className="overflow-x-scroll px-0 pb-2 pt-0">
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Nombre", "Email", "Celular", "Sede", "Accion"].map(
-                    (el) => (
-                      <th
-                        key={el}
-                        className="border-b border-blue-gray-50 px-6 py-3 text-left"
+                  {["Dia", "Hora", "Profesor", "Sede", "Accion"].map((el) => (
+                    <th
+                      key={el}
+                      className="border-b border-blue-gray-50 px-6 py-3 text-center"
+                    >
+                      <Typography
+                        variant="small"
+                        className="text-[11px] font-medium uppercase text-blue-gray-400"
                       >
-                        <Typography
-                          variant="small"
-                          className="text-[11px] font-medium uppercase text-blue-gray-400"
-                        >
-                          {el}
-                        </Typography>
-                      </th>
-                    )
-                  )}
+                        {el}
+                      </Typography>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {clientes.map(
-                  ({ _id, nombre, apellido, email, celular, sede }, key) => {
+                {clasesCliente.map(
+                  (
+                    {
+                      _id,
+                      diaDeLaSemana,
+                      horarioInicio,
+                      nombreProfe,
+                      nombreSede,
+                    },
+                    key
+                  ) => {
                     const className = `py-3 px-5 ${
                       key === projectsTableData.length - 1
                         ? ""
@@ -97,40 +117,47 @@ const ListadodeClientes = () => {
                     return (
                       <tr key={_id}>
                         <td className={className}>
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center justify-center gap-4">
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {nombre} {apellido}
+                              {diaDeLaSemana}
                             </Typography>
                           </div>
                         </td>
                         <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {email}
-                          </Typography>
+                          <div className="flex items-center justify-center gap-4">
+                            <Typography
+                              variant="small"
+                              className="text-xs font-medium text-blue-gray-600"
+                            >
+                              {horarioInicio}:00 hs
+                            </Typography>
+                          </div>
                         </td>
                         <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {celular}
-                          </Typography>
+                          <div className="flex items-center justify-center gap-4">
+                            <Typography
+                              variant="small"
+                              className="text-xs font-medium text-blue-gray-600"
+                            >
+                              {nombreProfe}
+                            </Typography>
+                          </div>
                         </td>
                         <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {sede ? sede : "Sin asignar"}
-                          </Typography>
+                          <div className="flex items-center justify-center gap-4">
+                            <Typography
+                              variant="small"
+                              className="text-xs font-medium text-blue-gray-600"
+                            >
+                              {nombreSede}
+                            </Typography>
+                          </div>
                         </td>
+
                         <td className={className}>
                           <Button
                             color="blue"
@@ -155,9 +182,8 @@ const ListadodeClientes = () => {
           </CardBody>
         </Card>
       </div>
-      <Cargando />
     </>
   );
 };
 
-export default ListadodeClientes;
+export default ClasesPorCliente;

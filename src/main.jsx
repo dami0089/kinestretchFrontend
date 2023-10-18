@@ -9,6 +9,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import { ClientesProvider } from "./context/ClientesProvider";
 import { ProfesoresProvider } from "./context/ProfesoresProvider";
 import { SedesProvider } from "./context/SedesProvider";
+import { ClasesProvider } from "./context/ClasesProvider";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
@@ -19,7 +20,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <ClientesProvider>
               <ProfesoresProvider>
                 <SedesProvider>
-                  <App />
+                  <ClasesProvider>
+                    <App />
+                  </ClasesProvider>
                 </SedesProvider>
               </ProfesoresProvider>
             </ClientesProvider>

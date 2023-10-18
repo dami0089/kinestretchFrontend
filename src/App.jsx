@@ -14,6 +14,8 @@ import Sedes from "./pages/inicio/sedes";
 import Clases from "./pages/inicio/clases";
 import ListadoProfesoresActivos from "./components/profesores/ListadoProfesoresActivos";
 import ListadoDeSedes from "./components/sedes/ListadoDeSedes";
+import ProfileCliente from "./components/clientes/ProfileCliente";
+import ProfileSede from "./components/sedes/ProfileSede";
 
 //TODO:FALTA AGREGAR EL BAR AL MENU
 function App() {
@@ -35,6 +37,7 @@ function App() {
       <Route path="/clientes" element={<RutaProtegida />}>
         <Route index element={<Clientes />} />
         <Route path="activos" element={<ListadodeClientes />} />
+        <Route path="perfil" element={<ProfileCliente />} />
       </Route>
       {/* Profesores Routes */}
       <Route path="/profesores" element={<RutaProtegida />}>
@@ -45,6 +48,7 @@ function App() {
       <Route path="/sedes" element={<RutaProtegida />}>
         <Route index element={<Sedes />} />
         <Route path="activas" element={<ListadoDeSedes />} />
+        <Route path="profile-sede" element={<ProfileSede />} />
       </Route>
       {/* Clases Routes */}
       <Route path="/clases" element={<RutaProtegida />}>

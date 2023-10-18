@@ -17,6 +17,8 @@ const SedesProvider = ({ children }) => {
   const [localidadSede, setLocalidadSede] = useState("");
   const [provinciaSede, setProvinciaSede] = useState("");
   const [sedes, setSedes] = useState([]);
+  const [idVerSede, setIdVerSede] = useState("");
+  const [sede, setSede] = useState("");
 
   //abre o cierra el modal nuevo sede
   const handleModalNuevaSede = () => {
@@ -135,7 +137,8 @@ const SedesProvider = ({ children }) => {
     }
   };
 
-  const obtenerCliente = async (id) => {
+  const obtenerSede = async (id) => {
+    console.log("Voy a mandar la peticion");
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -146,17 +149,8 @@ const SedesProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clienteAxios(`/clientes/obtener/${id}`, config);
-      console.log("obteniendo cliente");
-      console.log(data);
-      setEditarCliente(data.cliente);
-      setTipo(data.cliente.tipo);
-      setNombre(data.cliente.nombre);
-      setCuit(data.cliente.cuit);
-      setDomicilio(data.cliente.domicilio);
-      setEmailFactura(data.cliente.mailFactura);
-      setFechaVencimiento(data.cliente.fechaVencimiento);
-      setIsActivo(data.cliente.isActivo);
+      const { data } = await clienteAxios(`/sedes/obtener/${id}`, config);
+      setSede(data);
     } catch (error) {
       console.log(error);
     }
@@ -221,6 +215,10 @@ const SedesProvider = ({ children }) => {
         setProvinciaSede,
         obtenerSedes,
         sedes,
+        idVerSede,
+        setIdVerSede,
+        obtenerSede,
+        sede,
       }}
     >
       {children}

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useSedes from "@/hooks/useSedes";
 
 const ListadoDeSedes = () => {
-  const { obtenerSedes, sedes } = useSedes();
+  const { obtenerSedes, sedes, idVerSede, setIdVerSede } = useSedes();
 
   useEffect(() => {
     const obtenerInfo = async () => {
@@ -17,19 +17,11 @@ const ListadoDeSedes = () => {
 
   const navigate = useNavigate();
 
-  // const handleClick = async (e, _id, usuarios) => {
-  //   e.preventDefault();
-  //   await setCuitEditar(_id);
-  //   // obtenerUser([usuarios]);
-  //   setSeleccion(8);
-  // };
-
-  // const handleClickEditar = async (e, _id) => {
-  //   e.preventDefault();
-  //   await setCuitEditar(_id);
-  //   handleModalEditarCliente();
-  //   console.log("editando");
-  // };
+  const handleVer = (e, id) => {
+    e.preventDefault();
+    setIdVerSede(id);
+    navigate("/sedes/profile-sede");
+  };
 
   return (
     <>
@@ -51,7 +43,7 @@ const ListadoDeSedes = () => {
                   ].map((el) => (
                     <th
                       key={el}
-                      className="border-b border-blue-gray-50 px-6 py-3 text-left"
+                      className="border-b border-blue-gray-50 px-6 py-3 text-center"
                     >
                       <Typography
                         variant="small"
@@ -66,7 +58,7 @@ const ListadoDeSedes = () => {
               <tbody>
                 {sedes.map(
                   ({ _id, nombre, direccion, localidad, provincia }, key) => {
-                    const className = `py-3 px-5 ${
+                    const className = `py-3 px-5 text-center ${
                       key === projectsTableData.length - 1
                         ? ""
                         : "border-b border-blue-gray-50"
@@ -110,23 +102,19 @@ const ListadoDeSedes = () => {
                           </Typography>
                         </td>
                         <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="mx-2 flex text-xs font-medium text-blue-gray-600"
+                          <Button
+                            color="blue"
+                            className="mx-1 items-center gap-4 px-6 capitalize"
+                            fullWidth
+                            onClick={(e) => handleVer(e, _id)}
                           >
-                            <Button
-                              color="blue"
-                              className="mx-1 items-center gap-4 px-6 capitalize"
-                              fullWidth
+                            <Typography
+                              color="inherit"
+                              className="font-medium capitalize"
                             >
-                              <Typography
-                                color="inherit"
-                                className="font-medium capitalize"
-                              >
-                                ver
-                              </Typography>
-                            </Button>
-                          </Typography>
+                              ver
+                            </Typography>
+                          </Button>
                         </td>
                       </tr>
                     );
