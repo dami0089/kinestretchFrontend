@@ -102,7 +102,7 @@ export function DashboardNavbar() {
     <Navbar
       color={"white"}
       className={`"sticky shadow-blue-gray-500/5" 
-         z-8 top-4 rounded-xl py-3 shadow-md transition-all
+         z-100 top-4 rounded-xl py-3 shadow-md transition-all
     `}
       fullWidth
       blurred={fixedNavbar}

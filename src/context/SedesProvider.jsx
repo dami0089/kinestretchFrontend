@@ -19,10 +19,15 @@ const SedesProvider = ({ children }) => {
   const [sedes, setSedes] = useState([]);
   const [idVerSede, setIdVerSede] = useState("");
   const [sede, setSede] = useState("");
+  const [modalVerClase, setModalVerClase] = useState(false);
 
   //abre o cierra el modal nuevo sede
   const handleModalNuevaSede = () => {
     setModalNuevaSede(!modalNuevaSede);
+  };
+
+  const handleModalVerClase = () => {
+    setModalVerClase(!modalVerClase);
   };
 
   //Envia a la base de datos la informacion para un nuevo cliente
@@ -219,6 +224,8 @@ const SedesProvider = ({ children }) => {
         setIdVerSede,
         obtenerSede,
         sede,
+        modalVerClase,
+        handleModalVerClase,
       }}
     >
       {children}

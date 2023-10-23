@@ -16,6 +16,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import React, { useEffect } from "react";
+import { DateTime } from "luxon";
 
 const ProximaClaseSede = () => {
   const {
@@ -43,6 +44,24 @@ const ProximaClaseSede = () => {
     traerData();
   }, [recargoProximasClases]);
 
+  const diaActual = DateTime.now().setZone("America/Argentina/Buenos_Aires");
+  const diasDeLaSemanaOrden = [
+    "Lunes",
+    "Martes",
+    "Miercoles",
+    "Jueves",
+    "Viernes",
+    "Sabado",
+    "Domingo",
+  ];
+  const diaSemanaActual = diasDeLaSemanaOrden[diaActual.weekday - 1];
+
+  const percent = (length) => {
+    const porcentaje = (length / 8) * 100;
+
+    return porcentaje;
+  };
+
   return (
     <>
       {clasesSede && clasesSede.length !== 0 ? (
@@ -55,7 +74,10 @@ const ProximaClaseSede = () => {
           >
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-1">
-                Proximas clases hoy
+                Proximas clases hoy{" "}
+                <span className="text-blue-500">
+                  {diaSemanaActual.toUpperCase()}
+                </span>
               </Typography>
             </div>
           </CardHeader>
@@ -63,21 +85,19 @@ const ProximaClaseSede = () => {
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Dia", "Hora", "Profesor", "Inscriptos", "Ocupacion"].map(
-                    (el) => (
-                      <th
-                        key={el}
-                        className="border-b border-blue-gray-50 px-6 py-3 text-center"
+                  {["Hora", "Profesor", "Inscriptos", "Ocupacion"].map((el) => (
+                    <th
+                      key={el}
+                      className="border-b border-blue-gray-50 px-6 py-3 text-center"
+                    >
+                      <Typography
+                        variant="small"
+                        className="text-[11px] font-medium uppercase text-blue-gray-400"
                       >
-                        <Typography
-                          variant="small"
-                          className="text-[11px] font-medium uppercase text-blue-gray-400"
-                        >
-                          {el}
-                        </Typography>
-                      </th>
-                    )
-                  )}
+                        {el}
+                      </Typography>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -101,17 +121,6 @@ const ProximaClaseSede = () => {
 
                     return (
                       <tr key={_id}>
-                        <td className={className}>
-                          <div className="flex items-center justify-center gap-4">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-bold"
-                            >
-                              {diaDeLaSemana}
-                            </Typography>
-                          </div>
-                        </td>
                         <td className={className}>
                           <div className="flex items-center justify-center gap-4">
                             <Typography
@@ -156,12 +165,12 @@ const ProximaClaseSede = () => {
                               variant="small"
                               className="mb-1 block text-xs font-medium text-blue-gray-600"
                             >
-                              {clientes.length}%
+                              {percent(clientes.length)}%
                             </Typography>
                             <Progress
-                              value={clientes.length}
+                              value={percent(clientes.length)}
                               variant="gradient"
-                              color={clientes.length === 10 ? "green" : "blue"}
+                              color={clientes.length === 8 ? "green" : "blue"}
                               className="h-1"
                             />
                           </div>

@@ -8,7 +8,7 @@ import useAuth from "@/hooks/useAuth";
 const ClasesSedes = () => {
   const { obtenerClasesSedeDia, clasesDia } = useClases();
   const { handleCargando } = useAuth();
-  const { idVerSede } = useSedes();
+  const { idVerSede, handleModalVerClase } = useSedes();
   const diasDeLaSemana = [
     "Lunes",
     "Martes",
@@ -24,14 +24,21 @@ const ClasesSedes = () => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  const diaActual = capitalizeFirstLetter(
-    DateTime.now().setZone("America/Argentina/Buenos_Aires").weekdayLong
+  function removerAcentos(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  const diaActual = removerAcentos(
+    capitalizeFirstLetter(
+      DateTime.now().setZone("America/Argentina/Buenos_Aires").weekdayLong
+    )
   );
+
+  useEffect(() => {
+    console.log(diaActual);
+  }, []);
   const seleccionarDia = (dia) => {
     setDiaSeleccionado(dia);
-    console.log(dia);
-    // Aquí llamarías a la función que hace la solicitud al backend.
-    // obtenerClasesPorDia(dia);
   };
 
   useEffect(() => {
@@ -46,6 +53,11 @@ const ClasesSedes = () => {
     };
     traerInfo();
   }, [diaSeleccionado]);
+
+  const handleVerClase = (e) => {
+    e.preventDefault();
+    handleModalVerClase();
+  };
 
   return (
     <>
@@ -76,7 +88,8 @@ const ClasesSedes = () => {
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mb-5 ml-10 w-96  overflow-hidden rounded-lg border bg-white shadow-md"
+                    className="mb-5 ml-10 w-96  overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer"
+                    onClick={(e) => handleVerClase(e)}
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
@@ -110,7 +123,8 @@ const ClasesSedes = () => {
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mb-5 ml-10 w-96 overflow-hidden rounded-lg border bg-white shadow-md"
+                    className="mb-5 ml-10 w-96 overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer"
+                    onClick={(e) => handleVerClase(e)}
                   >
                     <div className="flex">
                       {/* Columna del Horario */}

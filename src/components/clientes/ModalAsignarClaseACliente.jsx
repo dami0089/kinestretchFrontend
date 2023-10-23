@@ -11,6 +11,7 @@ import useProfesores from "@/hooks/useProfesores";
 
 const ModalAsignarClaseACliente = () => {
   const { obtenerSedes, sedes } = useSedes();
+  const { usuarioAutenticado, handleCargando } = useAuth();
 
   const { obtenerProfesores, profesores } = useProfesores();
 
@@ -62,8 +63,6 @@ const ModalAsignarClaseACliente = () => {
     setDiaDeLaSemana(dia);
     setRenderizarClases(true);
   };
-
-  const { usuarioAutenticado, handleCargando } = useAuth();
 
   //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
   const handleSubmit = async (e) => {

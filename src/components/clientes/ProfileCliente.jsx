@@ -12,8 +12,12 @@ const ProfileCliente = () => {
   const { obtenerCliente, cliente, idClienteEditar } = useClientes();
   const { handleCargando } = useAuth();
 
-  const { modalAsignarClaseACliente, handleModalAsignarClaseACliente } =
-    useClases();
+  const {
+    modalAsignarClaseACliente,
+    handleModalAsignarClaseACliente,
+    actualizoClasesCliente,
+    setActualizoClasesCliente,
+  } = useClases();
 
   useEffect(() => {
     const obtenerInfo = async () => {
@@ -23,6 +27,18 @@ const ProfileCliente = () => {
     };
     obtenerInfo();
   }, []);
+
+  useEffect(() => {
+    const obtenerInfo = async () => {
+      if (actualizoClasesCliente) {
+        handleCargando();
+        await obtenerCliente(idClienteEditar);
+        handleCargando();
+        setActualizoClasesCliente(false);
+      }
+    };
+    obtenerInfo();
+  }, [actualizoClasesCliente]);
 
   const handleAsignarClase = (e) => {
     e.preventDefault();

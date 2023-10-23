@@ -110,24 +110,6 @@ const ClientesProvider = ({ children }) => {
       const { data } = await clienteAxios("/clientes", config);
       //guarda los datos de los clientes
       setClientes(data);
-      //guarda la cantidad de clientes
-      const cuenta = data.length; // Contar los clientes
-      setConteo(cuenta);
-      //guarda los clientes de los ultimos 7 dias
-      // Convertir las fechas de string a objetos Date
-      const client = data.map((cliente) => ({
-        ...cliente,
-        fechaAlta: new Date(cliente.fechaAlta),
-      }));
-      // Filtrar los clientes que se dieron de alta en los últimos 7 días
-      const fechaActual = new Date();
-      const ultimosClientes = client.filter(
-        (cliente) =>
-          fechaActual.getTime() - cliente.fechaAlta.getTime() <=
-          7 * 24 * 60 * 60 * 1000
-      );
-      // Actualizar el estado de los clientes y del conteo
-      setClientesRecientes(ultimosClientes.length);
     } catch (error) {
       console.log(error);
     }

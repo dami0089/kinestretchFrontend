@@ -87,7 +87,10 @@ const ListadodeClientes = () => {
               </thead>
               <tbody>
                 {clientes.map(
-                  ({ _id, nombre, apellido, email, celular, sede }, key) => {
+                  (
+                    { _id, nombre, apellido, email, celular, nombreSede },
+                    key
+                  ) => {
                     const className = `py-3 px-5 ${
                       key === projectsTableData.length - 1
                         ? ""
@@ -128,7 +131,7 @@ const ListadodeClientes = () => {
                             variant="small"
                             className="text-xs font-medium text-blue-gray-600"
                           >
-                            {sede ? sede : "Sin asignar"}
+                            {nombreSede ? nombreSede : "Sin asignar"}
                           </Typography>
                         </td>
                         <td className={className}>

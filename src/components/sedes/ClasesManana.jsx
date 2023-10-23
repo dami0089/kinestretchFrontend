@@ -16,6 +16,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import React, { useEffect } from "react";
+import { DateTime } from "luxon";
 
 const ClasesManana = () => {
   const {
@@ -43,6 +44,18 @@ const ClasesManana = () => {
     traerData();
   }, [recargoProximasClases]);
 
+  const diaActual = DateTime.now().setZone("America/Argentina/Buenos_Aires");
+  const diasDeLaSemanaOrden = [
+    "Lunes",
+    "Martes",
+    "Miercoles",
+    "Jueves",
+    "Viernes",
+    "Sabado",
+    "Domingo",
+  ];
+  const diaSemanaActual = diasDeLaSemanaOrden[diaActual.weekday];
+
   return (
     <>
       <Card className="overflow-hidden xl:col-span-2">
@@ -54,7 +67,10 @@ const ClasesManana = () => {
         >
           <div>
             <Typography variant="h6" color="blue-gray" className="mb-1">
-              Proximas Mañana
+              Proximas Mañana{" "}
+              <span className="text-blue-500">
+                {diaSemanaActual.toUpperCase()}
+              </span>
             </Typography>
           </div>
         </CardHeader>
@@ -62,21 +78,19 @@ const ClasesManana = () => {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Dia", "Hora", "Profesor", "Inscriptos", "Ocupacion"].map(
-                  (el) => (
-                    <th
-                      key={el}
-                      className="border-b border-blue-gray-50 px-6 py-3 text-center"
+                {["Hora", "Profesor", "Inscriptos", "Ocupacion"].map((el) => (
+                  <th
+                    key={el}
+                    className="border-b border-blue-gray-50 px-6 py-3 text-center"
+                  >
+                    <Typography
+                      variant="small"
+                      className="text-[11px] font-medium uppercase text-blue-gray-400"
                     >
-                      <Typography
-                        variant="small"
-                        className="text-[11px] font-medium uppercase text-blue-gray-400"
-                      >
-                        {el}
-                      </Typography>
-                    </th>
-                  )
-                )}
+                      {el}
+                    </Typography>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -100,17 +114,6 @@ const ClasesManana = () => {
 
                   return (
                     <tr key={_id}>
-                      <td className={className}>
-                        <div className="flex items-center justify-center gap-4">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {diaDeLaSemana}
-                          </Typography>
-                        </div>
-                      </td>
                       <td className={className}>
                         <div className="flex items-center justify-center gap-4">
                           <Typography

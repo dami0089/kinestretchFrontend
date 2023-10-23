@@ -16,6 +16,7 @@ import ListadoProfesoresActivos from "./components/profesores/ListadoProfesoresA
 import ListadoDeSedes from "./components/sedes/ListadoDeSedes";
 import ProfileCliente from "./components/clientes/ProfileCliente";
 import ProfileSede from "./components/sedes/ProfileSede";
+import TarjetasSede from "./components/sedes/TarjetasSede";
 
 //TODO:FALTA AGREGAR EL BAR AL MENU
 function App() {
