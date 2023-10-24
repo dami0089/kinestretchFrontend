@@ -19,6 +19,11 @@ const ProfesoresProvider = ({ children }) => {
   const [fechaNacimientoProfe, setFechaNacimientoProfe] = useState("");
   const [domicilioProfe, setDomicilioProfe] = useState("");
   const [profesores, setProfesores] = useState([]);
+  const [modalClasesProfe, setModalClasesProfe] = useState(false);
+
+  const handleModalClasesProfe = () => {
+    setModalClasesProfe(!modalClasesProfe);
+  };
 
   //Envia a la base de datos la informacion para un nuevo cliente
   const nuevoProfe = async (
@@ -235,6 +240,8 @@ const ProfesoresProvider = ({ children }) => {
         setDomicilioProfe,
         obtenerProfesores,
         profesores,
+        handleModalClasesProfe,
+        modalClasesProfe,
       }}
     >
       {children}

@@ -28,6 +28,11 @@ const ClasesProvider = ({ children }) => {
 
   const [clasesOrdenadas, setClasesOrdenadas] = useState([]);
   const [idClaseSeleccionada, setIdClaseSeleccionada] = useState("");
+  const [idVerClase, setIdVerClase] = useState("");
+
+  const [diaClase, setDiaClase] = useState("");
+  const [horaClase, setHoraClase] = useState("");
+  const [sedeClase, setSedeClase] = useState("");
 
   const handleModalAsignarClaseACliente = () => {
     setModalAsignarClaseACliente(!modalAsignarClaseACliente);
@@ -195,6 +200,30 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const [clasesProfe, setClasesProfe] = useState([]);
+
+  const obtenerClasesProfeDia = async (id, dia) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-clases-profesores/${id}`,
+        { dia },
+        config
+      );
+      setClasesProfe(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const asignarClienteAClase = async (id, idClase) => {
     try {
       const token = localStorage.getItem("token");
@@ -278,6 +307,31 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const [clientesClase, setClientesClase] = useState([]);
+
+  const obtenerClientesClases = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-clientes-clases/${id}`,
+        {},
+        config
+      );
+      console.log(data);
+      setClientesClase(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -313,6 +367,18 @@ const ClasesProvider = ({ children }) => {
         clasesOrdenadas,
         idClaseSeleccionada,
         setIdClaseSeleccionada,
+        clasesProfe,
+        obtenerClasesProfeDia,
+        idVerClase,
+        setIdVerClase,
+        clientesClase,
+        obtenerClientesClases,
+        diaClase,
+        setDiaClase,
+        horaClase,
+        setHoraClase,
+        sedeClase,
+        setSedeClase,
       }}
     >
       {children}

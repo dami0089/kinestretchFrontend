@@ -299,7 +299,7 @@ const ModalNuevoProfesor = () => {
                     <input
                       type="submit"
                       className="w-full cursor-pointer rounded bg-blue-600 p-3 text-sm font-bold uppercase text-white transition-colors hover:bg-blue-300"
-                      value={"Continuar"}
+                      value={"Guardar"}
                     />
                   </form>
                 </div>
