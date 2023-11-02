@@ -11,70 +11,34 @@ import {
 import React, { useEffect } from "react";
 import { projectsTableData } from "@/data";
 import useClientes from "@/hooks/useClientes";
-import { formatearFecha } from "@/helpers/formatearFecha";
-import { useNavigate } from "react-router-dom";
-import { setOpenConfigurator } from "@/context";
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
+
 import useClases from "@/hooks/useClases";
 import useAuth from "@/hooks/useAuth";
+import Cargando from "../Cargando";
+import ModalVerClase from "./ModalVerClase";
 
 const ClasesPorCliente = () => {
-  const {
-    cliente,
-    setObtenerUs,
-    setSeleccion,
-    handleModalEditarCliente,
-    setCuitEditar,
-    cuitEditar,
-    // obtenerUser,
-    setObtenerUsuario,
-    obtenerClientes,
-    idClienteEditar,
-    setIdClienteEditar,
-    setCliente,
-  } = useClientes();
+  const { setIdClienteEditar, modalVerClaseCliente, handleVerClase } =
+    useClientes();
 
-  const {
-    asignarClienteAClase,
-    obtenerClasesCliente,
-    clasesCliente,
-    actualizoClasesCliente,
-    setActualizoClasesCliente,
-  } = useClases();
+  const { clasesCliente, idClasePerfilCliente, setIdClasePerfilCliente } =
+    useClases();
 
   const { handleCargando } = useAuth();
 
-  useEffect(() => {
-    const obtenerInfo = async () => {
-      handleCargando();
-      await obtenerClasesCliente(cliente._id);
-      handleCargando();
-    };
-    obtenerInfo();
-  }, []);
-
-  useEffect(() => {
-    const obtenerInfo = async () => {
-      if (actualizoClasesCliente) {
-        handleCargando();
-        await obtenerClasesCliente(cliente._id);
-        handleCargando();
-        setActualizoClasesCliente(false);
-      }
-    };
-    obtenerInfo();
-  }, [actualizoClasesCliente]);
-
-  const navigate = useNavigate();
-
-  const handleProfile = (e, id) => {
+  const handleClase = async (e, id) => {
     e.preventDefault();
-    setIdClienteEditar(id);
-    navigate("/clientes/perfil");
+    handleCargando();
+    await setIdClasePerfilCliente(id);
+    handleVerClase();
+    handleCargando();
   };
 
   return (
     <>
+      <Typography className="ml-4 text-start font-bold uppercase text-blue-gray-700">
+        Clases
+      </Typography>
       <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-3">
           <CardBody className="overflow-x-scroll px-0 pb-2 pt-0">
@@ -84,11 +48,11 @@ const ClasesPorCliente = () => {
                   {["Dia", "Hora", "Profesor", "Sede", "Accion"].map((el) => (
                     <th
                       key={el}
-                      className="border-b border-blue-gray-50 px-6 py-3 text-center"
+                      className="border-b border-blue-gray-50 bg-blue-50 px-6 py-3 text-center"
                     >
                       <Typography
                         variant="small"
-                        className="text-[11px] font-medium uppercase text-blue-gray-400"
+                        className=" text-[11px] font-medium uppercase text-blue-gray-400"
                       >
                         {el}
                       </Typography>
@@ -162,7 +126,7 @@ const ClasesPorCliente = () => {
                           <Button
                             color="blue"
                             className="mx-1 items-center gap-4 px-6 capitalize"
-                            onClick={(e) => handleProfile(e, _id)}
+                            onClick={(e) => handleClase(e, _id)}
                             fullWidth
                           >
                             <Typography
@@ -181,6 +145,8 @@ const ClasesPorCliente = () => {
             </table>
           </CardBody>
         </Card>
+        <Cargando />
+        {modalVerClaseCliente ? <ModalVerClase /> : ""}
       </div>
     </>
   );

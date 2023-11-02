@@ -33,7 +33,18 @@ const ListadodeClientes = () => {
     idClienteEditar,
     setIdClienteEditar,
     setCliente,
+    clientesInactivos,
+    obtenerClientesInactivos,
   } = useClientes();
+
+  useEffect(() => {
+    const obtenerInfo = async () => {
+      handleCargando();
+      await obtenerClientesInactivos();
+      handleCargando();
+    };
+    obtenerInfo();
+  }, []);
 
   const { setClasesCliente } = useClases();
 
@@ -46,20 +57,11 @@ const ListadodeClientes = () => {
     const inputValue = e.target.value;
     setNombreFiltrado(inputValue);
 
-    const coincidencias = clientes.filter((cliente) =>
+    const coincidencias = clientesInactivos.filter((cliente) =>
       cliente.nombre.toLowerCase().includes(inputValue.toLowerCase())
     );
     setClientesFiltrados(coincidencias);
   };
-
-  useEffect(() => {
-    const obtenerInfo = async () => {
-      handleCargando();
-      await obtenerClientes();
-      handleCargando();
-    };
-    obtenerInfo();
-  }, []);
 
   useEffect(() => {
     setCliente([]);
@@ -90,7 +92,7 @@ const ListadodeClientes = () => {
   };
   const currentItems = nombreFiltrado
     ? clientesFiltrado
-    : clientes.slice(indexOfFirstItem, indexOfLastItem);
+    : clientesInactivos.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -110,7 +112,7 @@ const ListadodeClientes = () => {
         <Card className="overflow-hidden xl:col-span-3">
           <div className="mb-3 mt-8 flex items-center justify-between text-black">
             <Typography className="ml-4  font-bold">
-              Listado de Clientes
+              Listado de Clientes Inactivos
             </Typography>
 
             <div className="mr-5 flex items-center space-x-4">

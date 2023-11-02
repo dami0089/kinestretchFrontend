@@ -6,7 +6,6 @@ import OlvidePassword from "./pages/auth/OlvidePassword";
 import NuevoPassword from "./pages/auth/NuevoPassword";
 import RutaProtegida from "./layouts/RutaProtegida";
 import { Home } from "./pages/inicio";
-
 import { Clientes } from "./pages/inicio/clientes";
 import ListadodeClientes from "./components/clientes/ListadodeClientes";
 import Profesores from "./pages/inicio/profesores";
@@ -16,10 +15,10 @@ import ListadoProfesoresActivos from "./components/profesores/ListadoProfesoresA
 import ListadoDeSedes from "./components/sedes/ListadoDeSedes";
 import ProfileCliente from "./components/clientes/ProfileCliente";
 import ProfileSede from "./components/sedes/ProfileSede";
-import TarjetasSede from "./components/sedes/TarjetasSede";
 import useAuth from "./hooks/useAuth";
 import PaginaClientes from "./pages/inicio/PaginaClientes";
 import PaginaProfesores from "./pages/inicio/PaginaProfesores";
+import ListadoClientesInactivos from "./components/clientes/ListadoClientesInactivos";
 
 //TODO:FALTA AGREGAR EL BAR AL MENU
 function App() {
@@ -45,6 +44,7 @@ function App() {
           <Route path="/clientes" element={<RutaProtegida />}>
             <Route index element={<Clientes />} />
             <Route path="activos" element={<ListadodeClientes />} />
+            <Route path="inactivos" element={<ListadoClientesInactivos />} />
             <Route path="perfil" element={<ProfileCliente />} />
           </Route>
           {/* Profesores Routes */}

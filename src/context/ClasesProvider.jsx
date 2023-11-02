@@ -33,7 +33,7 @@ const ClasesProvider = ({ children }) => {
   const [diaClase, setDiaClase] = useState("");
   const [horaClase, setHoraClase] = useState("");
   const [sedeClase, setSedeClase] = useState("");
-
+  const [idClasePerfilCliente, setIdClasePerfilCliente] = useState(false);
   const handleModalAsignarClaseACliente = () => {
     setModalAsignarClaseACliente(!modalAsignarClaseACliente);
   };
@@ -332,6 +332,30 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const [clase, setClase] = useState([]);
+
+  const obtenerClase = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-clase/${id}`,
+        {},
+        config
+      );
+      setClase(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -359,6 +383,7 @@ const ClasesProvider = ({ children }) => {
         asignarClienteAClase,
         obtenerClasesCliente,
         clasesCliente,
+        setClasesCliente,
         actualizoClasesCliente,
         setActualizoClasesCliente,
         handleModalAsignarClaseACliente,
@@ -379,6 +404,10 @@ const ClasesProvider = ({ children }) => {
         setHoraClase,
         sedeClase,
         setSedeClase,
+        clase,
+        obtenerClase,
+        idClasePerfilCliente,
+        setIdClasePerfilCliente,
       }}
     >
       {children}

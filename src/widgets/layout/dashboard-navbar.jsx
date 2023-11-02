@@ -32,6 +32,8 @@ import { useEffect } from "react";
 
 import useAuth from "@/hooks/useAuth";
 
+import { useNavigate } from "react-router-dom";
+
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar, openSidenav } = controller;
@@ -47,10 +49,13 @@ export function DashboardNavbar() {
     setUsuarioAutenticado,
   } = useAuth();
 
+  const navigate = useNavigate();
+
   const handleclose = () => {
     cerrarSesionAuth();
     setUsuarioAutenticado("");
     localStorage.removeItem("token");
+    navigate("/");
   };
 
   const handleAbrirModal = () => {

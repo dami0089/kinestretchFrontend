@@ -8,23 +8,15 @@ import ModalNuevoCliente from "@/components/clientes/ModalNuevoCliente";
 
 import useClientes from "@/hooks/useClientes";
 
-import EditarCliente from "@/components/clientes/EditarCliente";
-
 import Cargando from "@/components/Cargando";
 
 export function Clientes() {
   const {
     handleModalNuevoCliente,
-    seleccion,
-    setSeleccion,
-
     setActualizoListado,
     obtenerUsuarios,
-
     actualizoListado,
     modalNuevoCliente,
-
-    modalEditarCliente,
   } = useClientes();
   const navigate = useNavigate();
 
@@ -41,6 +33,11 @@ export function Clientes() {
   const handleNavigate = (e) => {
     e.preventDefault();
     navigate("/clientes/activos");
+  };
+
+  const handleInactivos = (e) => {
+    e.preventDefault();
+    navigate("/clientes/inactivos");
   };
 
   return (
@@ -122,7 +119,7 @@ export function Clientes() {
           </div>
           <div
             className="w-full p-2 hover:cursor-pointer md:w-1/3"
-            onClick={(e) => setSeleccion(3)}
+            onClick={(e) => handleInactivos(e)}
           >
             <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
               <div className="flex flex-row items-center justify-between gap-4">
@@ -160,8 +157,6 @@ export function Clientes() {
 
       <Cargando />
       {modalNuevoCliente ? <ModalNuevoCliente /> : ""}
-
-      {modalEditarCliente ? <EditarCliente /> : ""}
     </>
   );
 }

@@ -26,6 +26,37 @@ const ClientesProvider = ({ children }) => {
   const [cliente, setCliente] = useState([]);
   const [idClienteEditar, setIdClienteEditar] = useState("");
   const [obtenerClasesCliente, setObtenerClasesCliente] = useState([]);
+  const [modalEditarCliente, setModalEditarCliente] = useState(false);
+  const [modalEnviarMensaje, setModalEnviarMensaje] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+  const [selectPerfil, setSelectPerfil] = useState(1);
+  const [modalPago, setModalPago] = useState(false);
+  const [importePagado, setImportePagado] = useState("");
+  const [modalEditarPago, setModalEditarPago] = useState(false);
+  const [fechaPago, setFechaPago] = useState("");
+  const [importePagoEditar, setImportePagoEditar] = useState("");
+  const [pagoId, setPagoId] = useState("");
+  const [modalVerClaseCliente, setModalVerClaseCliente] = useState(false);
+
+  const handleVerClase = () => {
+    setModalVerClaseCliente(!modalVerClaseCliente);
+  };
+
+  const handleModalEditarPago = () => {
+    setModalEditarPago(!modalEditarPago);
+  };
+
+  const handleModalEditarCliente = () => {
+    setModalEditarCliente(!modalEditarCliente);
+  };
+
+  const handleModalEnviarMensaje = () => {
+    setModalEnviarMensaje(!modalEnviarMensaje);
+  };
+
+  const handleModalPago = () => {
+    setModalPago(!modalPago);
+  };
 
   //Envia a la base de datos la informacion para un nuevo cliente
   const nuevoCliente = async (
@@ -115,6 +146,27 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const [clientesInactivos, setClientesInactivos] = useState([]);
+
+  const obtenerClientesInactivos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios("/clientes/inactivos", config);
+      //guarda los datos de los clientes
+      setClientesInactivos(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const navigate = useNavigate();
 
   //abre o cierra el modal nuevo cliente
@@ -122,7 +174,31 @@ const ClientesProvider = ({ children }) => {
     setModalNuevoCliente(!modalNuevoCliente);
   };
 
-  const editarC = async (cliente) => {
+  const editarC = async (
+    id,
+    nombreCliente,
+    apellidoCliente,
+    dniCliente,
+    emailCliente,
+    celularCliente,
+    fechaNacimientoCliente,
+    diagnosticoCliente,
+    aptoFisicoCliente,
+    nombreContactoEmergencia,
+    celularContactoEmergencia
+  ) => {
+    const cliente = {
+      nombre: nombreCliente,
+      apellido: apellidoCliente,
+      dni: dniCliente,
+      email: emailCliente,
+      celular: celularCliente,
+      fechaNacimiento: fechaNacimientoCliente,
+      diagnostico: diagnosticoCliente,
+      aptoFisico: aptoFisicoCliente,
+      nombreContactoEmergencia: nombreContactoEmergencia,
+      celularContactoEmergencia: celularContactoEmergencia,
+    };
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -133,13 +209,13 @@ const ClientesProvider = ({ children }) => {
         },
       };
       const { data } = await clienteAxios.put(
-        `/clientes/${cliente.id}`,
+        `/clientes/${id}`,
         cliente,
         config
       );
 
       //Mostrar la alerta
-      toast.success("Cliente actualizado correctamente", {
+      toast.success("Cliente Editado correctamente", {
         position: "top-right",
         autoClose: 1000,
         hideProgressBar: false,
@@ -203,8 +279,148 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const desactivarCliente = async (cliente) => {
-    console.log(cliente);
+  const desactivarCliente = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clientes/desactivar/${id}`, {}, config);
+
+      toast.success("Cliente desactivado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const enviarMensaje = async (id, mensaje) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clientes/enviar-mensaje/${id}`,
+        { mensaje },
+        config
+      );
+
+      toast.success("Mensaje enviado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const registrarPago = async (id, importe) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clientes/registrar-pago/${id}`,
+        { importe },
+        config
+      );
+
+      toast.success("Pago Registrado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const [pagosCliente, setPagosCliente] = useState([]);
+  const obtenerPagos = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios(`/clientes/pagos/${id}`, config);
+      setPagosCliente(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editarPago = async (id, fecha, importe) => {
+    const pago = {
+      fecha: fecha,
+      importe: importe,
+    };
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -215,14 +431,13 @@ const ClientesProvider = ({ children }) => {
         },
       };
       const { data } = await clienteAxios.put(
-        `/clientes/desactivar-activar/${cliente.id}`,
-        cliente,
+        `/clientes/editar-pago/${id}`,
+        pago,
         config
       );
 
-      setIsActivo(data.isActivo);
-
-      toast.success("Estado del cliente actualizado correctamente", {
+      //Mostrar la alerta
+      toast.success("Pago Editado correctamente", {
         position: "top-right",
         autoClose: 1000,
         hideProgressBar: false,
@@ -232,6 +447,7 @@ const ClientesProvider = ({ children }) => {
         progress: undefined,
         theme: "light",
       });
+      //redireccionar
     } catch (error) {
       toast.error(error, {
         position: "top-right",
@@ -285,6 +501,37 @@ const ClientesProvider = ({ children }) => {
         setCliente,
         obtenerClasesClienteProfile,
         obtenerClasesCliente,
+        clientesInactivos,
+        obtenerClientesInactivos,
+        desactivarCliente,
+        handleModalEditarCliente,
+        modalEditarCliente,
+        editarC,
+        handleModalEnviarMensaje,
+        modalEnviarMensaje,
+        mensaje,
+        setMensaje,
+        enviarMensaje,
+        selectPerfil,
+        setSelectPerfil,
+        registrarPago,
+        handleModalPago,
+        modalPago,
+        importePagado,
+        setImportePagado,
+        pagosCliente,
+        obtenerPagos,
+        handleModalEditarPago,
+        modalEditarPago,
+        fechaPago,
+        setFechaPago,
+        importePagoEditar,
+        setImportePagoEditar,
+        editarPago,
+        pagoId,
+        setPagoId,
+        handleVerClase,
+        modalVerClaseCliente,
       }}
     >
       {children}
