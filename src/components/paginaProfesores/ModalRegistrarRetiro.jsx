@@ -1,40 +1,44 @@
-import { projectsTableData } from "@/data";
-import useAuth from "@/hooks/useAuth";
-import useClases from "@/hooks/useClases";
+import { Fragment, useState, useEffect } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import useClientes from "@/hooks/useClientes";
+import { ToastContainer, toast } from "react-toastify";
+import clienteAxios from "@/configs/clinteAxios";
+import useAuth from "@/hooks/useAuth";
+
+import useSedes from "@/hooks/useSedes";
+import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
-
-import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
-import { Box, Dialog, Modal } from "@mui/material";
-import React, { Fragment, useEffect } from "react";
-import Cargando from "../Cargando";
 import Swal from "sweetalert2";
-import { Transition } from "@headlessui/react";
-import { ToastContainer } from "react-toastify";
 
-const ModalVerClase = () => {
-  const { handleModalClasesProfe, modalClasesProfe } = useProfesores();
-  const { clase, obtenerClase, idClasePerfilCliente, cancelarClaseCliente } =
-    useClases();
+const ModalRegistrarRetiro = () => {
+  const { auth } = useAuth();
 
-  const { handleVerClase, modalVerClaseCliente, cliente } = useClientes();
+  const { handleRetiro, modalRegistrarRetiro, registrarRetiro } =
+    useProfesores();
 
-  const { handleCargando } = useAuth();
+  const { setActualizoClasesCliente } = useClases();
 
-  useEffect(() => {
-    const obtenerDataClase = async () => {
-      handleCargando();
-      await obtenerClase(idClasePerfilCliente);
-      handleCargando();
-    };
-    obtenerDataClase();
-  }, []);
+  const { importePagado, setImportePagado } = useClientes();
 
-  const handleCancelar = async (e) => {
+  //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if ([importePagado].includes("")) {
+      toast("⚠️ El importe es obligatorio para continuar", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     Swal.fire({
-      title: "Cancelamos la proxima clase?",
-      text: "Se eliminara automaticamente al mismo de todas las clases que tenga asignadas",
+      title: "Registramos el retiro?",
       icon: "question",
       showCancelButton: true,
       cancelButtonText: "No",
@@ -43,17 +47,24 @@ const ModalVerClase = () => {
       confirmButtonText: "Si",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await cancelarClaseCliente(cliente._id, clase._id);
+        await registrarRetiro(importePagado, auth._id);
+        setImportePagado("");
+        handleRetiro();
+        setActualizoClasesCliente(true);
       }
     });
   };
+  const handleCerrarModal = () => {
+    setImportePagado("");
+    handleRetiro();
+  };
 
   return (
-    <Transition.Root show={modalVerClaseCliente} as={Fragment}>
+    <Transition.Root show={modalRegistrarRetiro} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={handleVerClase}
+        onClose={handleCerrarModal}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <ToastContainer pauseOnFocusLoss={false} />
@@ -92,7 +103,7 @@ const ModalVerClase = () => {
                 <button
                   type="button"
                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={handleVerClase}
+                  onClick={handleCerrarModal}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -116,20 +127,33 @@ const ModalVerClase = () => {
                     as="h3"
                     className="text-xl font-bold leading-6 text-gray-900"
                   >
-                    Clase del {clase.diaDeLaSemana}-{clase.horarioInicio}hs en{" "}
-                    {clase.nombreSede}
+                    Registrar Retiro
                   </Dialog.Title>
 
-                  <form>
-                    <div className="absolute left-1/2 top-1/2 mx-4 w-full max-w-md -translate-x-1/2 -translate-y-1/2 transform rounded border border-black bg-white p-4 text-center shadow-lg md:w-[800px] md:max-w-none">
-                      <p className="mb-4">Profesor: {clase.nombreProfe}</p>
-                      <button
-                        className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-                        onClick={(e) => handleCancelar(e)}
+                  <form className="mx-2 my-2" onSubmit={handleSubmit}>
+                    <div>
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="origen"
                       >
-                        Cancelar Clase
-                      </button>
+                        Importe Retirado
+                      </label>
+
+                      <input
+                        id="origen"
+                        className="mb-5 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                        type="text"
+                        placeholder="Ingrese el importe"
+                        value={importePagado}
+                        onChange={(e) => setImportePagado(e.target.value)}
+                      ></input>
                     </div>
+
+                    <input
+                      type="submit"
+                      className="w-full cursor-pointer rounded bg-blue-600 p-3 text-sm font-bold uppercase text-white transition-colors hover:bg-blue-300"
+                      value={"Guardar"}
+                    />
                   </form>
                 </div>
               </div>
@@ -141,4 +165,4 @@ const ModalVerClase = () => {
   );
 };
 
-export default ModalVerClase;
+export default ModalRegistrarRetiro;

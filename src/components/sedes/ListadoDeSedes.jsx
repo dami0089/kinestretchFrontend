@@ -1,16 +1,23 @@
 import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { projectsTableData } from "@/data";
 import { useNavigate } from "react-router-dom";
 import useSedes from "@/hooks/useSedes";
+import useAuth from "@/hooks/useAuth";
+import Cargando from "../Cargando";
+import { EyeIcon } from "@heroicons/react/24/solid";
 
 const ListadoDeSedes = () => {
   const { obtenerSedes, sedes, idVerSede, setIdVerSede } = useSedes();
 
+  const { handleCargando } = useAuth();
+
   useEffect(() => {
     const obtenerInfo = async () => {
+      handleCargando();
       await obtenerSedes();
+      handleCargando();
     };
     obtenerInfo();
   }, []);
@@ -67,7 +74,7 @@ const ListadoDeSedes = () => {
                     return (
                       <tr key={_id}>
                         <td className={className}>
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center justify-center gap-4">
                             <Typography
                               variant="small"
                               color="blue-gray"
@@ -78,43 +85,42 @@ const ListadoDeSedes = () => {
                           </div>
                         </td>
                         <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {direccion}
-                          </Typography>
-                        </td>
-                        <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {localidad}
-                          </Typography>
-                        </td>
-                        <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {provincia}
-                          </Typography>
-                        </td>
-                        <td className={className}>
-                          <Button
-                            color="blue"
-                            className="mx-1 items-center gap-4 px-6 capitalize"
-                            fullWidth
-                            onClick={(e) => handleVer(e, _id)}
-                          >
+                          <div className="flex items-center justify-center gap-4">
                             <Typography
-                              color="inherit"
-                              className="font-medium capitalize"
+                              variant="small"
+                              className="text-xs font-medium text-blue-gray-600"
                             >
-                              ver
+                              {direccion}
                             </Typography>
-                          </Button>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center justify-center gap-4">
+                            <Typography
+                              variant="small"
+                              className="text-xs font-medium text-blue-gray-600"
+                            >
+                              {localidad}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center justify-center gap-4">
+                            <Typography
+                              variant="small"
+                              className="text-xs font-medium text-blue-gray-600"
+                            >
+                              {provincia}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center justify-center gap-4">
+                            <EyeIcon
+                              className="h-8 w-8 hover:cursor-pointer"
+                              onClick={(e) => handleVer(e, _id)}
+                            />
+                          </div>
                         </td>
                       </tr>
                     );
@@ -125,6 +131,7 @@ const ListadoDeSedes = () => {
           </CardBody>
         </Card>
       </div>
+      <Cargando />
     </>
   );
 };

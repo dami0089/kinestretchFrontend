@@ -37,6 +37,12 @@ const ClientesProvider = ({ children }) => {
   const [importePagoEditar, setImportePagoEditar] = useState("");
   const [pagoId, setPagoId] = useState("");
   const [modalVerClaseCliente, setModalVerClaseCliente] = useState(false);
+  const [modalEditarDatosPerfilCliente, setModalEditarDatosPerfilCliente] =
+    useState(false);
+
+  const handleModalDatosCliente = () => {
+    setModalEditarDatosPerfilCliente(!modalEditarDatosPerfilCliente);
+  };
 
   const handleVerClase = () => {
     setModalVerClaseCliente(!modalVerClaseCliente);
@@ -316,6 +322,43 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const activarCliente = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clientes/activar/${id}`, {}, config);
+
+      toast.success("Cliente activado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   const enviarMensaje = async (id, mensaje) => {
     try {
       const token = localStorage.getItem("token");
@@ -357,7 +400,54 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const registrarPago = async (id, importe) => {
+  const registrarPago = async (id, importe, usuario) => {
+    const info = {
+      importe: importe,
+      usuario: usuario,
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clientes/registrar-pago/${id}`, info, config);
+
+      toast.success("Pago Registrado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const registrarPagoAdmin = async (id, importe, profesor) => {
+    const info = {
+      importe: importe,
+      profesor: profesor,
+    };
+
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -369,8 +459,8 @@ const ClientesProvider = ({ children }) => {
       };
 
       await clienteAxios.post(
-        `/clientes/registrar-pago/${id}`,
-        { importe },
+        `/clientes/registrar-pago-admin/${id}`,
+        info,
         config
       );
 
@@ -462,6 +552,95 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const editarCPerfil = async (
+    id,
+    nombreCliente,
+    apellidoCliente,
+    dniCliente,
+    emailCliente,
+    celularCliente,
+    fechaNacimientoCliente,
+
+    nombreContactoEmergencia,
+    celularContactoEmergencia
+  ) => {
+    const cliente = {
+      nombre: nombreCliente,
+      apellido: apellidoCliente,
+      dni: dniCliente,
+      email: emailCliente,
+      celular: celularCliente,
+      fechaNacimiento: fechaNacimientoCliente,
+
+      nombreContactoEmergencia: nombreContactoEmergencia,
+      celularContactoEmergencia: celularContactoEmergencia,
+    };
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.put(
+        `/clientes/editar-desde-perfil/${id}`,
+        cliente,
+        config
+      );
+
+      //Mostrar la alerta
+      toast.success("Datos editados correctamente", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      //redireccionar
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const [movimientosCliente, setMovimientosCliente] = useState([]);
+
+  const obtenerPagosCliente = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clientes/obtener-movimientos-cliente/${id}`,
+        {},
+        config
+      );
+
+      setMovimientosCliente(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClientesContext.Provider
       value={{
@@ -532,6 +711,13 @@ const ClientesProvider = ({ children }) => {
         setPagoId,
         handleVerClase,
         modalVerClaseCliente,
+        activarCliente,
+        modalEditarDatosPerfilCliente,
+        handleModalDatosCliente,
+        editarCPerfil,
+        movimientosCliente,
+        obtenerPagosCliente,
+        registrarPagoAdmin,
       }}
     >
       {children}

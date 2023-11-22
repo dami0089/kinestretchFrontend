@@ -17,6 +17,11 @@ export function Profesores() {
     navigate("/profesores/activos");
   };
 
+  const handleNavigate2 = (e) => {
+    e.preventDefault();
+    navigate("/profesores/inactivos");
+  };
+
   return (
     <>
       <div className="mt-10 flex flex-wrap justify-between">
@@ -29,7 +34,7 @@ export function Profesores() {
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between gap-4">
               <div className="flex-shrink-0">
-                <a href="#" className="relative block">
+                <a className="relative block">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="icon icon-tabler icon-tabler-user-plus"
@@ -66,7 +71,7 @@ export function Profesores() {
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between gap-4">
               <div className="flex-shrink-0">
-                <a href="#" className="relative block">
+                <a className="relative block">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="icon icon-tabler icon-tabler-discount-check"
@@ -95,12 +100,12 @@ export function Profesores() {
         </div>
         <div
           className="w-full p-2 hover:cursor-pointer md:w-1/3"
-          // onClick={(e) => setSeleccion(3)}
+          onClick={(e) => handleNavigate2(e)}
         >
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between gap-4">
               <div className="flex-shrink-0">
-                <a href="#" className="relative block">
+                <a className="relative block">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="icon icon-tabler icon-tabler-octagon-minus"

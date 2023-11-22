@@ -1,6 +1,6 @@
 import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
+import { EllipsisVerticalIcon, EyeIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
   Card,
@@ -17,6 +17,8 @@ import {
 } from "@material-tailwind/react";
 import React, { useEffect } from "react";
 import { DateTime } from "luxon";
+import ModalVerClase from "../clientes/ModalVerClase";
+import ModalClaseSede from "./ModalClaseSede";
 
 const ClasesManana = () => {
   const {
@@ -24,8 +26,14 @@ const ClasesManana = () => {
     clasesSedeManana,
     recargoProximasClases,
     setRecargoProximasClases,
+    setIdVerClase,
+    setDiaClase,
+    setHoraClase,
+    setSedeClase,
   } = useClases();
   const { idVerSede } = useSedes();
+
+  const { modalVerClase, handleModalVerClase } = useSedes();
 
   useEffect(() => {
     const traerData = async () => {
@@ -56,6 +64,15 @@ const ClasesManana = () => {
   ];
   const diaSemanaActual = diasDeLaSemanaOrden[diaActual.weekday];
 
+  const handleVer = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
+    e.preventDefault();
+    setIdVerClase(_id);
+    setDiaClase(diaDeLaSemana);
+    setHoraClase(horarioInicio);
+    setSedeClase(nombreSede);
+    handleModalVerClase();
+  };
+
   return (
     <>
       <Card className="overflow-hidden xl:col-span-2">
@@ -78,7 +95,7 @@ const ClasesManana = () => {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Hora", "Profesor", "Inscriptos", "Ocupacion"].map((el) => (
+                {["Hora", "Profesor", "Ocupacion", "Ver"].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 px-6 py-3 text-center"
@@ -97,11 +114,11 @@ const ClasesManana = () => {
               {clasesSedeManana.map(
                 (
                   {
-                    img,
                     diaDeLaSemana,
                     horarioInicio,
                     nombreProfe,
                     clientes,
+                    nombreSede,
                     _id,
                   },
                   key
@@ -136,21 +153,6 @@ const ClasesManana = () => {
                           </Typography>
                         </div>
                       </td>
-                      <td className={className}>
-                        {clientes.map(({ img, nombre }, key) => (
-                          <Tooltip key={nombre} content={name}>
-                            <Avatar
-                              src={"../../../public/img/team-1.jpeg"}
-                              alt={nombre}
-                              size="xs"
-                              variant="circular"
-                              className={`cursor-pointer border-2 border-white ${
-                                key === 0 ? "" : "-ml-2.5"
-                              }`}
-                            />
-                          </Tooltip>
-                        ))}
-                      </td>
 
                       <td className={className}>
                         <div className="w-10/12">
@@ -168,6 +170,22 @@ const ClasesManana = () => {
                           />
                         </div>
                       </td>
+                      <td className={className}>
+                        <div className="flex items-center justify-center gap-4">
+                          <EyeIcon
+                            className="h-8 w-8 text-blue-gray-600 hover:cursor-pointer"
+                            onClick={(e) =>
+                              handleVer(
+                                e,
+                                _id,
+                                diaDeLaSemana,
+                                horarioInicio,
+                                nombreSede
+                              )
+                            }
+                          />
+                        </div>
+                      </td>
                     </tr>
                   );
                 }
@@ -176,6 +194,7 @@ const ClasesManana = () => {
           </table>
         </CardBody>
       </Card>
+      {modalVerClase ? <ModalClaseSede /> : ""}
     </>
   );
 };

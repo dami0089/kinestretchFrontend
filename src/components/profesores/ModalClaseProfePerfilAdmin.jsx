@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-const ModalClaseProfe = () => {
+const ModalClaseProfePerfilAdmin = () => {
   const { handleModalClasesProfe, modalClasesProfe } = useProfesores();
   const {
     idVerClase,
@@ -34,6 +34,9 @@ const ModalClaseProfe = () => {
     setIdPagoProfe,
     actualizo,
     setActualizo,
+    modalClaseProfePerfilAdmin,
+    handleModalClaseProfePerfilAdmin,
+    handleModalPagoProfesorPerfil,
   } = useClases();
 
   const { handleCargando } = useAuth();
@@ -116,7 +119,7 @@ const ModalClaseProfe = () => {
   const handlePagos = async (e, id, fecha) => {
     e.preventDefault();
     if (esMismoMes(fecha)) {
-      handleModalClasesProfe();
+      handleModalClaseProfePerfilAdmin();
       await Swal.fire({
         title: "El cliente ya abono este mes",
         text: "Queres registrar otro pago mas?",
@@ -129,14 +132,14 @@ const ModalClaseProfe = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           setIdPagoProfe(id);
-          handleModalClasesProfe();
-          handleModalPagosProfes();
+          handleModalClaseProfePerfilAdmin();
+          handleModalPagoProfesorPerfil();
         }
       });
     } else {
       setIdPagoProfe(id);
-      handleModalClasesProfe();
-      handleModalPagosProfes();
+      handleModalPagoProfesorPerfil();
+      handleModalClaseProfePerfilAdmin();
     }
   };
 
@@ -155,8 +158,8 @@ const ModalClaseProfe = () => {
     <>
       <ToastContainer pauseOnFocusLoss={false} />
       <Modal
-        open={modalClasesProfe}
-        onClose={handleModalClasesProfe}
+        open={modalClaseProfePerfilAdmin}
+        onClose={handleModalClaseProfePerfilAdmin}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -253,4 +256,4 @@ const ModalClaseProfe = () => {
   );
 };
 
-export default ModalClaseProfe;
+export default ModalClaseProfePerfilAdmin;

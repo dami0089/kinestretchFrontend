@@ -12,7 +12,7 @@ const Cargando = () => {
     <Transition.Root show={cargandoModal} as={Fragment}>
       <Dialog
         as="div"
-        className="z-80 fixed inset-0 overflow-y-auto"
+        className="z-90 fixed inset-0 overflow-y-auto"
         onClose={handleCargando}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">

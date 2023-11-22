@@ -14,15 +14,22 @@ import useClientes from "@/hooks/useClientes";
 import { formatearFecha } from "@/helpers/formatearFecha";
 import { useNavigate } from "react-router-dom";
 import { setOpenConfigurator } from "@/context";
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftCircleIcon, EyeIcon } from "@heroicons/react/24/solid";
 import useProfesores from "@/hooks/useProfesores";
+import Cargando from "../Cargando";
+import useAuth from "@/hooks/useAuth";
 
 const ListadoProfesoresActivos = () => {
-  const { obtenerProfesores, profesores } = useProfesores();
+  const { obtenerProfesores, profesores, idProfesor, setIdProfesor } =
+    useProfesores();
+
+  const { handleCargando } = useAuth();
 
   useEffect(() => {
     const obtenerInfo = async () => {
+      handleCargando();
       await obtenerProfesores();
+      handleCargando();
     };
     obtenerInfo();
   }, []);
@@ -34,9 +41,10 @@ const ListadoProfesoresActivos = () => {
     // await setCuitEditar(_id);
   };
 
-  const handleClickEditar = async (e, _id) => {
+  const handleVer = async (e, _id) => {
     e.preventDefault();
-    // await setCuitEditar(_id);
+    await setIdProfesor(_id);
+    navigate("/profesores/perfil-profesor");
   };
 
   return (
@@ -54,7 +62,7 @@ const ListadoProfesoresActivos = () => {
                     (el) => (
                       <th
                         key={el}
-                        className="border-b border-blue-gray-50 px-6 py-3 text-left"
+                        className="border-b border-blue-gray-50 px-6 py-3 text-center"
                       >
                         <Typography
                           variant="small"
@@ -69,7 +77,10 @@ const ListadoProfesoresActivos = () => {
               </thead>
               <tbody>
                 {profesores.map(
-                  ({ _id, nombre, apellido, email, celular, sede }, key) => {
+                  (
+                    { _id, nombre, apellido, email, celular, nombreSede },
+                    key
+                  ) => {
                     const className = `py-3 px-5 ${
                       key === projectsTableData.length - 1
                         ? ""
@@ -79,7 +90,7 @@ const ListadoProfesoresActivos = () => {
                     return (
                       <tr key={_id}>
                         <td className={className}>
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center justify-center gap-4">
                             <Typography
                               variant="small"
                               color="blue-gray"
@@ -90,47 +101,42 @@ const ListadoProfesoresActivos = () => {
                           </div>
                         </td>
                         <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {email}
-                          </Typography>
-                        </td>
-                        <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {celular}
-                          </Typography>
-                        </td>
-                        <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {sede ? sede : "Sin asignar"}
-                          </Typography>
-                        </td>
-                        <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="mx-2 flex text-xs font-medium text-blue-gray-600"
-                          >
-                            <Button
-                              color="blue"
-                              className="mx-1 items-center gap-4 px-6 capitalize"
-                              fullWidth
+                          <div className="flex items-center justify-center gap-4">
+                            <Typography
+                              variant="small"
+                              className="text-xs font-medium text-blue-gray-600"
                             >
-                              <Typography
-                                color="inherit"
-                                className="font-medium capitalize"
-                              >
-                                ver
-                              </Typography>
-                            </Button>
-                          </Typography>
+                              {email}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center justify-center gap-4">
+                            <Typography
+                              variant="small"
+                              className="text-xs font-medium text-blue-gray-600"
+                            >
+                              {celular}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center justify-center gap-4">
+                            <Typography
+                              variant="small"
+                              className="text-xs font-bold uppercase text-black"
+                            >
+                              {nombreSede ? nombreSede : "Sin asignar"}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center justify-center gap-4">
+                            <EyeIcon
+                              className="h-8 w-8 hover:cursor-pointer"
+                              onClick={(e) => handleVer(e, _id)}
+                            />
+                          </div>
                         </td>
                       </tr>
                     );
@@ -141,6 +147,7 @@ const ListadoProfesoresActivos = () => {
           </CardBody>
         </Card>
       </div>
+      <Cargando />
     </>
   );
 };

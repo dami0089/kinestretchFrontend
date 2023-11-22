@@ -3,9 +3,9 @@ import useClientes from "@/hooks/useClientes";
 import React, { useEffect, useRef, useState } from "react";
 import Cargando from "../Cargando";
 import { formatearFecha } from "@/helpers/formatearFecha";
-import ClasesPorCliente from "./ClasesPorCliente";
+import ClasesPorCliente from "../clientes/ClasesPorCliente";
 import useClases from "@/hooks/useClases";
-import ModalAsignarClaseACliente from "./ModalAsignarClaseACliente";
+import ModalAsignarClaseACliente from "../clientes/ModalAsignarClaseACliente";
 import { ToastContainer } from "react-toastify";
 import lottie from "lottie-web";
 import editar from "../../../public/lotties/editar.json";
@@ -13,18 +13,25 @@ import mensaje from "../../../public/lotties/mensaje.json";
 import eliminar from "../../../public/lotties/delete.json";
 import alerta from "../../../public/lotties/Alert.json";
 import Swal from "sweetalert2";
-import ModalEditarCliente from "./ModalEditarCliente";
-import ModalEnviarMensaje from "./ModalEnviarMensaje";
+
+import ModalEditarCliente from "../clientes/ModalEditarCliente";
+import ModalEnviarMensaje from "../clientes/ModalEnviarMensaje";
 import pago from "../../../public/lotties/billing.json";
 import calendario from "../../../public/lotties/calendar.json";
 import cuenta from "../../../public/lotties/Currency.json";
 import activar from "../../../public/lotties/Success.json";
 
-import ContableCliente from "./ContableCliente";
-import ModalRegistrarPago from "./ModalRegistrarPago";
-import ModalEditarPago from "./ModalEditarPago";
+import ContableCliente from "../clientes/ContableCliente";
+import ModalRegistrarPago from "../clientes/ModalRegistrarPago";
+import ModalEditarPago from "../clientes/ModalEditarPago";
+import useProfesores from "@/hooks/useProfesores";
+import ClasesProfesorPerfil from "./ClasesProfesorPerfil";
+import ModalClaseProfePerfilAdmin from "./ModalClaseProfePerfilAdmin";
+import ContableProfesor from "./ContableProfesor";
+import ModalRegistrarPagoProfesor from "../paginaProfesores/ModalRegistrarPagoProfesor";
+import ModalRegistrarPagoPerfilProfesor from "./ModalRegistrarPagoPerfilProfesor";
 
-const ProfileCliente = () => {
+const PerfilProfesor = () => {
   const {
     obtenerCliente,
     cliente,
@@ -66,81 +73,36 @@ const ProfileCliente = () => {
     inasistenciaCliente,
     verificarInasistenciaClietne,
     setInasistenciaCliente,
+    modalClaseProfePerfilAdmin,
+    handleModalClaseProfePerfilAdmin,
+    modalPagoProfesorPerfil,
   } = useClases();
 
+  const {
+    idProfesor,
+    profesor,
+    obtenerProfesor,
+    registrosContbalesProfe,
+    obtenerRegistrosContablesProfesorAdmin,
+    desactivarProfe,
+  } = useProfesores();
+
   useEffect(() => {
-    const pagos = async () => {
-      handleCargando();
-      await obtenerPagos(idClienteEditar);
-      handleCargando();
+    const obtener = async () => {
+      await obtenerRegistrosContablesProfesorAdmin(profesor._id);
     };
-    pagos();
+    obtener();
   }, []);
 
   useEffect(() => {
     const obtenerInfo = async () => {
       setSelectPerfil(1);
       handleCargando();
-      await obtenerCliente(idClienteEditar);
+      await obtenerProfesor(idProfesor);
       handleCargando();
     };
     obtenerInfo();
   }, []);
-
-  useEffect(() => {
-    const obtenerInfo = async () => {
-      setClasesCliente([]);
-      handleCargando();
-      await obtenerClasesClienteAdmin(idClienteEditar);
-      handleCargando();
-    };
-    obtenerInfo();
-  }, []);
-
-  useEffect(() => {
-    const obtenerInfo = async () => {
-      if (actualizoClasesCliente) {
-        handleCargando();
-        await obtenerCliente(idClienteEditar);
-        handleCargando();
-        setActualizoClasesCliente(false);
-      }
-    };
-    obtenerInfo();
-  }, [actualizoClasesCliente]);
-
-  useEffect(() => {
-    const obtenerInfo = async () => {
-      if (actualizoClasesCliente) {
-        handleCargando();
-        await obtenerClasesClienteAdmin(cliente._id);
-        handleCargando();
-        setActualizoClasesCliente(false);
-      }
-    };
-    obtenerInfo();
-  }, [actualizoClasesCliente]);
-
-  useEffect(() => {
-    const chequearInasistencias = async () => {
-      if (cliente) {
-        setInasistenciaCliente([]);
-        await verificarInasistenciaClietne(cliente.clases[0], idClienteEditar);
-      }
-    };
-    chequearInasistencias();
-  }, [cliente]);
-
-  useEffect(() => {
-    const chequearInasistencias = async () => {
-      if (actualizoClasesCliente) {
-        setInasistenciaCliente([]);
-        await verificarInasistenciaClietne(cliente.clases[0], idClienteEditar);
-        setActualizoClasesCliente(false);
-      }
-    };
-    chequearInasistencias();
-  }, [actualizoClasesCliente]);
 
   const handleAsignarClase = (e) => {
     e.preventDefault();
@@ -227,9 +189,9 @@ const ProfileCliente = () => {
 
   const handleDesactivar = async (e) => {
     e.preventDefault();
-    if (cliente.isActivo) {
+    if (profesor.isActivo) {
       Swal.fire({
-        title: "Seguro queres desactivar este cliente?",
+        title: "Seguro queres desactivar este profesor?",
         text: "Se eliminara automaticamente al mismo de todas las clases que tenga asignadas",
         icon: "question",
         showCancelButton: true,
@@ -239,14 +201,16 @@ const ProfileCliente = () => {
         confirmButtonText: "Si",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await desactivarCliente(idClienteEditar);
+          handleCargando();
+          await desactivarProfe(profesor._id);
           setActualizoClasesCliente(true);
+          handleCargando();
         }
       });
     }
-    if (!cliente.isActivo) {
+    if (!profesor.isActivo) {
       Swal.fire({
-        title: "Seguro queres activar este cliente?",
+        title: "Seguro queres activar este Profesor?",
         text: "Se eliminara automaticamente al mismo de todas las clases que tenga asignadas",
         icon: "question",
         showCancelButton: true,
@@ -256,8 +220,10 @@ const ProfileCliente = () => {
         confirmButtonText: "Si",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await activarCliente(idClienteEditar);
+          handleCargando();
+          await desactivarProfe(profesor._id);
           setActualizoClasesCliente(true);
+          handleCargando();
         }
       });
     }
@@ -296,12 +262,16 @@ const ProfileCliente = () => {
         <div class="grid grid-cols-1 md:grid-cols-3">
           <div class="order-last mt-20 grid grid-cols-2 text-center md:order-first md:mt-0">
             <div>
-              <p class="text-xl font-bold text-gray-700">22</p>
-              <p class="text-gray-400">Clases Hechas</p>
+              <p class="text-gray-400">Nombre</p>
+              <p class=" text-l font-bold text-gray-700">
+                {profesor.nombre} {profesor.apellido}
+              </p>
             </div>
             <div>
-              <p class="text-xl font-bold text-gray-700">10</p>
-              <p class="text-gray-400">Clases Canceladas</p>
+              <p class="text-gray-400">Ingreso</p>
+              <p class="text-l font-bold text-gray-700">
+                {formatearFecha(profesor.fechaAlta)}
+              </p>
             </div>
           </div>
           <div class="relative">
@@ -331,10 +301,10 @@ const ProfileCliente = () => {
               style={{ width: 50, height: 50 }}
             ></div>
             {/* Trash Icon */}
-            {cliente.isActivo === true ? (
+            {profesor.isActivo === true ? (
               <div
                 ref={plusRef}
-                title="Desactivar Cliente"
+                title="Desactivar Profesor"
                 className="hover:cursor-pointer"
                 onClick={(e) => handleDesactivar(e)}
                 style={{ width: 50, height: 50 }}
@@ -342,7 +312,7 @@ const ProfileCliente = () => {
             ) : (
               <div
                 ref={act}
-                title="Activar Cliente"
+                title="Activar Profesor"
                 className="hover:cursor-pointer"
                 onClick={(e) => handleDesactivar(e)}
                 style={{ width: 50, height: 50 }}
@@ -378,70 +348,29 @@ const ProfileCliente = () => {
           </div>
         </div>
 
-        <div class="mt-20 border-b pb-12 text-center">
-          {/* <h1 class="text-4xl font-medium text-gray-700">{cliente.nombre}</h1>
-          <p class="mt-3 font-light text-gray-600">
-            Miembro desde:{" "}
-            {cliente.fechaAlta ? formatearFecha(cliente.fechaAlta) : "-"}
-          </p>
-          {cliente && cliente.isActivo ? (
-            ""
-          ) : (
-            <div class="flex flex-col justify-center">
-              <button className="font-bold text-red-200">
-                Cliente Inactivo
-              </button>
-            </div>
-          )} */}
-          <div class="mt-3 flex">
+        <div class="mt-5 border-b pb-12 text-center">
+          <div class=" flex">
             {/* <!-- Columna izquierda --> */}
-            <div class="flex-1 font-light text-gray-600">
-              {inasistenciaCliente.data ? (
-                <div class="rounded border border-red-500 p-2">
-                  <p>
-                    {inasistenciaCliente.data ? (
-                      <>
-                        El cliente tendrá una inasistencia el día{" "}
-                        <strong>
-                          {formatearFecha(inasistenciaCliente.data)}
-                        </strong>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </p>
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
+            <div class="flex-1 font-light text-gray-600"></div>
 
             {/* <!-- Columna del centro --> */}
             <div class="flex-1 font-light text-gray-600">
-              <h1 class="text-4xl font-medium text-gray-700">
-                {cliente.nombre}
-              </h1>
-              <p class="mt-3 font-light text-gray-600">
-                Miembro desde:{" "}
-                {cliente.fechaAlta ? formatearFecha(cliente.fechaAlta) : "-"}
-              </p>
-              {cliente && cliente.isActivo ? (
+              {profesor && profesor.isActivo ? (
                 ""
               ) : (
                 <div class="flex flex-col justify-center">
                   <button className="font-bold text-red-200">
-                    Cliente Inactivo
+                    Profesor Inactivo
                   </button>
                 </div>
               )}
             </div>
-
             {/* <!-- Columna de la derecha (vacía) --> */}
             <div class="flex-1">{/* <!-- Contenido vacío --> */}</div>
           </div>
         </div>
 
-        <div class="mr-4 mt-2 flex justify-end space-x-4 md:justify-end">
+        <div class="mb-5 mr-4 flex justify-end space-x-4 md:justify-end">
           {/* Calendario */}
           <div
             ref={cal}
@@ -460,9 +389,9 @@ const ProfileCliente = () => {
           {/* Placeholder para el segundo ícono */}
         </div>
         {selectPerfil === 1 ? (
-          <div class="mt-4 flex flex-col justify-center">
-            {cliente && cliente.clases && cliente.clases.length !== 0 ? (
-              <ClasesPorCliente />
+          <div class=" flex flex-col justify-center">
+            {profesor && profesor.clases && profesor.clases.length !== 0 ? (
+              <ClasesProfesorPerfil />
             ) : (
               <div class="mt-5 flex flex-col justify-center">
                 <button class="">No tiene clases asignadas</button>
@@ -470,9 +399,9 @@ const ProfileCliente = () => {
             )}
           </div>
         ) : (
-          <div class="mt-4 flex flex-col justify-center">
-            {pagosCliente && pagosCliente.length > 0 ? (
-              <ContableCliente />
+          <div class=" flex flex-col justify-center">
+            {registrosContbalesProfe && registrosContbalesProfe.length > 0 ? (
+              <ContableProfesor />
             ) : (
               <div class="mt-5 flex flex-col justify-center">
                 <button class="">La cuenta no tiene movimientos</button>
@@ -486,9 +415,11 @@ const ProfileCliente = () => {
       {modalEnviarMensaje ? <ModalEnviarMensaje /> : ""}
       {modalPago ? <ModalRegistrarPago /> : ""}
       {modalEditarPago ? <ModalEditarPago /> : ""}
+      {modalClaseProfePerfilAdmin ? <ModalClaseProfePerfilAdmin /> : ""}
+      {modalPagoProfesorPerfil ? <ModalRegistrarPagoPerfilProfesor /> : ""}
       <Cargando />
     </div>
   );
 };
 
-export default ProfileCliente;
+export default PerfilProfesor;

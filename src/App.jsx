@@ -19,6 +19,11 @@ import useAuth from "./hooks/useAuth";
 import PaginaClientes from "./pages/inicio/PaginaClientes";
 import PaginaProfesores from "./pages/inicio/PaginaProfesores";
 import ListadoClientesInactivos from "./components/clientes/ListadoClientesInactivos";
+import ContableProfesores from "./components/paginaProfesores/ContableProfesores";
+import PerfilCliente from "./components/paginaClientes/PerfilCliente";
+import PagosCliente from "./components/paginaClientes/PagosCliente";
+import PerfilProfesor from "./components/profesores/PerfilProfesor";
+import ListadoProfesoresInactivos from "./components/profesores/ListadoProfesoresInactivos";
 
 //TODO:FALTA AGREGAR EL BAR AL MENU
 function App() {
@@ -51,6 +56,8 @@ function App() {
           <Route path="/profesores" element={<RutaProtegida />}>
             <Route index element={<Profesores />} />
             <Route path="activos" element={<ListadoProfesoresActivos />} />
+            <Route path="perfil-profesor" element={<PerfilProfesor />} />
+            <Route path="inactivos" element={<ListadoProfesoresInactivos />} />
           </Route>
           {/* Sedes Routes */}
           <Route path="/sedes" element={<RutaProtegida />}>
@@ -69,12 +76,21 @@ function App() {
           <Route path="/inicio" element={<RutaProtegida />}>
             <Route index element={<PaginaClientes />} />
           </Route>
+          <Route path="/perfil" element={<RutaProtegida />}>
+            <Route index element={<PerfilCliente />} />
+          </Route>
+          <Route path="/pagos" element={<RutaProtegida />}>
+            <Route index element={<PagosCliente />} />
+          </Route>
         </>
       ) : auth.rol === "profesor" ? (
         <>
           {/* Usuario Profesores Routes */}
           <Route path="/inicio" element={<RutaProtegida />}>
             <Route index element={<PaginaProfesores />} />
+          </Route>
+          <Route path="/contable" element={<RutaProtegida />}>
+            <Route path="contable-profe" element={<ContableProfesores />} />
           </Route>
         </>
       ) : (

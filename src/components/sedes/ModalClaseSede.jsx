@@ -2,6 +2,7 @@ import { projectsTableData } from "@/data";
 import useAuth from "@/hooks/useAuth";
 import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
+import useSedes from "@/hooks/useSedes";
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 
 import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
@@ -11,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-const ModalClaseProfe = () => {
+const ModalClaseSede = () => {
   const { handleModalClasesProfe, modalClasesProfe } = useProfesores();
   const {
     idVerClase,
@@ -34,7 +35,11 @@ const ModalClaseProfe = () => {
     setIdPagoProfe,
     actualizo,
     setActualizo,
+    modalClaseProfePerfilAdmin,
+    handleModalClaseProfePerfilAdmin,
   } = useClases();
+
+  const { modalVerClase, handleModalVerClase } = useSedes();
 
   const { handleCargando } = useAuth();
   const capitalizeFirstLetter = (string) => {
@@ -116,7 +121,7 @@ const ModalClaseProfe = () => {
   const handlePagos = async (e, id, fecha) => {
     e.preventDefault();
     if (esMismoMes(fecha)) {
-      handleModalClasesProfe();
+      handleModalClaseProfePerfilAdmin();
       await Swal.fire({
         title: "El cliente ya abono este mes",
         text: "Queres registrar otro pago mas?",
@@ -130,7 +135,7 @@ const ModalClaseProfe = () => {
         if (result.isConfirmed) {
           setIdPagoProfe(id);
           handleModalClasesProfe();
-          handleModalPagosProfes();
+          handleModalClaseProfePerfilAdmin();
         }
       });
     } else {
@@ -155,8 +160,8 @@ const ModalClaseProfe = () => {
     <>
       <ToastContainer pauseOnFocusLoss={false} />
       <Modal
-        open={modalClasesProfe}
-        onClose={handleModalClasesProfe}
+        open={modalVerClase}
+        onClose={handleModalVerClase}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -253,4 +258,4 @@ const ModalClaseProfe = () => {
   );
 };
 
-export default ModalClaseProfe;
+export default ModalClaseSede;

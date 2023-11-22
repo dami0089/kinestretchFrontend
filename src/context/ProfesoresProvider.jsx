@@ -20,6 +20,12 @@ const ProfesoresProvider = ({ children }) => {
   const [domicilioProfe, setDomicilioProfe] = useState("");
   const [profesores, setProfesores] = useState([]);
   const [modalClasesProfe, setModalClasesProfe] = useState(false);
+  const [modalRegistrarRetiro, setModalRegistrarRetiro] = useState(false);
+  const [idProfesor, setIdProfesor] = useState("");
+
+  const handleRetiro = () => {
+    setModalRegistrarRetiro(!modalRegistrarRetiro);
+  };
 
   const handleModalClasesProfe = () => {
     setModalClasesProfe(!modalClasesProfe);
@@ -96,6 +102,27 @@ const ProfesoresProvider = ({ children }) => {
       const { data } = await clienteAxios("/profesores", config);
       //guarda los datos de los clientes
       setProfesores(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [profesor, setProfesor] = useState([]);
+
+  const obtenerProfesor = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(`/profesores/obtener/${id}`, config);
+
+      setProfesor(data);
     } catch (error) {
       console.log(error);
     }
@@ -218,6 +245,193 @@ const ProfesoresProvider = ({ children }) => {
     }
   };
 
+  const [registrosContbalesProfe, setRegistrosContablesProfe] = useState([]);
+
+  const obtenerRegistrosContablesProfesor = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.get(
+        `/clientes/registros-contables-profesor/${id}`,
+        config
+      );
+      console.log(data);
+      setRegistrosContablesProfe(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const obtenerRegistrosContablesProfesorAdmin = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clientes/registros-contables-profesor-admin/${id}`,
+        config
+      );
+
+      setRegistrosContablesProfe(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const registrarRetiro = async (importe, usuario) => {
+    const info = {
+      importe: importe,
+      usuario: usuario,
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clientes/registrar-retiro`, info, config);
+
+      toast.success("Retiro Registrado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const hacerCierre = async (importe, id) => {
+    const info = {
+      importe: importe,
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clientes/hacer-cierre/${id}`, info, config);
+
+      toast.success("Cierre Hecho Correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const desactivarProfe = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/profesores/desactivar/${id}`, {}, config);
+
+      toast.success("Profesor desactivado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const [profesoresInactivos, setProfesoresInactivos] = useState([]);
+
+  const obtenerProfesoresInactivos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios("/profesores/inactivos", config);
+      //guarda los datos de los clientes
+      setProfesoresInactivos(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ProfesoresContext.Provider
       value={{
@@ -242,6 +456,20 @@ const ProfesoresProvider = ({ children }) => {
         profesores,
         handleModalClasesProfe,
         modalClasesProfe,
+        registrosContbalesProfe,
+        obtenerRegistrosContablesProfesor,
+        registrarRetiro,
+        handleRetiro,
+        modalRegistrarRetiro,
+        hacerCierre,
+        idProfesor,
+        setIdProfesor,
+        profesor,
+        obtenerProfesor,
+        obtenerRegistrosContablesProfesorAdmin,
+        desactivarProfe,
+        profesoresInactivos,
+        obtenerProfesoresInactivos,
       }}
     >
       {children}

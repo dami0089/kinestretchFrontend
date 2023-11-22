@@ -1,24 +1,25 @@
 import { Avatar, Typography, Button } from "@material-tailwind/react";
-import {
-  MapPinIcon,
-  BriefcaseIcon,
-  BuildingLibraryIcon,
-  UserIcon,
-} from "@heroicons/react/24/solid";
-import { Footer } from "@/widgets/layout";
+import { UserIcon } from "@heroicons/react/24/solid";
+
 import useAuth from "@/hooks/useAuth";
-import ListadodeClientes from "@/components/clientes/ListadodeClientes";
-import ListadoClasesCliente from "@/components/paginaClientes/ListadoClasesCliente";
+
 import ClasesProfesor from "@/components/paginaProfesores/ClasesProfesor";
 import Cargando from "@/components/Cargando";
 import useProfesores from "@/hooks/useProfesores";
 import ModalClaseProfe from "@/components/paginaProfesores/ModalClaseProfe";
+import useClases from "@/hooks/useClases";
+import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
+import { ToastContainer } from "react-toastify";
 
 export function PaginaProfesores() {
   const { auth } = useAuth();
-  const { handleModalClasesProfe, modalClasesProfe } = useProfesores();
+  const { modalClasesProfe } = useProfesores();
+  const { modalRegistrarPagoProfe, limpiarAsistencias } = useClases();
+
   return (
     <>
+      <ToastContainer pauseOnFocusLoss={false} />
+
       <section className="relative block h-[50vh]">
         <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('../../../public/img/trainer-grupo-personas-ayudando-ejercicios-estiramiento.jpg')] bg-cover bg-center" />
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
@@ -60,9 +61,10 @@ export function PaginaProfesores() {
             <div className="align-middle ">
               <ClasesProfesor />
             </div>
+            <Cargando />
           </div>
-          <Cargando />
           {modalClasesProfe ? <ModalClaseProfe /> : ""}
+          {modalRegistrarPagoProfe ? <ModalRegistrarPagoProfesor /> : ""}
         </div>
       </section>
     </>

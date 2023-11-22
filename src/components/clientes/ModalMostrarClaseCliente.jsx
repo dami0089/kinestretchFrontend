@@ -1,25 +1,31 @@
-import { projectsTableData } from "@/data";
+import { Fragment, useState, useEffect } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import useClientes from "@/hooks/useClientes";
+import { ToastContainer, toast } from "react-toastify";
+import { Button, Checkbox } from "@material-tailwind/react";
+import clienteAxios from "@/configs/clinteAxios";
+import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import useClases from "@/hooks/useClases";
-import useClientes from "@/hooks/useClientes";
 import useProfesores from "@/hooks/useProfesores";
-
-import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
-import { Box, Dialog, Modal } from "@mui/material";
-import React, { Fragment, useEffect } from "react";
-import Cargando from "../Cargando";
 import Swal from "sweetalert2";
-import { Transition } from "@headlessui/react";
-import { ToastContainer } from "react-toastify";
+import Cargando from "../Cargando";
 
-const ModalVerClase = () => {
-  const { handleModalClasesProfe, modalClasesProfe } = useProfesores();
-  const { clase, obtenerClase, idClasePerfilCliente, cancelarClaseCliente } =
-    useClases();
-
+const ModalMostrarClaseCliente = () => {
   const { handleVerClase, modalVerClaseCliente, cliente } = useClientes();
 
+  const {
+    clase,
+    obtenerClase,
+    idClasePerfilCliente,
+    cancelarClaseCliente,
+    eliminarDeClaseACliente,
+    setActualizoClasesCliente,
+  } = useClases();
+
   const { handleCargando } = useAuth();
+
+  const { handleModalClasesProfe, modalClasesProfe } = useProfesores();
 
   useEffect(() => {
     const obtenerDataClase = async () => {
@@ -34,7 +40,7 @@ const ModalVerClase = () => {
     e.preventDefault();
     Swal.fire({
       title: "Cancelamos la proxima clase?",
-      text: "Se eliminara automaticamente al mismo de todas las clases que tenga asignadas",
+      text: "Se marcara al cliente como inasistente",
       icon: "question",
       showCancelButton: true,
       cancelButtonText: "No",
@@ -44,6 +50,30 @@ const ModalVerClase = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await cancelarClaseCliente(cliente._id, clase._id);
+        setActualizoClasesCliente(true);
+        handleVerClase();
+      }
+    });
+  };
+
+  const handleEliminar = async (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "Eliminamos al cliente de la clase?",
+      text: "Esta accion lo eliminara de todos los listados",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        await eliminarDeClaseACliente(clase._id, cliente._id);
+        handleVerClase();
+        setActualizoClasesCliente(true);
+        handleCargando();
       }
     });
   };
@@ -114,21 +144,33 @@ const ModalVerClase = () => {
                 <div className="mt-3 w-full text-center sm:ml-0 sm:mt-0 sm:text-left">
                   <Dialog.Title
                     as="h3"
-                    className="text-xl font-bold leading-6 text-gray-900"
+                    className="text-center text-xl font-bold leading-6 text-gray-900"
                   >
                     Clase del {clase.diaDeLaSemana}-{clase.horarioInicio}hs en{" "}
                     {clase.nombreSede}
                   </Dialog.Title>
 
-                  <form>
-                    <div className="absolute left-1/2 top-1/2 mx-4 w-full max-w-md -translate-x-1/2 -translate-y-1/2 transform rounded border border-black bg-white p-4 text-center shadow-lg md:w-[800px] md:max-w-none">
+                  <form className="mx-2 my-2 text-center">
+                    <div className="mb-1">
                       <p className="mb-4">Profesor: {clase.nombreProfe}</p>
-                      <button
-                        className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+                    </div>
+                    <div className="mb-1">
+                      <Button
+                        className="rounded bg-deep-orange-400 px-4 py-2 text-white hover:bg-red-600"
                         onClick={(e) => handleCancelar(e)}
+                        fullWidth
                       >
-                        Cancelar Clase
-                      </button>
+                        Registrar Inasistencia
+                      </Button>
+                    </div>
+                    <div className="mb-1">
+                      <Button
+                        className="mt-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+                        fullWidth
+                        onClick={(e) => handleEliminar(e)}
+                      >
+                        Eliminar de la clase
+                      </Button>
                     </div>
                   </form>
                 </div>
@@ -136,9 +178,10 @@ const ModalVerClase = () => {
             </div>
           </Transition.Child>
         </div>
+        <Cargando />
       </Dialog>
     </Transition.Root>
   );
 };
 
-export default ModalVerClase;
+export default ModalMostrarClaseCliente;

@@ -2,21 +2,88 @@ import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useClientes from "@/hooks/useClientes";
 import { ToastContainer, toast } from "react-toastify";
-import { Checkbox } from "@material-tailwind/react";
 import clienteAxios from "@/configs/clinteAxios";
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
-import useSedes from "@/hooks/useSedes";
 
-const VerClase = () => {
-  const { modalVerClase, handleModalVerClase } = useSedes();
+import useSedes from "@/hooks/useSedes";
+import useClases from "@/hooks/useClases";
+import useProfesores from "@/hooks/useProfesores";
+import Swal from "sweetalert2";
+
+const ModalRegistrarPagoProfesor = () => {
+  const { obtenerSedes, sedes } = useSedes();
+  const { usuarioAutenticado, handleCargando, auth } = useAuth();
+
+  const { handleModalClasesProfe } = useProfesores();
+
+  const {
+    setActualizoClasesCliente,
+    handleModalPagosProfes,
+    modalRegistrarPagoProfe,
+    idPagoProfe,
+    setIdPagoProfe,
+    actualizo,
+    setActualizo,
+  } = useClases();
+
+  const {
+    cliente,
+    handleModalPago,
+    modalPago,
+    importePagado,
+    setImportePagado,
+    registrarPago,
+  } = useClientes();
+
+  //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if ([importePagado].includes("")) {
+      toast("⚠️ El importe es obligatorio para continuar", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+    Swal.fire({
+      title: "Imputamos el pago al cliente?",
+      text: "Esta accion marcara en los listados que el cliente tiene el mes pago",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await registrarPago(idPagoProfe, importePagado, auth._id);
+        setImportePagado("");
+        setActualizo(true);
+        setActualizoClasesCliente(true);
+        handleModalPagosProfes();
+        handleModalClasesProfe();
+      }
+    });
+  };
+  const handleCerrarModal = () => {
+    setImportePagado("");
+    handleModalPagosProfes();
+    handleModalClasesProfe();
+  };
 
   return (
-    <Transition.Root show={modalVerClase} as={Fragment}>
+    <Transition.Root show={modalRegistrarPagoProfe} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={handleModalVerClase}
+        onClose={handleCerrarModal}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <ToastContainer pauseOnFocusLoss={false} />
@@ -55,7 +122,7 @@ const VerClase = () => {
                 <button
                   type="button"
                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={handleModalVerClase}
+                  onClick={handleCerrarModal}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -74,70 +141,39 @@ const VerClase = () => {
               </div>
 
               <div className="sm:flex sm:items-start">
-                <div className="mt-3 h-96 w-full text-center sm:ml-0 sm:mt-0 sm:text-left">
+                <div className="mt-3 w-full text-center sm:ml-0 sm:mt-0 sm:text-left">
                   <Dialog.Title
                     as="h3"
                     className="text-xl font-bold leading-6 text-gray-900"
                   >
-                    Nuevo Cliente
+                    Registrar Pago
                   </Dialog.Title>
 
-                  <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="w-3/4 rounded-lg bg-white p-6 shadow-xl">
-                      <div className="flex">
-                        {/* Columna Izquierda */}
-                        <div className="w-1/2 pr-4">
-                          <h2 className="mb-4 text-xl font-semibold">Sede</h2>
-                          <p className="mb-4">[Nombre de la sede]</p>
+                  <form className="mx-2 my-2" onSubmit={handleSubmit}>
+                    <div>
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="origen"
+                      >
+                        Importe Abonado
+                      </label>
 
-                          <h2 className="mb-4 text-xl font-semibold">
-                            Profesor
-                          </h2>
-                          <p className="mb-4">[Nombre del profesor]</p>
-
-                          <h2 className="mb-4 text-xl font-semibold">
-                            Horario
-                          </h2>
-                          <p className="mb-4">[Horario]</p>
-
-                          <button className="mr-2 rounded bg-blue-500 px-4 py-2 text-white">
-                            Botón 1
-                          </button>
-                          <button className="rounded bg-blue-500 px-4 py-2 text-white">
-                            Botón 2
-                          </button>
-                        </div>
-
-                        {/* Columna Derecha */}
-                        <div className="w-1/2 border-l pl-4">
-                          <h2 className="mb-4 text-xl font-semibold">
-                            Clientes Anotados
-                          </h2>
-                          <ul>
-                            {/* Suponiendo que tienes un array de clientes, puedes mapearlo aquí */}
-                            {["Cliente 1", "Cliente 2"].map(
-                              (cliente, index) => (
-                                <li
-                                  key={index}
-                                  className="mb-2 flex items-center justify-between"
-                                >
-                                  <span>{cliente}</span>
-                                  <button
-                                    className="text-red-500"
-                                    onClick={() =>
-                                      console.log("Eliminar cliente")
-                                    }
-                                  >
-                                    X
-                                  </button>
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </div>
-                      </div>
+                      <input
+                        id="origen"
+                        className="mb-5 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                        type="text"
+                        placeholder="Ingrese el importe"
+                        value={importePagado}
+                        onChange={(e) => setImportePagado(e.target.value)}
+                      ></input>
                     </div>
-                  </div>
+
+                    <input
+                      type="submit"
+                      className="w-full cursor-pointer rounded bg-blue-600 p-3 text-sm font-bold uppercase text-white transition-colors hover:bg-blue-300"
+                      value={"Guardar"}
+                    />
+                  </form>
                 </div>
               </div>
             </div>
@@ -148,4 +184,4 @@ const VerClase = () => {
   );
 };
 
-export default VerClase;
+export default ModalRegistrarPagoProfesor;

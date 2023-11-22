@@ -16,13 +16,18 @@ import useClases from "@/hooks/useClases";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import ModalVerClase from "./ModalVerClase";
+import ModalMostrarClaseCliente from "./ModalMostrarClaseCliente";
 
 const ClasesPorCliente = () => {
   const { setIdClienteEditar, modalVerClaseCliente, handleVerClase } =
     useClientes();
 
-  const { clasesCliente, idClasePerfilCliente, setIdClasePerfilCliente } =
-    useClases();
+  const {
+    clasesCliente,
+    idClasePerfilCliente,
+    setIdClasePerfilCliente,
+    cancelarClaseCliente,
+  } = useClases();
 
   const { handleCargando } = useAuth();
 
@@ -146,7 +151,8 @@ const ClasesPorCliente = () => {
           </CardBody>
         </Card>
         <Cargando />
-        {modalVerClaseCliente ? <ModalVerClase /> : ""}
+        {/* {modalVerClaseCliente ? <ModalVerClase /> : ""} */}
+        {modalVerClaseCliente ? <ModalMostrarClaseCliente /> : ""}
       </div>
     </>
   );

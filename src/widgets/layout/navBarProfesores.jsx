@@ -37,18 +37,21 @@ export function DashboardNavbarProfesores() {
   const { fixedNavbar, openSidenav } = controller;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const {
-    cerrarSesionAuth,
-    auth,
-
-    setUsuarioAutenticado,
-  } = useAuth();
+  const { cerrarSesionAuth, auth, handleCargando, setUsuarioAutenticado } =
+    useAuth();
 
   const handleclose = () => {
     cerrarSesionAuth();
     setUsuarioAutenticado("");
     localStorage.removeItem("token");
     navigate("/");
+  };
+
+  const handleContable = (e) => {
+    e.preventDefault();
+    handleCargando();
+    navigate("/contable/contable-profe");
+    handleCargando();
   };
 
   return (
@@ -63,14 +66,17 @@ export function DashboardNavbarProfesores() {
           <div></div>
           {/* Secciones del medio */}
           <div className="hidden justify-center space-x-4 md:flex md:space-x-6">
-            <Link to="/seccion1" className="text-white hover:text-gray-300">
+            <Link to="/inicio" className="text-white hover:text-gray-300">
               Inicio
             </Link>
             <Link to="/seccion2" className="text-white hover:text-gray-300">
               Mi perfil
             </Link>
-            <Link to="/seccion2" className="text-white hover:text-gray-300">
-              Asistencias
+            <Link
+              onClick={(e) => handleContable(e)}
+              className="text-white hover:text-gray-300"
+            >
+              Contable
             </Link>
           </div>
 
@@ -107,14 +113,17 @@ export function DashboardNavbarProfesores() {
         {/* Menú desplegable para móviles */}
         {isMenuOpen && (
           <div className="mt-2 flex flex-col items-start space-y-2 md:hidden">
-            <Link to="/seccion1" className="text-white hover:text-gray-300">
-              Sección 1
+            <Link to="/inicio" className="text-white hover:text-gray-300">
+              Inicio
             </Link>
             <Link to="/seccion2" className="text-white hover:text-gray-300">
-              Sección 2
+              Mi perfil
             </Link>
-            <Link to="/seccion3" className="text-white hover:text-gray-300">
-              Sección 3
+            <Link
+              onClick={(e) => handleContable(e)}
+              className="text-white hover:text-gray-300"
+            >
+              Contable
             </Link>
           </div>
         )}

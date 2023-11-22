@@ -28,7 +28,8 @@ import useClases from "@/hooks/useClases";
 import ModalNuevaClaseSede from "./ModalNuevaClaseSede";
 import ClasesSedes from "../clases/ClasesSedes";
 import Cargando from "../Cargando";
-import VerClase from "./VerClase";
+
+import ModalClaseSede from "./ModalClaseSede";
 
 export function ProfileSede() {
   const { idVerSede, obtenerSede, sede, modalVerClase } = useSedes();
@@ -276,7 +277,7 @@ export function ProfileSede() {
             ""
           )}
           {modalNuevaClaseSede ? <ModalNuevaClaseSede /> : ""}
-          {modalVerClase ? <VerClase /> : ""}
+          {modalVerClase ? <ModalClaseSede /> : ""}
           <Cargando />
         </CardBody>
       </Card>

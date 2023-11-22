@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 
 const ModalRegistrarPago = () => {
   const { obtenerSedes, sedes } = useSedes();
-  const { usuarioAutenticado, handleCargando } = useAuth();
+  const { usuarioAutenticado, handleCargando, auth } = useAuth();
 
   const { obtenerProfesores, profesores } = useProfesores();
 
@@ -55,7 +55,7 @@ const ModalRegistrarPago = () => {
       confirmButtonText: "Si",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await registrarPago(cliente._id, importePagado);
+        await registrarPago(cliente._id, importePagado, auth._id);
         setImportePagado("");
         handleModalPago();
         setActualizoClasesCliente(true);

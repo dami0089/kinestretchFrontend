@@ -5,11 +5,12 @@ import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import useProfesores from "@/hooks/useProfesores";
+import ModalRegistrarPagoPerfilProfesor from "./ModalRegistrarPagoPerfilProfesor";
 
-const ClasesProfesor = () => {
+const ClasesProfesorPerfil = () => {
   const {
     clasesProfe,
-    obtenerClasesProfeDia,
+    obtenerClasesProfeDiaAdmin,
     idVerClase,
     setIdVerClase,
     diaClase,
@@ -19,11 +20,15 @@ const ClasesProfesor = () => {
     sedeClase,
     setSedeClase,
     limpiarAsistencias,
+    handleModalClaseProfePerfilAdmin,
+    setActualizoClasesCliente,
+    actualizoClasesCliente,
+    modalRegistrarPagoProfe,
   } = useClases();
   const { handleCargando } = useAuth();
   const { idVerSede, handleModalVerClase } = useSedes();
   const { auth } = useAuth();
-  const { handleModalClasesProfe } = useProfesores();
+  const { handleModalClasesProfe, profesor } = useProfesores();
   const diasDeLaSemana = [
     "Lunes",
     "Martes",
@@ -62,16 +67,28 @@ const ClasesProfesor = () => {
 
   useEffect(() => {
     setDiaSeleccionado(diaActual);
-  }, []);
+  }, [diaActual]);
 
   useEffect(() => {
     const traerInfo = async () => {
       handleCargando();
-      await obtenerClasesProfeDia(auth._id, diaSeleccionado);
+      await obtenerClasesProfeDiaAdmin(profesor._id, diaSeleccionado);
       handleCargando();
     };
     traerInfo();
   }, [diaSeleccionado]);
+
+  useEffect(() => {
+    const traerInfo = async () => {
+      if (actualizoClasesCliente) {
+        handleCargando();
+        await obtenerClasesProfeDiaAdmin(profesor._id, diaSeleccionado);
+        handleCargando();
+        setActualizoClasesCliente(false);
+      }
+    };
+    traerInfo();
+  }, [actualizoClasesCliente]);
 
   const handleVerClase = (e, _id, dia, hora, sede) => {
     e.preventDefault();
@@ -79,7 +96,7 @@ const ClasesProfesor = () => {
     setDiaClase(dia);
     setHoraClase(hora);
     setSedeClase(sede);
-    handleModalClasesProfe();
+    handleModalClaseProfePerfilAdmin();
   };
 
   return (
@@ -217,4 +234,4 @@ const ClasesProfesor = () => {
   );
 };
 
-export default ClasesProfesor;
+export default ClasesProfesorPerfil;
