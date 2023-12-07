@@ -24,7 +24,7 @@ export function Clases() {
         <ToastContainer pauseOnFocusLoss={false} />
 
         <div
-          className="w-full p-2 hover:cursor-pointer md:w-1/3"
+          className="w-full p-2 hover:cursor-pointer md:w-1/2"
           onClick={handleModalNuevaClase}
         >
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
@@ -61,7 +61,7 @@ export function Clases() {
         </div>
 
         <div
-          className="w-full p-2 hover:cursor-pointer md:w-1/3"
+          className="w-full p-2 hover:cursor-pointer md:w-1/2"
           onClick={(e) => handleNavigate(e)}
         >
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
@@ -89,40 +89,6 @@ export function Clases() {
               <div className="flex flex-col">
                 <span className="text-lg font-medium text-gray-600 dark:text-white">
                   Listado de Clases
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="w-full p-2 hover:cursor-pointer md:w-1/3"
-          // onClick={(e) => setSeleccion(3)}
-        >
-          <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
-            <div className="flex flex-row items-center justify-between gap-4">
-              <div className="flex-shrink-0">
-                <a href="#" className="relative block">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="icon icon-tabler icon-tabler-octagon-minus"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                    stroke="currentColor"
-                    fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M12.802 2.165l5.575 2.389c.48 .206 .863 .589 1.07 1.07l2.388 5.574c.22 .512 .22 1.092 0 1.604l-2.389 5.575c-.206 .48 -.589 .863 -1.07 1.07l-5.574 2.388c-.512 .22 -1.092 .22 -1.604 0l-5.575 -2.389a2.036 2.036 0 0 1 -1.07 -1.07l-2.388 -5.574a2.036 2.036 0 0 1 0 -1.604l2.389 -5.575c.206 -.48 .589 -.863 1.07 -1.07l5.574 -2.388a2.036 2.036 0 0 1 1.604 0z"></path>
-                    <path d="M9 12h6"></path>
-                  </svg>
-                </a>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-medium text-gray-600 dark:text-white">
-                  Clases por Sede
                 </span>
               </div>
             </div>

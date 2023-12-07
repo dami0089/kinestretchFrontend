@@ -39,6 +39,7 @@ const ModalNuevoProfesor = () => {
     setCeluProfe("");
     setFechaNacimientoProfe("");
     setDomicilioProfe("");
+    handleModalNuevoProfe();
   };
 
   const consultarBase = async (dni) => {

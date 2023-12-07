@@ -16,10 +16,18 @@ import UltimasActualizaciones from "@/components/inicio/UltimasActualizaciones";
 export function Home() {
   const { conteo, clientesRecientes, handleModalNuevoUsuario } = useClientes();
 
-  const { modalQr, setUsuarioAutenticado, auth } = useAuth();
+  const { modalQr, setUsuarioAutenticado, auth, dataDash, datosParaDash } =
+    useAuth();
 
   useEffect(() => {
     setUsuarioAutenticado(auth._id);
+  }, []);
+
+  useEffect(() => {
+    const obtenerDataParaDash = async () => {
+      await datosParaDash();
+    };
+    obtenerDataParaDash();
   }, []);
 
   return (
@@ -41,7 +49,7 @@ export function Home() {
             footer={
               <Typography className="font-normal text-blue-gray-600">
                 <strong className=" text-3xl font-bold text-blue-500">
-                  30
+                  {dataDash.clases}
                 </strong>
               </Typography>
             }
@@ -60,7 +68,9 @@ export function Home() {
           }
           footer={
             <Typography className="font-normal text-blue-gray-600">
-              <strong className=" text-3xl font-bold text-blue-500">980</strong>
+              <strong className=" text-3xl font-bold text-blue-500">
+                {dataDash.clientes}
+              </strong>
             </Typography>
           }
         />
@@ -76,7 +86,9 @@ export function Home() {
           }
           footer={
             <Typography className="font-normal text-blue-gray-600">
-              <strong className=" text-3xl font-bold text-blue-500">20</strong>
+              <strong className=" text-3xl font-bold text-blue-500">
+                {dataDash.profesores}
+              </strong>
             </Typography>
           }
         />

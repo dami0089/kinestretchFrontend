@@ -4,9 +4,17 @@ import { Typography } from "@material-tailwind/react";
 import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
+import { CalendarIcon } from "@heroicons/react/24/solid";
 
 const ClasesSedes = () => {
-  const { obtenerClasesSedeDia, clasesDia } = useClases();
+  const {
+    obtenerClasesSedeDia,
+    clasesDia,
+    setIdVerClase,
+    setDiaClase,
+    setHoraClase,
+    setSedeClase,
+  } = useClases();
   const { handleCargando } = useAuth();
   const { idVerSede, handleModalVerClase } = useSedes();
   const diasDeLaSemana = [
@@ -54,8 +62,16 @@ const ClasesSedes = () => {
     traerInfo();
   }, [diaSeleccionado]);
 
-  const handleVerClase = (e) => {
+  const handleVerClase = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
     e.preventDefault();
+    console.log(_id);
+    console.log(diaDeLaSemana);
+    console.log(horarioInicio);
+    console.log(nombreSede);
+    setIdVerClase(_id);
+    setDiaClase(diaDeLaSemana);
+    setHoraClase(horarioInicio);
+    setSedeClase(nombreSede);
     handleModalVerClase();
   };
 
@@ -89,12 +105,24 @@ const ClasesSedes = () => {
                   <div
                     key={clase._id}
                     className="mb-5 ml-10 w-96  overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer"
-                    onClick={(e) => handleVerClase(e)}
+                    onClick={(e) =>
+                      handleVerClase(
+                        e,
+                        clase._id,
+                        clase.diaDeLaSemana,
+                        clase.horarioInicio,
+                        clase.nombreSede
+                      )
+                    }
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
-                      <div className="w-1/4 flex-shrink-0 bg-blue-gray-500 p-4 text-center text-white">
-                        {clase.horarioInicio} AM
+                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                        <CalendarIcon className="h-8 w-8" />
+                        <div className="text-s">{clase.diaDeLaSemana}</div>
+                        <div className="text-lg font-bold">
+                          {clase.horarioInicio} HS
+                        </div>
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
@@ -124,12 +152,24 @@ const ClasesSedes = () => {
                   <div
                     key={clase._id}
                     className="mb-5 ml-10 w-96 overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer"
-                    onClick={(e) => handleVerClase(e)}
+                    onClick={(e) =>
+                      handleVerClase(
+                        e,
+                        clase._id,
+                        clase.diaDeLaSemana,
+                        clase.horarioInicio,
+                        clase.nombreSede
+                      )
+                    }
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
-                      <div className="w-1/4 flex-shrink-0 bg-blue-gray-500 p-4 text-center text-white">
-                        {clase.horarioInicio} PM
+                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                        <CalendarIcon className="h-8 w-8" />
+                        <div className="text-s">{clase.diaDeLaSemana}</div>
+                        <div className="text-lg font-bold">
+                          {clase.horarioInicio} HS
+                        </div>
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}

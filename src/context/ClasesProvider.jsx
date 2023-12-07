@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { da } from "date-fns/locale";
 
 const ClasesContext = createContext();
 
@@ -40,9 +41,15 @@ const ClasesProvider = ({ children }) => {
   const [modalClaseProfePerfilAdmin, setModalClaseProfePerfilAdmin] =
     useState(false);
   const [modalPagoProfesorPerfil, setModalPagoProfesorPerfil] = useState(false);
+  const [cupo, setCupo] = useState(0);
+  const [modalClaseRecupero, setModalClaseRecupero] = useState(false);
 
   const handleModalPagoProfesorPerfil = () => {
     setModalPagoProfesorPerfil(!modalPagoProfesorPerfil);
+  };
+
+  const handleModalClaseRecupero = () => {
+    setModalClaseRecupero(!modalClaseRecupero);
   };
 
   const handleModalClaseProfePerfilAdmin = () => {
@@ -71,7 +78,8 @@ const ClasesProvider = ({ children }) => {
     diaDeLaSemana,
     horarioInicio,
     profesor,
-    creador
+    creador,
+    cupo
   ) => {
     const cliente = {
       sede,
@@ -79,6 +87,7 @@ const ClasesProvider = ({ children }) => {
       horarioInicio,
       profesor,
       creador,
+      cupo,
     };
     try {
       const token = localStorage.getItem("token");
@@ -276,8 +285,48 @@ const ClasesProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clienteAxios.post(
+      await clienteAxios.post(
         `/clases/asignar-cliente-a-clase/${id}`,
+        { idClase },
+        config
+      );
+      toast.success("Cliente Asignado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const recupero = async (id, idClase) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clases/asignar-recupero/${id}`,
         { idClase },
         config
       );
@@ -364,6 +413,31 @@ const ClasesProvider = ({ children }) => {
         config
       );
       setClasesOrdenadas(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [clasesOrdenadasInicio, setClasesOrdenadasInicio] = useState([]);
+
+  const obtenerClasesOrdenadasInicio = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-clases-ordenadas-inicio`,
+        {},
+        config
+      );
+      console.log(data);
+      setClasesOrdenadasInicio(data);
     } catch (error) {
       console.log(error);
     }
@@ -596,6 +670,109 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const registrarInasistenciaCliente = async (id, claseId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.post(
+        `/clases/cancelar-clase-cliente/${id}`,
+        { claseId },
+        config
+      );
+
+      if (data.msg1) {
+        toast.warning(data.msg1, {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        toast.success(data.msg2, {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const [inasistencias, setInasistencias] = useState([]);
+
+  const obtenerInasistencias = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-inasistencias/${id}`,
+        {},
+        config
+      );
+      console.log(data);
+      setInasistencias(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [asistenciasCliente, setAsistenciasCliente] = useState([]);
+
+  const obtenerAsistenciasCliente = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-asistencias/${id}`,
+        {},
+        config
+      );
+
+      setAsistenciasCliente(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -669,6 +846,18 @@ const ClasesProvider = ({ children }) => {
         handleModalClaseProfePerfilAdmin,
         modalPagoProfesorPerfil,
         handleModalPagoProfesorPerfil,
+        registrarInasistenciaCliente,
+        cupo,
+        setCupo,
+        modalClaseRecupero,
+        handleModalClaseRecupero,
+        clasesOrdenadasInicio,
+        obtenerClasesOrdenadasInicio,
+        recupero,
+        inasistencias,
+        obtenerInasistencias,
+        asistenciasCliente,
+        obtenerAsistenciasCliente,
       }}
     >
       {children}

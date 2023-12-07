@@ -6,6 +6,7 @@ import { Checkbox } from "@material-tailwind/react";
 import clienteAxios from "@/configs/clinteAxios";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
+import Cargando from "../Cargando";
 
 const ModalResumen = () => {
   const {
@@ -32,6 +33,10 @@ const ModalResumen = () => {
     setNombreContactoEmergencia,
     celularContactoEmergencia,
     setCelularContactoEmergencia,
+    fechaApto,
+    setFechaApto,
+    linkApto,
+    setLinkApto,
   } = useClientes();
 
   const { auth, usuarioAutenticado, handleCargando } = useAuth();
@@ -49,6 +54,7 @@ const ModalResumen = () => {
 
       await clienteAxios.post(`/clientes/comprobar`, { dni }, config);
       handleCargando();
+      handleModalNuevoCliente();
       await nuevoCliente(
         nombreCliente,
         apellidoCliente,
@@ -60,10 +66,11 @@ const ModalResumen = () => {
         aptoFisicoCliente,
         nombreContactoEmergencia,
         celularContactoEmergencia,
-        usuarioAutenticado
+        usuarioAutenticado,
+        fechaApto,
+        linkApto
       );
       handleCargando();
-      handleModalNuevoCliente();
 
       setNombreCliente("");
       setApellidoCliente("");
@@ -75,6 +82,8 @@ const ModalResumen = () => {
       setAptoFisicoCliente("");
       setNombreContactoEmergencia("");
       setCelularContactoEmergencia("");
+      setFechaApto("");
+      setLinkApto("");
     } catch (error) {
       toast.error(error.response.data.msg, {
         position: "top-right",
@@ -318,6 +327,43 @@ const ModalResumen = () => {
                         <option value="no">No</option>
                       </select>
                     </div>
+                    {aptoFisicoCliente == "si" ? (
+                      <>
+                        <div className="mb-1">
+                          <label
+                            className="text-sm font-bold uppercase text-gray-700"
+                            htmlFor="fechaApto"
+                          >
+                            Fecha Apto Fisico
+                          </label>
+                          <input
+                            id="fechaApto"
+                            type="date"
+                            className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                            value={fechaApto}
+                            onChange={(e) => setFechaApto(e.target.value)}
+                          />
+                        </div>
+                        <div className="mb-1">
+                          <label
+                            className="text-sm font-bold uppercase text-gray-700"
+                            htmlFor="contactoTelefono"
+                          >
+                            Link Apto fisico
+                          </label>
+                          <input
+                            id="contactoTelefono"
+                            type="text"
+                            placeholder="Pega el link del apto fisico"
+                            className="mb-2 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                            value={linkApto}
+                            onChange={(e) => setLinkApto(e.target.value)}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      ""
+                    )}
                     <div className="mb-1">
                       <label
                         className="text-sm font-bold uppercase text-gray-700"
@@ -365,6 +411,7 @@ const ModalResumen = () => {
               </div>
             </div>
           </Transition.Child>
+          <Cargando />
         </div>
       </Dialog>
     </Transition.Root>

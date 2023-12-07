@@ -141,7 +141,7 @@ const ProximaClaseSede = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-body"
+                              className="font-bold"
                             >
                               {horarioInicio}:00 hs
                             </Typography>

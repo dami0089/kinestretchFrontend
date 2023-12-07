@@ -9,8 +9,9 @@ import useSedes from "@/hooks/useSedes";
 import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
 
-const ModalNuevaClase = () => {
+const ModalClaseRecupero = () => {
   const { obtenerSedes, sedes } = useSedes();
+  const { usuarioAutenticado, handleCargando, auth } = useAuth();
 
   const { obtenerProfesores, profesores } = useProfesores();
 
@@ -24,33 +25,45 @@ const ModalNuevaClase = () => {
     setHoraInicio,
     idProfesor,
     setIdProfesor,
-    cupo,
-    setCupo,
+    handleModalAsignarClaseACliente,
+    modalAsignarClaseACliente,
+    obtenerClasesOrdenadas,
+    clasesOrdenadas,
+    idClaseSeleccionada,
+    setIdClaseSeleccionada,
+
+    setActualizoClasesCliente,
+    modalClaseRecupero,
+    handleModalClaseRecupero,
+    recupero,
   } = useClases();
 
-  useEffect(() => {
-    const traerSedes = async () => {
-      await obtenerSedes();
-    };
-    traerSedes();
-  }, []);
+  const { cliente } = useClientes();
+
+  const [renderizarClases, setRenderizarClases] = useState(false);
 
   useEffect(() => {
     const traerProfes = async () => {
-      await obtenerProfesores();
+      if (renderizarClases) {
+        handleCargando();
+        await obtenerClasesOrdenadas(cliente.sede, diaDeLaSemana);
+        setRenderizarClases(false);
+        handleCargando();
+      }
     };
     traerProfes();
-  }, []);
+  }, [renderizarClases]);
 
-  const { handleModalNuevaClase, modalNuevaClase } = useClases();
-
-  const { usuarioAutenticado, handleCargando } = useAuth();
+  const handleRender = (dia) => {
+    setDiaDeLaSemana(dia);
+    setRenderizarClases(true);
+  };
 
   //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ([idSede, diaDeLaSemana, horaInicio, idProfesor, cupo].includes("")) {
+    if ([diaDeLaSemana, idClaseSeleccionada].includes("")) {
       toast("⚠️ Todos los campos son obligatorios", {
         position: "top-right",
         autoClose: 1500,
@@ -66,20 +79,11 @@ const ModalNuevaClase = () => {
 
     try {
       handleCargando();
-      await nuevaClase(
-        idSede,
-        diaDeLaSemana,
-        horaInicio,
-        idProfesor,
-        usuarioAutenticado,
-        cupo
-      );
-      setIdSede("");
+      handleModalClaseRecupero();
+      await recupero(cliente._id, idClaseSeleccionada);
       setDiaDeLaSemana("");
-      setHoraInicio("");
-      setIdProfesor("");
-      setCupo(0);
-      handleModalNuevaClase();
+      setIdClaseSeleccionada("");
+      setActualizoClasesCliente(true);
       handleCargando();
     } catch (error) {
       toast.error(error.response.data.msg, {
@@ -96,11 +100,11 @@ const ModalNuevaClase = () => {
   };
 
   return (
-    <Transition.Root show={modalNuevaClase} as={Fragment}>
+    <Transition.Root show={modalClaseRecupero} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={handleModalNuevaClase}
+        onClose={handleModalClaseRecupero}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <ToastContainer pauseOnFocusLoss={false} />
@@ -139,7 +143,7 @@ const ModalNuevaClase = () => {
                 <button
                   type="button"
                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={handleModalNuevaClase}
+                  onClick={handleModalClaseRecupero}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -163,35 +167,10 @@ const ModalNuevaClase = () => {
                     as="h3"
                     className="text-xl font-bold leading-6 text-gray-900"
                   >
-                    Nueva Clase
+                    Inscribirse a Clase en sede {cliente.nombreSede}
                   </Dialog.Title>
 
                   <form className="mx-2 my-2" onSubmit={handleSubmit}>
-                    <div>
-                      <label
-                        className="text-sm font-bold uppercase text-gray-700"
-                        htmlFor="origen"
-                      >
-                        Selecciona la Sede
-                      </label>
-
-                      <select
-                        id="origen"
-                        className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
-                        value={idSede}
-                        onChange={(e) => setIdSede(e.target.value)}
-                      >
-                        <option value="">--Seleccionar--</option>
-
-                        {sedes.map((sede) => (
-                          <option key={sede._id} value={sede._id}>
-                            {sede.nombre ? sede.nombre + "-" : ""}
-
-                            {sede.direccion}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
                     <div className="mb-1">
                       <label
                         className="text-sm font-bold uppercase text-gray-700"
@@ -203,7 +182,7 @@ const ModalNuevaClase = () => {
                         id="dia"
                         className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
                         value={diaDeLaSemana}
-                        onChange={(e) => setDiaDeLaSemana(e.target.value)}
+                        onChange={(e) => handleRender(e.target.value)}
                       >
                         <option value="">--Seleccionar--</option>
                         <option value="Lunes">Lunes</option>
@@ -214,74 +193,38 @@ const ModalNuevaClase = () => {
                         <option value="Sabado">Sabado</option>
                       </select>
                     </div>
-                    <div className="mb-1">
-                      <label
-                        className="text-sm font-bold uppercase text-gray-700"
-                        htmlFor="horario"
-                      >
-                        Horario de Inicio
-                      </label>
-                      <select
-                        id="horario"
-                        className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
-                        value={horaInicio}
-                        onChange={(e) => setHoraInicio(e.target.value)}
-                      >
-                        <option value="">--Seleccionar--</option>
-                        <option value="8">8 hs</option>
-                        <option value="9">9 hs</option>
-                        <option value="10">10 hs</option>
-                        <option value="11">11 hs</option>
-                        <option value="12">12 hs</option>
-                        <option value="13">13 hs</option>
-                        <option value="14">14 hs</option>
-                        <option value="15">15 hs</option>
-                        <option value="16">16 hs</option>
-                        <option value="17">17 hs</option>
-                        <option value="18">18 hs</option>
-                        <option value="19">19 hs</option>
-                        <option value="20">20 hs</option>
-                      </select>
-                    </div>
+
                     <div>
                       <label
                         className="text-sm font-bold uppercase text-gray-700"
                         htmlFor="profe"
                       >
-                        Selecciona el Profesor
+                        Selecciona la Clase
                       </label>
 
                       <select
                         id="profe"
                         className="mb-3 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
-                        value={idProfesor}
-                        onChange={(e) => setIdProfesor(e.target.value)}
+                        value={idClaseSeleccionada}
+                        onChange={(e) => setIdClaseSeleccionada(e.target.value)}
                       >
-                        <option value="">--Seleccionar--</option>
-
-                        {profesores.map((profe) => (
-                          <option key={profe._id} value={profe._id}>
-                            {profe.nombre} {profe.apellido}
+                        {clasesOrdenadas ? (
+                          <option value="">--Seleccionar--</option>
+                        ) : (
+                          <option value="">
+                            --NO HAY CLASES PARA ESTE DIA--
                           </option>
-                        ))}
-                      </select>
-                    </div>
+                        )}
 
-                    <div className="mb-1">
-                      <label
-                        className="text-sm font-bold uppercase text-gray-700"
-                        htmlFor="cupo"
-                      >
-                        Cupo de la clase
-                      </label>
-                      <input
-                        id="cupo"
-                        className="mb-5 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
-                        type="number"
-                        placeholder="Ingrese el importe"
-                        value={cupo}
-                        onChange={(e) => setCupo(e.target.value)}
-                      ></input>
+                        {clasesOrdenadas
+                          ? clasesOrdenadas.map((clase) => (
+                              <option key={clase._id} value={clase._id}>
+                                {clase.nombreProfe} - {clase.horarioInicio}:00
+                                hs
+                              </option>
+                            ))
+                          : ""}
+                      </select>
                     </div>
 
                     <input
@@ -300,4 +243,4 @@ const ModalNuevaClase = () => {
   );
 };
 
-export default ModalNuevaClase;
+export default ModalClaseRecupero;

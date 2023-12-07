@@ -5,6 +5,7 @@ import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import useProfesores from "@/hooks/useProfesores";
+import { CalendarIcon } from "@heroicons/react/24/solid";
 
 const ClasesProfesor = () => {
   const {
@@ -23,7 +24,7 @@ const ClasesProfesor = () => {
   const { handleCargando } = useAuth();
   const { idVerSede, handleModalVerClase } = useSedes();
   const { auth } = useAuth();
-  const { handleModalClasesProfe } = useProfesores();
+  const { handleModalClasesProfe, profesor } = useProfesores();
   const diasDeLaSemana = [
     "Lunes",
     "Martes",
@@ -146,8 +147,12 @@ const ClasesProfesor = () => {
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
-                      <div className="w-1/4 flex-shrink-0 bg-blue-gray-500 p-4 text-center text-white">
-                        {clase.horarioInicio} AM
+                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                        <CalendarIcon className="h-8 w-8" />
+                        <div className="text-s">{clase.diaDeLaSemana}</div>
+                        <div className="text-lg font-bold">
+                          {clase.horarioInicio} HS
+                        </div>
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
@@ -189,8 +194,12 @@ const ClasesProfesor = () => {
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
-                      <div className="w-1/4 flex-shrink-0 bg-blue-gray-500 p-4 text-center text-white">
-                        {clase.horarioInicio} PM
+                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                        <CalendarIcon className="h-8 w-8" />
+                        <div className="text-s">{clase.diaDeLaSemana}</div>
+                        <div className="text-lg font-bold">
+                          {clase.horarioInicio} HS
+                        </div>
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}

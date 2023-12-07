@@ -15,12 +15,13 @@ import clienteAxios from "@/configs/clinteAxios";
 import useAuth from "@/hooks/useAuth";
 import { ToastContainer, toast } from "react-toastify";
 import imagen from "../../../public/img/DSC_4871.jpg";
+import Cargando from "@/components/Cargando";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setAuth } = useAuth();
+  const { setAuth, handleCargando } = useAuth();
 
   const navigate = useNavigate();
 
@@ -40,12 +41,15 @@ export function SignIn() {
     }
 
     try {
+      handleCargando();
       const { data } = await clienteAxios.post("/usuarios/login", {
         email,
         password,
       });
       localStorage.setItem("token", data.token);
-      setAuth(data);
+      await setAuth(data);
+      handleCargando();
+
       navigate("/inicio");
     } catch (error) {
       toast.error(error.response.data.msg, {
@@ -120,6 +124,7 @@ export function SignIn() {
             </Typography>
           </CardFooter>
         </Card>
+        <Cargando />
       </div>
     </>
   );

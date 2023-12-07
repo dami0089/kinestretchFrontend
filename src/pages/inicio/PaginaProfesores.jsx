@@ -10,11 +10,19 @@ import ModalClaseProfe from "@/components/paginaProfesores/ModalClaseProfe";
 import useClases from "@/hooks/useClases";
 import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
 
 export function PaginaProfesores() {
   const { auth } = useAuth();
-  const { modalClasesProfe } = useProfesores();
+  const { modalClasesProfe, obtenerProfesor, profesor } = useProfesores();
   const { modalRegistrarPagoProfe, limpiarAsistencias } = useClases();
+
+  useEffect(() => {
+    const obtenerInfo = async () => {
+      await obtenerProfesor(auth.profesor);
+    };
+    obtenerInfo();
+  }, []);
 
   return (
     <>
@@ -48,7 +56,7 @@ export function PaginaProfesores() {
               </div>
               <div className="my-8 text-center">
                 <Typography variant="h2" color="blue-gray" className="mb-2">
-                  {auth.nombre} {auth.apellido}
+                  {profesor.nombre} {profesor.apellido}
                 </Typography>
                 <div className="mb-2 flex items-center justify-center gap-2">
                   <UserIcon className="-mt-px h-4 w-4 text-blue-gray-700" />

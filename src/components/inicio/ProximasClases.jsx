@@ -1,5 +1,6 @@
 import { projectsTableData } from "@/data";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
+import useClases from "@/hooks/useClases";
+import { EllipsisVerticalIcon, EyeIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
   Card,
@@ -14,9 +15,18 @@ import {
   Tooltip,
   Typography,
 } from "@material-tailwind/react";
-import React from "react";
+import React, { useEffect } from "react";
 
 const ProximasClases = () => {
+  const { clasesOrdenadasInicio, obtenerClasesOrdenadasInicio } = useClases();
+
+  useEffect(() => {
+    const clasesOrdenadas = async () => {
+      await obtenerClasesOrdenadasInicio();
+    };
+    clasesOrdenadas();
+  }, []);
+
   return (
     <Card className="overflow-hidden xl:col-span-2">
       <CardHeader
@@ -52,26 +62,33 @@ const ProximasClases = () => {
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {["Fecha, hora y Sede", "Alumnos", "Profe", "Ocupacion"].map(
-                (el) => (
-                  <th
-                    key={el}
-                    className="border-b border-blue-gray-50 px-6 py-3 text-left"
+              {["Dia y Hora", "Sede", "Profe", "Ocupacion", "Ver"].map((el) => (
+                <th
+                  key={el}
+                  className="border-b border-blue-gray-50 px-6 py-3 text-center"
+                >
+                  <Typography
+                    variant="small"
+                    className="text-[11px] font-medium uppercase text-blue-gray-400"
                   >
-                    <Typography
-                      variant="small"
-                      className="text-[11px] font-medium uppercase text-blue-gray-400"
-                    >
-                      {el}
-                    </Typography>
-                  </th>
-                )
-              )}
+                    {el}
+                  </Typography>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {projectsTableData.map(
-              ({ img, name, members, budget, completion }, key) => {
+            {clasesOrdenadasInicio.map(
+              (
+                {
+                  diaDeLaSemana,
+                  horarioInicio,
+                  nombreSede,
+                  nombreProfe,
+                  clientes,
+                },
+                key
+              ) => {
                 const className = `py-3 px-5 ${
                   key === projectsTableData.length - 1
                     ? ""
@@ -81,38 +98,37 @@ const ProximasClases = () => {
                 return (
                   <tr key={name}>
                     <td className={className}>
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center justify-center gap-4">
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-bold"
                         >
-                          {name}
+                          {diaDeLaSemana} {horarioInicio} hs
                         </Typography>
                       </div>
                     </td>
                     <td className={className}>
-                      {members.map(({ img, name }, key) => (
-                        <Tooltip key={name} content={name}>
-                          <Avatar
-                            src={img}
-                            alt={name}
-                            size="xs"
-                            variant="circular"
-                            className={`cursor-pointer border-2 border-white ${
-                              key === 0 ? "" : "-ml-2.5"
-                            }`}
-                          />
-                        </Tooltip>
-                      ))}
+                      <div className="flex items-center justify-center gap-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-body"
+                        >
+                          {nombreSede}
+                        </Typography>
+                      </div>
                     </td>
                     <td className={className}>
-                      <Typography
-                        variant="small"
-                        className="text-xs font-medium text-blue-gray-600"
-                      >
-                        {budget}
-                      </Typography>
+                      <div className="flex items-center justify-center gap-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-body"
+                        >
+                          {nombreProfe}
+                        </Typography>
+                      </div>
                     </td>
                     <td className={className}>
                       <div className="w-10/12">
@@ -120,14 +136,19 @@ const ProximasClases = () => {
                           variant="small"
                           className="mb-1 block text-xs font-medium text-blue-gray-600"
                         >
-                          {completion}%
+                          {clientes.length}%
                         </Typography>
                         <Progress
-                          value={completion}
+                          value={clientes.length}
                           variant="gradient"
-                          color={completion === 100 ? "green" : "blue"}
+                          color={clientes.length === 10 ? "green" : "blue"}
                           className="h-1"
                         />
+                      </div>
+                    </td>
+                    <td className={className}>
+                      <div className="flex items-center justify-center gap-4">
+                        <EyeIcon className="h-8 w-8 text-blue-gray-600 hover:cursor-pointer" />
                       </div>
                     </td>
                   </tr>

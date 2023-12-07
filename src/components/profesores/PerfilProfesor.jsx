@@ -336,15 +336,6 @@ const PerfilProfesor = () => {
               style={{ width: 50, height: 50 }}
             ></div>
             {/* Asignar Clase Icon */}
-            {clasesCliente && clasesCliente.length === 0 ? (
-              <div
-                ref={alert}
-                title="Asignar Clase"
-                className="hover:cursor-pointer"
-                onClick={(e) => handleAsignarClase(e)}
-                style={{ width: 50, height: 50 }}
-              ></div>
-            ) : null}
           </div>
         </div>
 

@@ -26,6 +26,8 @@ const ModalNuevaClaseSede = () => {
     setRecargoProximasClases,
     handleModalNuevaClaseSede,
     modalNuevaClaseSede,
+    cupo,
+    setCupo,
   } = useClases();
 
   useEffect(() => {
@@ -33,6 +35,13 @@ const ModalNuevaClaseSede = () => {
       await obtenerProfesores();
     };
     traerProfes();
+  }, []);
+
+  useEffect(() => {
+    setDiaDeLaSemana("");
+    setHoraInicio("");
+    setIdProfesor("");
+    setCupo("");
   }, []);
 
   const { usuarioAutenticado, handleCargando } = useAuth();
@@ -57,18 +66,19 @@ const ModalNuevaClaseSede = () => {
 
     try {
       handleCargando();
+      handleModalNuevaClaseSede();
       await nuevaClase(
         sede._id,
         diaDeLaSemana,
         horaInicio,
         idProfesor,
-        usuarioAutenticado
+        usuarioAutenticado,
+        cupo
       );
       setRecargoProximasClases(true);
       setDiaDeLaSemana("");
       setHoraInicio("");
       setIdProfesor("");
-      handleModalNuevaClaseSede();
       handleCargando();
     } catch (error) {
       toast.error(error.response.data.msg, {
@@ -229,6 +239,23 @@ const ModalNuevaClaseSede = () => {
                           </option>
                         ))}
                       </select>
+                    </div>
+
+                    <div className="mb-1">
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="cupo"
+                      >
+                        Cupo de la clase
+                      </label>
+                      <input
+                        id="cupo"
+                        className="mb-5 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                        type="number"
+                        placeholder="Ingrese el importe"
+                        value={cupo}
+                        onChange={(e) => setCupo(e.target.value)}
+                      ></input>
                     </div>
 
                     <input

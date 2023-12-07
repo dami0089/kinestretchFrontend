@@ -7,6 +7,8 @@ import clienteAxios from "@/configs/clinteAxios";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import useClases from "@/hooks/useClases";
+import { formatearFecha } from "@/helpers/formatearFecha";
+import { formatearFechaInputs } from "@/helpers/formatearFechaInputs";
 
 const ModalEditarCliente = () => {
   const {
@@ -35,6 +37,10 @@ const ModalEditarCliente = () => {
     setCelularContactoEmergencia,
     idClienteEditar,
     editarC,
+    fechaApto,
+    setFechaApto,
+    linkApto,
+    setLinkApto,
   } = useClientes();
 
   const { setActualizoClasesCliente } = useClases();
@@ -56,7 +62,9 @@ const ModalEditarCliente = () => {
       diagnosticoCliente,
       aptoFisicoCliente,
       nombreContactoEmergencia,
-      celularContactoEmergencia
+      celularContactoEmergencia,
+      fechaApto,
+      linkApto
     );
     setNombreCliente("");
     setApellidoCliente("");
@@ -68,6 +76,8 @@ const ModalEditarCliente = () => {
     setAptoFisicoCliente("");
     setNombreContactoEmergencia("");
     setCelularContactoEmergencia("");
+    setFechaApto("");
+    setLinkApto("");
     setActualizoClasesCliente(true);
     handleCargando();
     handleModalEditarCliente();
@@ -251,7 +261,7 @@ const ModalEditarCliente = () => {
                         id="fechanac"
                         type="date"
                         className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
-                        value={fechaNacimientoCliente}
+                        value={formatearFechaInputs(fechaNacimientoCliente)}
                         onChange={(e) =>
                           setFechaNacimientoCliente(e.target.value)
                         }
@@ -293,6 +303,43 @@ const ModalEditarCliente = () => {
                         <option value="no">No</option>
                       </select>
                     </div>
+                    {aptoFisicoCliente == "si" ? (
+                      <>
+                        <div className="mb-1">
+                          <label
+                            className="text-sm font-bold uppercase text-gray-700"
+                            htmlFor="fechaApto"
+                          >
+                            Fecha Apto Fisico
+                          </label>
+                          <input
+                            id="fechaApto"
+                            type="date"
+                            className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                            value={formatearFechaInputs(fechaApto)}
+                            onChange={(e) => setFechaApto(e.target.value)}
+                          />
+                        </div>
+                        <div className="mb-1">
+                          <label
+                            className="text-sm font-bold uppercase text-gray-700"
+                            htmlFor="contactoTelefono"
+                          >
+                            Link Apto fisico
+                          </label>
+                          <input
+                            id="contactoTelefono"
+                            type="text"
+                            placeholder="Pega el link del apto fisico"
+                            className="mb-2 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                            value={linkApto}
+                            onChange={(e) => setLinkApto(e.target.value)}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      ""
+                    )}
                     <div className="mb-1">
                       <label
                         className="text-sm font-bold uppercase text-gray-700"

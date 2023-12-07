@@ -23,6 +23,8 @@ import activar from "../../../public/lotties/Success.json";
 import ContableCliente from "./ContableCliente";
 import ModalRegistrarPago from "./ModalRegistrarPago";
 import ModalEditarPago from "./ModalEditarPago";
+import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
+import { Button } from "@material-tailwind/react";
 
 const ProfileCliente = () => {
   const {
@@ -52,6 +54,13 @@ const ProfileCliente = () => {
     modalEditarPago,
     pagosCliente,
     activarCliente,
+    otorgarCreditos,
+    creditosCliente,
+    setCreditosCliente,
+    fechaApto,
+    setFechaApto,
+    linkApto,
+    setLinkApto,
   } = useClientes();
   const { handleCargando, cargando } = useAuth();
 
@@ -125,7 +134,7 @@ const ProfileCliente = () => {
     const chequearInasistencias = async () => {
       if (cliente) {
         setInasistenciaCliente([]);
-        await verificarInasistenciaClietne(cliente.clases[0], idClienteEditar);
+        // await verificarInasistenciaClietne(cliente.clases[0], idClienteEditar);
       }
     };
     chequearInasistencias();
@@ -265,7 +274,6 @@ const ProfileCliente = () => {
 
   const handleEditar = (e) => {
     e.preventDefault();
-
     setNombreCliente(cliente.nombre),
       setApellidoCliente(cliente.apellido),
       setDniCliente(cliente.dni),
@@ -276,6 +284,7 @@ const ProfileCliente = () => {
       setAptoFisicoCliente(cliente.aptoFisico),
       setNombreContactoEmergencia(cliente.nombreContactoEmergencia),
       setCelularContactoEmergencia(cliente.celularContactoEmergencia);
+    setFechaApto(cliente.fechaApto), setLinkApto(cliente.linkApto);
     handleModalEditarCliente();
   };
 
@@ -289,6 +298,25 @@ const ProfileCliente = () => {
     handleModalPago();
   };
 
+  const creditos = (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: `Otorgamos 1 credito al cliente?`,
+      text: "Se le agregara ese credito a su cuenta",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await otorgarCreditos(idClienteEditar);
+        setActualizoClasesCliente(true);
+      }
+    });
+  };
+
   return (
     <div class="p-16">
       <ToastContainer pauseOnFocusLoss={false} />
@@ -296,12 +324,19 @@ const ProfileCliente = () => {
         <div class="grid grid-cols-1 md:grid-cols-3">
           <div class="order-last mt-20 grid grid-cols-2 text-center md:order-first md:mt-0">
             <div>
-              <p class="text-xl font-bold text-gray-700">22</p>
-              <p class="text-gray-400">Clases Hechas</p>
+              <p class="text-xl font-bold text-gray-700">
+                {cliente.creditos ? cliente.creditos : "0"}
+              </p>
+              <p class="p-1 text-gray-400">Creditos Disponibles</p>
             </div>
             <div>
-              <p class="text-xl font-bold text-gray-700">10</p>
-              <p class="text-gray-400">Clases Canceladas</p>
+              <p class="text-xl font-bold text-gray-700">←</p>
+              <Button
+                onClick={(e) => creditos(e)}
+                class="m-0 rounded-lg bg-light-blue-300 p-1 text-white"
+              >
+                Asignar un credito
+              </Button>
             </div>
           </div>
           <div class="relative">
@@ -379,20 +414,6 @@ const ProfileCliente = () => {
         </div>
 
         <div class="mt-20 border-b pb-12 text-center">
-          {/* <h1 class="text-4xl font-medium text-gray-700">{cliente.nombre}</h1>
-          <p class="mt-3 font-light text-gray-600">
-            Miembro desde:{" "}
-            {cliente.fechaAlta ? formatearFecha(cliente.fechaAlta) : "-"}
-          </p>
-          {cliente && cliente.isActivo ? (
-            ""
-          ) : (
-            <div class="flex flex-col justify-center">
-              <button className="font-bold text-red-200">
-                Cliente Inactivo
-              </button>
-            </div>
-          )} */}
           <div class="mt-3 flex">
             {/* <!-- Columna izquierda --> */}
             <div class="flex-1 font-light text-gray-600">

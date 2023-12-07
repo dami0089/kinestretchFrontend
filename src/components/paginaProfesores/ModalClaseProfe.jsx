@@ -34,6 +34,9 @@ const ModalClaseProfe = () => {
     setIdPagoProfe,
     actualizo,
     setActualizo,
+
+    asistenciasCliente,
+    obtenerAsistenciasCliente,
   } = useClases();
 
   const { handleCargando } = useAuth();

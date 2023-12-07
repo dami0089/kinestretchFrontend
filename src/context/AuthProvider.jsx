@@ -85,6 +85,26 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const [dataDash, setDataDash] = useState([]);
+
+  const datosParaDash = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(`/usuarios/obtener-dash`, config);
+
+      setDataDash(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <AuthContext.Provider
       value={{
@@ -101,6 +121,8 @@ const AuthProvider = ({ children }) => {
         setUsuarioAutenticado,
         cargandoModal,
         handleCargando,
+        dataDash,
+        datosParaDash,
       }}
     >
       {children}

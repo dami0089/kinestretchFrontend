@@ -23,29 +23,18 @@ import {
 import useClases from "@/hooks/useClases";
 import useAuth from "@/hooks/useAuth";
 import Swal from "sweetalert2";
+import { ToastContainer } from "react-toastify";
 
 const ListadoClasesCliente = () => {
-  const {
-    cliente,
-    setObtenerUs,
-    setSeleccion,
-    handleModalEditarCliente,
-    setCuitEditar,
-    cuitEditar,
-    // obtenerUser,
-    setObtenerUsuario,
-    obtenerClientes,
-    idClienteEditar,
-    setIdClienteEditar,
-    setCliente,
-  } = useClientes();
+  const { obtenerCliente } = useClientes();
 
   const {
-    asignarClienteAClase,
     obtenerClasesCliente,
     clasesCliente,
     actualizoClasesCliente,
     setActualizoClasesCliente,
+    registrarInasistenciaCliente,
+    inasistencias,
   } = useClases();
 
   const { handleCargando, auth } = useAuth();
@@ -60,10 +49,21 @@ const ListadoClasesCliente = () => {
   }, []);
 
   useEffect(() => {
+    const dataCliente = async () => {
+      if (actualizoClasesCliente) {
+        await obtenerCliente(auth.cliente);
+        setActualizoClasesCliente(false);
+      }
+    };
+    dataCliente();
+  }, [actualizoClasesCliente]);
+
+  useEffect(() => {
     const obtenerInfo = async () => {
       if (actualizoClasesCliente) {
         handleCargando();
         await obtenerClasesCliente(auth._id);
+        await obtenerCliente(auth.cliente);
         handleCargando();
         setActualizoClasesCliente(false);
       }
@@ -73,7 +73,7 @@ const ListadoClasesCliente = () => {
 
   const navigate = useNavigate();
 
-  const handleCancelarClase = (e) => {
+  const handleCancelarClase = (e, clase) => {
     e.preventDefault();
     Swal.fire({
       title: "Queres Cancelar Tu clase?",
@@ -85,12 +85,20 @@ const ListadoClasesCliente = () => {
       confirmButtonText: "Si",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // await registrarPago(cliente._id, importePagado, auth._id);
-        // setImportePagado("");
-        // handleModalPago();
-        // setActualizoClasesCliente(true);
+        handleCargando();
+        await registrarInasistenciaCliente(auth._id, clase);
+        setActualizoClasesCliente(true);
+        handleCargando();
       }
     });
+  };
+
+  const esClaseCancelada = (idClase) => {
+    if (inasistencias.length > 0) {
+      return inasistencias.some(
+        (inasistencia) => inasistencia.clase === idClase
+      );
+    }
   };
 
   return (
@@ -100,11 +108,19 @@ const ListadoClasesCliente = () => {
       </Typography>
 
       <div className="mb-4 mt-10 flex justify-center">
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-1">
+        <ToastContainer />
+
+        <div
+          className={`grid gap-6 ${
+            clasesCliente.length > 1 ? "xl:grid-cols-2" : "xl:grid-cols-1"
+          }`}
+        >
           {clasesCliente.map((clase) => (
             <div
               key={clase._id}
-              className="mx-auto mb-5 max-w-md overflow-hidden rounded-lg border bg-white shadow-md xl:mx-0"
+              className={`mx-auto mb-5 max-w-md overflow-hidden rounded-lg border ${
+                esClaseCancelada(clase._id) ? "bg-gray-300" : "bg-white"
+              } shadow-md xl:mx-0`}
             >
               <div className="flex">
                 {/* Columna del Horario */}
@@ -123,14 +139,24 @@ const ListadoClasesCliente = () => {
                     Profesor {clase.nombreProfe}
                   </div>
                   <div className="mt-4 flex items-center justify-between">
-                    <span className="text-l text-gray-600">
-                      {clase.nombreSede}
+                    <span
+                      className={`text-l text-gray-600 ${
+                        esClaseCancelada(clase._id) ? "text-red-500" : ""
+                      }`}
+                    >
+                      {esClaseCancelada(clase._id)
+                        ? "CLASE CANCELADA"
+                        : clase.nombreSede}
                     </span>
-                    <XCircleIcon
-                      title="Cancelar clase"
-                      className="h-8 w-8 text-red-300 hover:cursor-pointer"
-                      onClick={(e) => handleCancelarClase(e)}
-                    />{" "}
+                    {esClaseCancelada(clase._id) ? (
+                      ""
+                    ) : (
+                      <XCircleIcon
+                        title="Cancelar clase"
+                        className="h-8 w-8 text-red-300 hover:cursor-pointer"
+                        onClick={(e) => handleCancelarClase(e, clase._id)}
+                      />
+                    )}
                   </div>
                 </div>
               </div>

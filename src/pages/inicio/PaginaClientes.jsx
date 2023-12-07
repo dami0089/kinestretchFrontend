@@ -8,15 +8,50 @@ import { Footer } from "@/widgets/layout";
 import useAuth from "@/hooks/useAuth";
 import ListadodeClientes from "@/components/clientes/ListadodeClientes";
 import ListadoClasesCliente from "@/components/paginaClientes/ListadoClasesCliente";
+import { ToastContainer } from "react-toastify";
+import useClientes from "@/hooks/useClientes";
+import { useEffect } from "react";
+import useClases from "@/hooks/useClases";
+import ModalClaseRecupero from "@/components/paginaClientes/ModalClaseRecupero";
+import Cargando from "@/components/Cargando";
 
 export function PaginaClientes() {
   const { auth } = useAuth();
+  const { obtenerCliente, cliente } = useClientes();
+  const {
+    modalClaseRecupero,
+    handleModalClaseRecupero,
+    inasistencias,
+    obtenerInasistencias,
+  } = useClases();
+
+  useEffect(() => {
+    const dataCliente = async () => {
+      await obtenerCliente(auth.cliente);
+    };
+    dataCliente();
+  }, []);
+
+  useEffect(() => {
+    const inasistencias = async () => {
+      await obtenerInasistencias(auth.cliente);
+    };
+    inasistencias();
+  }, []);
+
+  const handleReservarRecupero = async (e) => {
+    e.preventDefault();
+    handleModalClaseRecupero();
+  };
+
   return (
     <>
+      <ToastContainer />
       <section className="relative block h-[50vh]">
         <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('../../../public/img/trainer-grupo-personas-ayudando-ejercicios-estiramiento.jpg')] bg-cover bg-center" />
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
       </section>
+
       <section className="relative h-[50vh] bg-blue-gray-50/50 px-4 py-16">
         <div className="container mx-auto">
           <div className="relative -mt-64 mb-6 flex w-full min-w-0 flex-col break-words rounded-3xl bg-white shadow-xl shadow-gray-500/5">
@@ -37,11 +72,31 @@ export function PaginaClientes() {
                 <div className="mt-10 flex w-full justify-center px-4 lg:order-3 lg:mt-0 lg:w-4/12 lg:justify-end lg:self-center">
                   <Button className="bg-blue-400">Mensaje</Button>
                 </div>
-                <div className="w-full px-4 lg:order-1 lg:w-4/12"></div>
+                <div className="w-full lg:order-1 lg:w-4/12">
+                  <div
+                    class="mt-5 flex-1 font-light text-gray-600 hover:cursor-pointer"
+                    onClick={(e) => handleReservarRecupero(e)}
+                  >
+                    {cliente.creditos ? (
+                      <div class="rounded border border-red-500 p-2 text-center">
+                        {cliente.creditos ? (
+                          <>
+                            <p>Tenes {cliente.creditos} credito disponibles </p>
+                            <strong>Reserva tu clase haciendo clic aqui</strong>
+                          </>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
               </div>
               <div className="my-8 text-center">
                 <Typography variant="h2" color="blue-gray" className="mb-2">
-                  {auth.nombre} {auth.apellido}
+                  {cliente.nombre} {cliente.apellido}
                 </Typography>
                 <div className="mb-16 flex items-center justify-center gap-2">
                   {auth.nombreSede ? (
@@ -63,6 +118,8 @@ export function PaginaClientes() {
           </div>
         </div>
       </section>
+      {modalClaseRecupero ? <ModalClaseRecupero /> : ""}
+      <Cargando />
     </>
   );
 }

@@ -11,20 +11,14 @@ import useProfesores from "@/hooks/useProfesores";
 
 const ModalAsignarClaseACliente = () => {
   const { obtenerSedes, sedes } = useSedes();
-  const { usuarioAutenticado, handleCargando } = useAuth();
-
-  const { obtenerProfesores, profesores } = useProfesores();
+  const { handleCargando } = useAuth();
 
   const {
-    nuevaClase,
     idSede,
     setIdSede,
     diaDeLaSemana,
     setDiaDeLaSemana,
-    horaInicio,
-    setHoraInicio,
-    idProfesor,
-    setIdProfesor,
+
     handleModalAsignarClaseACliente,
     modalAsignarClaseACliente,
     obtenerClasesOrdenadas,
@@ -32,7 +26,7 @@ const ModalAsignarClaseACliente = () => {
     idClaseSeleccionada,
     setIdClaseSeleccionada,
     asignarClienteAClase,
-    actualizoClasesCliente,
+
     setActualizoClasesCliente,
   } = useClases();
 
@@ -45,6 +39,11 @@ const ModalAsignarClaseACliente = () => {
       await obtenerSedes();
     };
     traerSedes();
+  }, []);
+
+  useEffect(() => {
+    setIdSede("");
+    setDiaDeLaSemana("");
   }, []);
 
   useEffect(() => {

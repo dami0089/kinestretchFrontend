@@ -39,6 +39,9 @@ const ClientesProvider = ({ children }) => {
   const [modalVerClaseCliente, setModalVerClaseCliente] = useState(false);
   const [modalEditarDatosPerfilCliente, setModalEditarDatosPerfilCliente] =
     useState(false);
+  const [creditosCliente, setCreditosCliente] = useState(0);
+  const [fechaApto, setFechaApto] = useState("");
+  const [linkApto, setLinkApto] = useState("");
 
   const handleModalDatosCliente = () => {
     setModalEditarDatosPerfilCliente(!modalEditarDatosPerfilCliente);
@@ -76,7 +79,9 @@ const ClientesProvider = ({ children }) => {
     aptoFisico,
     nombreContactoEmergencia,
     celularContactoEmergencia,
-    creador
+    creador,
+    fechaApto,
+    linkApto
   ) => {
     const cliente = {
       nombre,
@@ -90,6 +95,8 @@ const ClientesProvider = ({ children }) => {
       nombreContactoEmergencia,
       celularContactoEmergencia,
       creador,
+      fechaApto,
+      linkApto,
     };
     try {
       const token = localStorage.getItem("token");
@@ -191,7 +198,9 @@ const ClientesProvider = ({ children }) => {
     diagnosticoCliente,
     aptoFisicoCliente,
     nombreContactoEmergencia,
-    celularContactoEmergencia
+    celularContactoEmergencia,
+    fechaApto,
+    linkApto
   ) => {
     const cliente = {
       nombre: nombreCliente,
@@ -204,6 +213,8 @@ const ClientesProvider = ({ children }) => {
       aptoFisico: aptoFisicoCliente,
       nombreContactoEmergencia: nombreContactoEmergencia,
       celularContactoEmergencia: celularContactoEmergencia,
+      fechaApto: fechaApto,
+      linkApto: linkApto,
     };
     try {
       const token = localStorage.getItem("token");
@@ -641,6 +652,43 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const otorgarCreditos = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clientes/otorgar-creditos/${id}`, {}, config);
+
+      toast.success("Credito Asignado Correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ClientesContext.Provider
       value={{
@@ -718,6 +766,13 @@ const ClientesProvider = ({ children }) => {
         movimientosCliente,
         obtenerPagosCliente,
         registrarPagoAdmin,
+        otorgarCreditos,
+        creditosCliente,
+        setCreditosCliente,
+        fechaApto,
+        setFechaApto,
+        linkApto,
+        setLinkApto,
       }}
     >
       {children}

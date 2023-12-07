@@ -216,7 +216,12 @@ const ClasesProfesorPerfil = () => {
                           Sede: {clase.nombreSede}
                         </div>
                         <div className="text-sm text-gray-600">
-                          {clase.clientes.length} alumnos inscriptos
+                          {clase.recupero.length > 0
+                            ? clase.recupero.length +
+                              clase.clientes.length +
+                              " alumnos inscriptos"
+                            : clase.clientes.length + " alumnos inscriptos"}
+                          {/* {clase.clientes.length} alumnos inscriptos */}
                         </div>
                       </div>
                     </div>

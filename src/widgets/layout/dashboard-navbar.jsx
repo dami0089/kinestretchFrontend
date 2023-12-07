@@ -29,6 +29,7 @@ import {
 } from "@/context";
 import io from "socket.io-client";
 import { useEffect } from "react";
+import { QRCode } from "qrcode";
 
 import useAuth from "@/hooks/useAuth";
 
