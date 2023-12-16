@@ -1,10 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  Typography,
-} from "@material-tailwind/react";
+import { Card, CardBody, Typography } from "@material-tailwind/react";
 
 import React, { useEffect } from "react";
 import { projectsTableData } from "@/data";
@@ -163,9 +157,7 @@ const ListadoDePagosCliente = () => {
         </div>
       ) : (
         <div class="mb-5 mt-5 flex flex-col justify-center">
-          <button className="font-bold">
-            No hay cobros sin liquidar para mostrar
-          </button>
+          <button className="font-bold">No hay pagos para mostrar</button>
         </div>
       )}
     </>

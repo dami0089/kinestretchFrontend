@@ -10,23 +10,14 @@ import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
 
 const ModalClaseRecupero = () => {
-  const { obtenerSedes, sedes } = useSedes();
-  const { usuarioAutenticado, handleCargando, auth } = useAuth();
+  const { handleCargando } = useAuth();
 
-  const { obtenerProfesores, profesores } = useProfesores();
+  const [opcionesDias, setOpcionesDias] = useState([]);
 
   const {
-    nuevaClase,
-    idSede,
-    setIdSede,
     diaDeLaSemana,
     setDiaDeLaSemana,
-    horaInicio,
-    setHoraInicio,
-    idProfesor,
-    setIdProfesor,
-    handleModalAsignarClaseACliente,
-    modalAsignarClaseACliente,
+
     obtenerClasesOrdenadas,
     clasesOrdenadas,
     idClaseSeleccionada,
@@ -36,6 +27,7 @@ const ModalClaseRecupero = () => {
     modalClaseRecupero,
     handleModalClaseRecupero,
     recupero,
+    setClasesOrdenadas,
   } = useClases();
 
   const { cliente } = useClientes();
@@ -46,13 +38,19 @@ const ModalClaseRecupero = () => {
     const traerProfes = async () => {
       if (renderizarClases) {
         handleCargando();
+        handleModalClaseRecupero();
         await obtenerClasesOrdenadas(cliente.sede, diaDeLaSemana);
         setRenderizarClases(false);
         handleCargando();
+        await handleModalClaseRecupero();
       }
     };
     traerProfes();
   }, [renderizarClases]);
+
+  useEffect(() => {
+    setOpcionesDias(generarOpcionesDias());
+  }, []);
 
   const handleRender = (dia) => {
     setDiaDeLaSemana(dia);
@@ -99,12 +97,44 @@ const ModalClaseRecupero = () => {
     }
   };
 
+  const generarOpcionesDias = () => {
+    const dias = [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miercoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
+    ];
+    let hoy = new Date();
+    let opciones = [];
+
+    for (let i = 0; i < 7; i++) {
+      if (hoy.getDay() !== 0) {
+        // Excluir domingos
+        let dia = dias[hoy.getDay()];
+        let fecha = `${hoy.getDate()}/${hoy.getMonth() + 1}`;
+        opciones.push({ nombreDia: dia, etiqueta: `${dia} - ${fecha}` });
+      }
+      hoy.setDate(hoy.getDate() + 1);
+    }
+
+    return opciones;
+  };
+
+  const handleClose = () => {
+    setDiaDeLaSemana("");
+    setClasesOrdenadas([]);
+    handleModalClaseRecupero();
+  };
+
   return (
     <Transition.Root show={modalClaseRecupero} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={handleModalClaseRecupero}
+        onClose={handleClose}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <ToastContainer pauseOnFocusLoss={false} />
@@ -143,7 +173,7 @@ const ModalClaseRecupero = () => {
                 <button
                   type="button"
                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={handleModalClaseRecupero}
+                  onClick={handleClose}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -182,15 +212,24 @@ const ModalClaseRecupero = () => {
                         id="dia"
                         className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
                         value={diaDeLaSemana}
-                        onChange={(e) => handleRender(e.target.value)}
+                        onChange={(e) =>
+                          handleRender(
+                            e.target.options[
+                              e.target.selectedIndex
+                            ].getAttribute("nombreDia")
+                          )
+                        }
                       >
                         <option value="">--Seleccionar--</option>
-                        <option value="Lunes">Lunes</option>
-                        <option value="Martes">Martes</option>
-                        <option value="Miercoles">Miercoles</option>
-                        <option value="Jueves">Jueves</option>
-                        <option value="Viernes">Viernes</option>
-                        <option value="Sabado">Sabado</option>
+                        {opcionesDias.map((opcion, index) => (
+                          <option
+                            key={index}
+                            value={opcion.nombreDia}
+                            nombreDia={opcion.nombreDia}
+                          >
+                            {opcion.etiqueta}
+                          </option>
+                        ))}
                       </select>
                     </div>
 

@@ -8,6 +8,7 @@ import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import useClases from "@/hooks/useClases";
 import { formatearFecha } from "@/helpers/formatearFecha";
+import { formatearFechaInputs } from "@/helpers/formatearFechaInputs";
 
 const ModalEditarDatosCliente = () => {
   const {
@@ -49,6 +50,7 @@ const ModalEditarDatosCliente = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleCargando();
+    handleModalDatosCliente();
     await editarCPerfil(
       auth.cliente,
       nombreCliente,
@@ -70,7 +72,7 @@ const ModalEditarDatosCliente = () => {
     setCelularContactoEmergencia("");
     setActualizoClasesCliente(true);
     handleCargando();
-    handleModalDatosCliente();
+    // handleModalDatosCliente();
   };
 
   const handleCerrar = () => {
@@ -249,7 +251,7 @@ const ModalEditarDatosCliente = () => {
                         id="fechanac"
                         type="date"
                         className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
-                        value={formatearFecha(fechaNacimientoCliente)}
+                        value={formatearFechaInputs(fechaNacimientoCliente)}
                         onChange={(e) =>
                           setFechaNacimientoCliente(
                             formatearFecha(e.target.value)

@@ -45,31 +45,31 @@ const ClasesProvider = ({ children }) => {
   const [modalClaseRecupero, setModalClaseRecupero] = useState(false);
 
   const handleModalPagoProfesorPerfil = () => {
-    setModalPagoProfesorPerfil(!modalPagoProfesorPerfil);
+    setModalPagoProfesorPerfil((prev) => !prev);
   };
 
   const handleModalClaseRecupero = () => {
-    setModalClaseRecupero(!modalClaseRecupero);
+    setModalClaseRecupero((prev) => !prev);
   };
 
   const handleModalClaseProfePerfilAdmin = () => {
-    setModalClaseProfePerfilAdmin(!modalClaseProfePerfilAdmin);
+    setModalClaseProfePerfilAdmin((prev) => !prev);
   };
 
   const handleModalPagosProfes = () => {
-    setModalRegistrarPagoProfe(!modalRegistrarPagoProfe);
+    setModalRegistrarPagoProfe((prev) => !prev);
   };
 
   const handleModalAsignarClaseACliente = () => {
-    setModalAsignarClaseACliente(!modalAsignarClaseACliente);
+    setModalAsignarClaseACliente((prev) => !prev);
   };
 
   const handleModalNuevaClase = () => {
-    setModalNuevaClase(!modalNuevaClase);
+    setModalNuevaClase((prev) => !prev);
   };
 
   const handleModalNuevaClaseSede = () => {
-    setModalNuevaClaseSede(!modalNuevaClaseSede);
+    setModalNuevaClaseSede((prev) => !prev);
   };
 
   //Envia a la base de datos la informacion para un nuevo cliente
@@ -773,6 +773,50 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const registrarInasistenciaPaginaProfe = async (id, idClase) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/registrar-inasistencia/${id}`,
+        { idClase },
+        config
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const consultarPrimerClase = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clases/consultar-primer-clase/${id}`,
+        config
+      );
+      // Actualizar para utilizar solo esPrimerClase
+      return data.esPrimerClase;
+    } catch (error) {
+      console.log(error);
+      return false; // Asumir que no es la primera clase en caso de error
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -858,6 +902,10 @@ const ClasesProvider = ({ children }) => {
         obtenerInasistencias,
         asistenciasCliente,
         obtenerAsistenciasCliente,
+        setClasesOrdenadas,
+        registrarInasistenciaPaginaProfe,
+
+        consultarPrimerClase,
       }}
     >
       {children}

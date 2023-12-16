@@ -12,6 +12,9 @@ import EditarDatosPerfil from "./EditarDatosPerfil";
 import useClientes from "@/hooks/useClientes";
 import { useEffect } from "react";
 import ModalEditarDatosCliente from "./ModalEditarDatosCliente";
+import useClases from "@/hooks/useClases";
+import { ToastContainer } from "react-toastify";
+import Cargando from "../Cargando";
 
 export function PerfilCliente() {
   const { auth } = useAuth();
@@ -39,12 +42,21 @@ export function PerfilCliente() {
     handleModalDatosCliente,
   } = useClientes();
 
+  const { actualizoClasesCliente } = useClases();
+
   useEffect(() => {
     const obtenerCli = async (e) => {
       await obtenerCliente(auth.cliente);
     };
     obtenerCli();
   }, []);
+
+  useEffect(() => {
+    const obtenerCli = async (e) => {
+      await obtenerCliente(auth.cliente);
+    };
+    obtenerCli();
+  }, [actualizoClasesCliente]);
 
   const editarCliente = (e) => {
     e.preventDefault();
@@ -61,6 +73,8 @@ export function PerfilCliente() {
 
   return (
     <>
+      <ToastContainer pauseOnFocusLoss={false} />
+
       <section className="relative block h-[50vh]">
         <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('../../../public/img/trainer-grupo-personas-ayudando-ejercicios-estiramiento.jpg')] bg-cover bg-center" />
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
@@ -117,6 +131,7 @@ export function PerfilCliente() {
         </div>
       </section>
       {modalEditarDatosPerfilCliente ? <ModalEditarDatosCliente /> : ""}
+      <Cargando />
     </>
   );
 }

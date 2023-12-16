@@ -1,6 +1,7 @@
 import { projectsTableData } from "@/data";
 import useAuth from "@/hooks/useAuth";
 import useClases from "@/hooks/useClases";
+import useClientes from "@/hooks/useClientes";
 import useProfesores from "@/hooks/useProfesores";
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 
@@ -10,9 +11,11 @@ import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import Cargando from "../Cargando";
 
 const ModalClaseProfe = () => {
   const { handleModalClasesProfe, modalClasesProfe } = useProfesores();
+  const { desactivarCliente } = useClientes();
   const {
     idVerClase,
     setIdVerClase,
@@ -37,8 +40,11 @@ const ModalClaseProfe = () => {
 
     asistenciasCliente,
     obtenerAsistenciasCliente,
-  } = useClases();
+    registrarInasistenciaPaginaProfe,
 
+    consultarPrimerClase,
+  } = useClases();
+  const [primerasClases, setPrimerasClases] = useState({});
   const { handleCargando } = useAuth();
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -58,7 +64,11 @@ const ModalClaseProfe = () => {
 
   useEffect(() => {
     const obtenerNombresClientes = async () => {
+      handleCargando();
+
       await obtenerClientesClases(idVerClase);
+
+      handleCargando();
     };
     obtenerNombresClientes();
   }, []);
@@ -90,6 +100,20 @@ const ModalClaseProfe = () => {
 
     asistencias();
   }, []);
+
+  useEffect(() => {
+    const cargarPrimerasClases = async () => {
+      const resultados = {};
+      for (const cliente of clientesClase) {
+        resultados[cliente.id] = await consultarPrimerClase(cliente.id);
+      }
+      setPrimerasClases(resultados);
+    };
+
+    if (clientesClase.length > 0) {
+      cargarPrimerasClases();
+    }
+  }, [clientesClase]);
 
   const registrarAsistencia = async (e, id) => {
     e.preventDefault();
@@ -154,6 +178,62 @@ const ModalClaseProfe = () => {
     );
   };
 
+  const handleInasistencia = async (e, id) => {
+    e.preventDefault();
+    handleModalClasesProfe();
+    Swal.fire({
+      title: "Registramos la inasistencia?",
+      text: "Se marcara al cliente como inasistente",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        await registrarInasistenciaPaginaProfe(id, idVerClase);
+        handleModalClasesProfe();
+        toast.success("Inasistencia registrada", {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        handleCargando();
+      }
+    });
+  };
+
+  const handleDesactivar = async (e, id) => {
+    e.preventDefault();
+    handleModalClasesProfe();
+
+    Swal.fire({
+      title: "Seguro queres desactivar este cliente?",
+      text: "Se eliminara automaticamente al mismo de todas las clases que tenga asignadas",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        await desactivarCliente(id);
+        handleCargando();
+        handleModalClasesProfe();
+      }
+    });
+  };
+
   return (
     <>
       <ToastContainer pauseOnFocusLoss={false} />
@@ -171,85 +251,97 @@ const ModalClaseProfe = () => {
             Clase del {diaClase}-{horaClase}hs en {sedeClase}
           </h2>
 
-          <CardBody className="max-h-[60vh] overflow-y-auto px-0 pb-2 pt-0">
-            <div className="responsive-table">
-              {clientesClase.map(
-                (
-                  {
-                    id,
-                    nombre,
-                    apellido,
-                    fechaUltimoPago,
-                    importeUltimoPago,
-                    asistioHoy,
-                  },
-                  key
-                ) => (
-                  <div key={id} className="card mb-4 border p-4">
-                    <div className="mb-2 flex items-center justify-between">
-                      <Typography
-                        variant="small"
-                        className="text-xl font-medium uppercase text-blue-gray-400"
-                      >
-                        Nombre:{" "}
-                        <p className="ml-4 text-xl font-bold text-blue-gray-800">
-                          {nombre} {apellido}
-                        </p>
-                      </Typography>
+          {clientesClase.length > 0 ? (
+            <CardBody className="max-h-[60vh] overflow-y-auto px-0 pb-2 pt-0">
+              <div className="responsive-table">
+                {clientesClase.map(
+                  (
+                    { id, nombre, apellido, fechaUltimoPago, asistioHoy },
+                    key
+                  ) => (
+                    <div key={id} className="card mb-4 border p-4">
+                      <div className="mb-2 flex items-center justify-between">
+                        <Typography
+                          variant="small"
+                          className="text-xl font-medium uppercase text-blue-gray-400"
+                        >
+                          Nombre:{" "}
+                          <p className="ml-4 text-xl font-bold text-blue-gray-800">
+                            {nombre} {apellido}{" "}
+                            {primerasClases[id] ? (
+                              <span className="font-bold text-blue-700">
+                                - Primera Clase
+                              </span>
+                            ) : (
+                              ""
+                            )}
+                          </p>
+                        </Typography>
 
-                      <div>
-                        <CurrencyDollarIcon
-                          className={`h-8 w-8 ${
-                            esMismoMes(fechaUltimoPago)
-                              ? "text-green-500"
-                              : "text-red-500"
+                        <div>
+                          <CurrencyDollarIcon
+                            className={`h-8 w-8 ${
+                              esMismoMes(fechaUltimoPago)
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }`}
+                          />
+                        </div>
+                      </div>
+                      {/* Aquí continúa el resto de tu contenido, como botones de asistencia, etc. */}
+                      <div className="card-row mt-4 flex flex-wrap justify-between space-y-2 md:space-y-0">
+                        <Button
+                          onClick={(e) => registrarAsistencia(e, id)}
+                          disabled={
+                            asistioHoy === "Si"
+                              ? true
+                              : asistioHoy === "No"
+                              ? true
+                              : false
+                          }
+                          className={`mb-2 mr-5 w-full bg-green-500 md:mb-0 md:w-auto ${
+                            asistioHoy === "Si" || asistioHoy === "No"
+                              ? "bg-gray-600"
+                              : ""
                           }`}
-                        />
+                        >
+                          Asistencia
+                        </Button>
+                        <Button
+                          onClick={(e) => handleInasistencia(e, id)}
+                          disabled={
+                            asistioHoy === "Si"
+                              ? true
+                              : asistioHoy === "No"
+                              ? true
+                              : false
+                          }
+                          className="mb-2 mr-5 w-full bg-orange-500 md:mb-0 md:w-auto"
+                        >
+                          Inasistencia
+                        </Button>
+                        <Button
+                          onClick={(e) => handlePagos(e, id, fechaUltimoPago)}
+                          className="mr-5 w-full bg-blue-gray-500 md:w-auto"
+                        >
+                          Registrar Pago
+                        </Button>
+                        <Button
+                          onClick={(e) => handleDesactivar(e, id)}
+                          className="mr-5 w-full bg-red-500 md:w-auto"
+                        >
+                          Desactivar
+                        </Button>
                       </div>
                     </div>
-                    {/* Aquí continúa el resto de tu contenido, como botones de asistencia, etc. */}
-                    <div className="card-row mt-4 flex flex-wrap justify-between space-y-2 md:space-y-0">
-                      <Button
-                        onClick={(e) => registrarAsistencia(e, id)}
-                        disabled={
-                          asistioHoy === "Si"
-                            ? true
-                            : asistioHoy === "No"
-                            ? true
-                            : false
-                        }
-                        className={`mb-2 mr-5 w-full bg-green-500 md:mb-0 md:w-auto ${
-                          asistioHoy === "Si" || asistioHoy === "No"
-                            ? "bg-gray-600"
-                            : ""
-                        }`}
-                      >
-                        Asistencia
-                      </Button>
-                      <Button
-                        disabled={
-                          asistioHoy === "Si"
-                            ? true
-                            : asistioHoy === "No"
-                            ? true
-                            : false
-                        }
-                        className="mb-2 mr-5 w-full bg-orange-500 md:mb-0 md:w-auto"
-                      >
-                        Inasistencia
-                      </Button>
-                      <Button
-                        onClick={(e) => handlePagos(e, id, fechaUltimoPago)}
-                        className="mr-5 w-full bg-blue-gray-500 md:w-auto"
-                      >
-                        Registrar Pago
-                      </Button>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          </CardBody>
+                  )
+                )}
+              </div>
+            </CardBody>
+          ) : (
+            "No hay alumnos inscriptos"
+          )}
+          <Cargando />
         </div>
       </Modal>
     </>

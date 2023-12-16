@@ -24,11 +24,11 @@ const ProfesoresProvider = ({ children }) => {
   const [idProfesor, setIdProfesor] = useState("");
 
   const handleRetiro = () => {
-    setModalRegistrarRetiro(!modalRegistrarRetiro);
+    setModalRegistrarRetiro((prev) => !prev);
   };
 
   const handleModalClasesProfe = () => {
-    setModalClasesProfe(!modalClasesProfe);
+    setModalClasesProfe((prev) => !prev);
   };
 
   //Envia a la base de datos la informacion para un nuevo cliente

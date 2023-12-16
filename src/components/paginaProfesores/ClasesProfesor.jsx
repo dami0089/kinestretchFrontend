@@ -161,7 +161,8 @@ const ClasesProfesor = () => {
                           Sede: {clase.nombreSede}
                         </div>
                         <div className="text-sm text-gray-600">
-                          {clase.clientes.length} alumnos inscriptos
+                          {clase.clientes.length + clase.recupero.length}{" "}
+                          alumnos inscriptos
                         </div>
                       </div>
                     </div>
@@ -208,7 +209,8 @@ const ClasesProfesor = () => {
                           Sede: {clase.nombreSede}
                         </div>
                         <div className="text-sm text-gray-600">
-                          {clase.clientes.length} alumnos inscriptos
+                          {clase.clientes.length + clase.recupero.length}{" "}
+                          alumnos inscriptos
                         </div>
                       </div>
                     </div>

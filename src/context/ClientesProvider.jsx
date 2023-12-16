@@ -571,7 +571,6 @@ const ClientesProvider = ({ children }) => {
     emailCliente,
     celularCliente,
     fechaNacimientoCliente,
-
     nombreContactoEmergencia,
     celularContactoEmergencia
   ) => {
@@ -582,7 +581,6 @@ const ClientesProvider = ({ children }) => {
       email: emailCliente,
       celular: celularCliente,
       fechaNacimiento: fechaNacimientoCliente,
-
       nombreContactoEmergencia: nombreContactoEmergencia,
       celularContactoEmergencia: celularContactoEmergencia,
     };

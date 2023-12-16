@@ -25,7 +25,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
     <aside
       className={`${sidenavTypes[sidenavType]} ${
         openSidenav ? "translate-x-0" : "-translate-x-80"
-      } z-9  fixed inset-0 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0`}
+      } fixed  inset-0 z-20 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0`}
     >
       <div
         className={`relative border-b ${
@@ -47,10 +47,10 @@ export function Sidenav({ brandImg, brandName, routes }) {
         </div>
         <IconButton
           variant="text"
-          color="white"
+          color="black"
           size="sm"
           ripple={false}
-          className="absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
+          className="absolute right-0 top-0 grid rounded-br-none rounded-tl-none bg-blue-200 xl:hidden"
           onClick={() => setOpenSidenav(dispatch, false)}
         >
           <XMarkIcon strokeWidth={2.5} className="h-5 w-5 text-white" />

@@ -252,7 +252,7 @@ const ModalNuevaClaseSede = () => {
                         id="cupo"
                         className="mb-5 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
                         type="number"
-                        placeholder="Ingrese el importe"
+                        placeholder="Ingrese el cupo"
                         value={cupo}
                         onChange={(e) => setCupo(e.target.value)}
                       ></input>

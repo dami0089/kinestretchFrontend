@@ -101,10 +101,49 @@ const ListadoClasesCliente = () => {
     }
   };
 
+  const obtenerProximaFecha = (diaSemana, horaInicio) => {
+    const dias = [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miercoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
+    ];
+
+    // Suponiendo que el servidor está en Argentina, GMT-3
+    const offsetArgentina = -3;
+    let ahora = new Date(new Date().getTime() + offsetArgentina * 3600 * 1000);
+
+    let indiceDiaSemana = dias.indexOf(diaSemana);
+
+    // Si no se encuentra el día o es domingo, devolvemos null o una cadena vacía
+    if (indiceDiaSemana === -1 || indiceDiaSemana === 0) {
+      return null;
+    }
+
+    let diferenciaDias = indiceDiaSemana - ahora.getDay();
+    let horaActual = ahora.getHours();
+
+    // Si es el mismo día pero la hora ya pasó, calculamos para la próxima semana
+    if (diferenciaDias === 0 && horaInicio <= horaActual) {
+      diferenciaDias += 7;
+    } else if (diferenciaDias < 0) {
+      // Si ya pasó ese día de la semana, calculamos para la próxima semana
+      diferenciaDias += 7;
+    }
+
+    let proximaFecha = new Date(ahora.getTime());
+    proximaFecha.setDate(ahora.getDate() + diferenciaDias);
+
+    return `${proximaFecha.getDate()}/${proximaFecha.getMonth() + 1}`;
+  };
+
   return (
     <>
       <Typography className="text-center text-xl font-bold uppercase text-blue-gray-500">
-        Tu Proxima Clase
+        Tu Próxima Clase
       </Typography>
 
       <div className="mb-4 mt-10 flex justify-center">
@@ -115,53 +154,61 @@ const ListadoClasesCliente = () => {
             clasesCliente.length > 1 ? "xl:grid-cols-2" : "xl:grid-cols-1"
           }`}
         >
-          {clasesCliente.map((clase) => (
-            <div
-              key={clase._id}
-              className={`mx-auto mb-5 max-w-md overflow-hidden rounded-lg border ${
-                esClaseCancelada(clase._id) ? "bg-gray-300" : "bg-white"
-              } shadow-md xl:mx-0`}
-            >
-              <div className="flex">
-                {/* Columna del Horario */}
-                <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
-                  <CalendarIcon className="h-8 w-8" />
-                  <div className="text-s">{clase.diaDeLaSemana}</div>
-                  <div className="text-lg font-bold">
-                    {clase.horarioInicio} HS
+          {clasesCliente.map((clase) => {
+            const fechaClase = obtenerProximaFecha(
+              clase.diaDeLaSemana,
+              parseInt(clase.horarioInicio)
+            );
+            return (
+              <div
+                key={clase._id}
+                className={`mx-auto mb-5 max-w-md overflow-hidden rounded-lg border ${
+                  esClaseCancelada(clase._id) ? "bg-gray-300" : "bg-white"
+                } shadow-md xl:mx-0`}
+              >
+                <div className="flex">
+                  {/* Columna del Horario */}
+                  <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                    <CalendarIcon className="h-8 w-8" />
+                    <div className="text-s">{clase.diaDeLaSemana}</div>
+                    <div className="text-lg font-bold">
+                      {fechaClase ? `${fechaClase} - ` : ""}
+                      {clase.horarioInicio} HS
+                    </div>
                   </div>
-                </div>
 
-                {/* Columna del Profesor y Alumnos */}
-                <div className="w-6/10 flex flex-col justify-center p-4">
-                  <div className="items-left flex text-lg font-medium">
-                    <UserIcon className="mr-2 h-5 w-5" />
-                    Profesor {clase.nombreProfe}
-                  </div>
-                  <div className="mt-4 flex items-center justify-between">
-                    <span
-                      className={`text-l text-gray-600 ${
-                        esClaseCancelada(clase._id) ? "text-red-500" : ""
-                      }`}
-                    >
-                      {esClaseCancelada(clase._id)
-                        ? "CLASE CANCELADA"
-                        : clase.nombreSede}
-                    </span>
-                    {esClaseCancelada(clase._id) ? (
-                      ""
-                    ) : (
-                      <XCircleIcon
-                        title="Cancelar clase"
-                        className="h-8 w-8 text-red-300 hover:cursor-pointer"
-                        onClick={(e) => handleCancelarClase(e, clase._id)}
-                      />
-                    )}
+                  {/* Columna del Profesor y Alumnos */}
+                  <div className="w-6/10 flex flex-col justify-center p-4">
+                    <div className="items-left flex text-lg font-medium">
+                      <UserIcon className="mr-2 h-5 w-5" />
+                      Profesor {clase.nombreProfe}
+                    </div>
+                    <div className="mt-4 flex items-center justify-between">
+                      <span
+                        className={`text-l text-gray-600 ${
+                          esClaseCancelada(clase._id) ? "text-red-500" : ""
+                        }`}
+                      >
+                        {esClaseCancelada(clase._id)
+                          ? "CANCELASTE ESTA CLASE"
+                          : clase.nombreSede}
+                        {clase.esRecupero ? "-Clase de recupero" : ""}
+                      </span>
+                      {esClaseCancelada(clase._id) ? (
+                        ""
+                      ) : (
+                        <XCircleIcon
+                          title="Cancelar clase"
+                          className="h-8 w-8 text-red-300 hover:cursor-pointer"
+                          onClick={(e) => handleCancelarClase(e, clase._id)}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </>
