@@ -26,7 +26,7 @@ import Swal from "sweetalert2";
 import { ToastContainer } from "react-toastify";
 
 const ListadoClasesCliente = () => {
-  const { obtenerCliente } = useClientes();
+  const { obtenerCliente, cliente } = useClientes();
 
   const {
     obtenerClasesCliente,
@@ -63,9 +63,9 @@ const ListadoClasesCliente = () => {
       if (actualizoClasesCliente) {
         handleCargando();
         await obtenerClasesCliente(auth._id);
-        await obtenerCliente(auth.cliente);
-        handleCargando();
+        await obtenerCliente(cliente._id);
         setActualizoClasesCliente(false);
+        handleCargando();
       }
     };
     obtenerInfo();
@@ -88,6 +88,7 @@ const ListadoClasesCliente = () => {
         handleCargando();
         await registrarInasistenciaCliente(auth._id, clase);
         setActualizoClasesCliente(true);
+        window.location.reload();
         handleCargando();
       }
     });
@@ -154,12 +155,33 @@ const ListadoClasesCliente = () => {
             clasesCliente.length > 1 ? "xl:grid-cols-2" : "xl:grid-cols-1"
           }`}
         >
-          {clasesCliente.map((clase) => {
-            const fechaClase = obtenerProximaFecha(
-              clase.diaDeLaSemana,
-              parseInt(clase.horarioInicio)
-            );
-            return (
+          {clasesCliente
+            .map((clase) => ({
+              ...clase,
+              fechaCompleta: obtenerProximaFecha(
+                clase.diaDeLaSemana,
+                clase.horarioInicio
+              ),
+              // No es necesario convertir la hora, ya es un número adecuado para ordenar
+              horaOrden: clase.horarioInicio,
+            }))
+            .sort((a, b) => {
+              const fechaA = new Date(
+                a.fechaCompleta.split("/").reverse().join("-")
+              );
+              const fechaB = new Date(
+                b.fechaCompleta.split("/").reverse().join("-")
+              );
+
+              // Primero comparar por fecha
+              if (fechaA - fechaB !== 0) {
+                return fechaA - fechaB;
+              }
+
+              // Si las fechas son iguales, comparar por hora (horaOrden)
+              return a.horaOrden - b.horaOrden;
+            })
+            .map((clase) => (
               <div
                 key={clase._id}
                 className={`mx-auto mb-5 max-w-md overflow-hidden rounded-lg border ${
@@ -168,11 +190,11 @@ const ListadoClasesCliente = () => {
               >
                 <div className="flex">
                   {/* Columna del Horario */}
-                  <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                  <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-center text-white">
                     <CalendarIcon className="h-8 w-8" />
                     <div className="text-s">{clase.diaDeLaSemana}</div>
                     <div className="text-lg font-bold">
-                      {fechaClase ? `${fechaClase} - ` : ""}
+                      {clase.fechaCompleta ? `${clase.fechaCompleta} - ` : ""}
                       {clase.horarioInicio} HS
                     </div>
                   </div>
@@ -192,8 +214,12 @@ const ListadoClasesCliente = () => {
                         {esClaseCancelada(clase._id)
                           ? "CANCELASTE ESTA CLASE"
                           : clase.nombreSede}
-                        {clase.esRecupero ? "-Clase de recupero" : ""}
+                        <span className="font-bold uppercase">
+                          {" "}
+                          {clase.esRecupero ? "- recupero" : ""}
+                        </span>
                       </span>
+
                       {esClaseCancelada(clase._id) ? (
                         ""
                       ) : (
@@ -207,8 +233,7 @@ const ListadoClasesCliente = () => {
                   </div>
                 </div>
               </div>
-            );
-          })}
+            ))}
         </div>
       </div>
     </>

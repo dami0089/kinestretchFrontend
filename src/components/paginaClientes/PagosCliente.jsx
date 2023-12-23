@@ -95,7 +95,7 @@ export function PagosCliente() {
               </div>
               <div className="my-8 text-center">
                 <Typography variant="h2" color="blue-gray" className="mb-2">
-                  {auth.nombre} {auth.apellido}
+                  {cliente.nombre} {cliente.apellido}
                 </Typography>
                 <div className="mb-16 flex items-center justify-center gap-2">
                   {auth.nombreSede ? (

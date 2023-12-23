@@ -332,7 +332,7 @@ const ClasesProvider = ({ children }) => {
       );
       toast.success("Cliente Asignado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -343,7 +343,7 @@ const ClasesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -689,7 +689,7 @@ const ClasesProvider = ({ children }) => {
       if (data.msg1) {
         toast.warning(data.msg1, {
           position: "top-right",
-          autoClose: 1500,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

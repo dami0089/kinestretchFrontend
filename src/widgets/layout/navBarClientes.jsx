@@ -107,13 +107,13 @@ export function DashboardNavbarClientes() {
         {/* Menú desplegable para móviles */}
         {isMenuOpen && (
           <div className="mt-2 flex flex-col items-start space-y-2 md:hidden">
-            <Link to="/seccion1" className="text-white hover:text-gray-300">
+            <Link to="/inicio" className="text-white hover:text-gray-300">
               Inicio
             </Link>
-            <Link to="/seccion2" className="text-white hover:text-gray-300">
+            <Link to="/perfil" className="text-white hover:text-gray-300">
               Mi perfil
             </Link>
-            <Link to="/seccion3" className="text-white hover:text-gray-300">
+            <Link to="/pagos" className="text-white hover:text-gray-300">
               Pagos
             </Link>
           </div>

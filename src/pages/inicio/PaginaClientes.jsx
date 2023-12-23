@@ -70,7 +70,7 @@ export function PaginaClientes() {
                   </div>
                 </div>
                 <div className="mt-10 flex w-full justify-center px-4 lg:order-3 lg:mt-0 lg:w-4/12 lg:justify-end lg:self-center">
-                  <Button className="bg-blue-400">Mensaje</Button>
+                  {/* <Button className="bg-blue-400">Mensaje</Button> */}
                 </div>
                 <div className="w-full lg:order-1 lg:w-4/12">
                   <div

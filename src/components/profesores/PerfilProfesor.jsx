@@ -3,7 +3,6 @@ import useClientes from "@/hooks/useClientes";
 import React, { useEffect, useRef, useState } from "react";
 import Cargando from "../Cargando";
 import { formatearFecha } from "@/helpers/formatearFecha";
-import ClasesPorCliente from "../clientes/ClasesPorCliente";
 import useClases from "@/hooks/useClases";
 import ModalAsignarClaseACliente from "../clientes/ModalAsignarClaseACliente";
 import { ToastContainer } from "react-toastify";
@@ -13,30 +12,24 @@ import mensaje from "../../../public/lotties/mensaje.json";
 import eliminar from "../../../public/lotties/delete.json";
 import alerta from "../../../public/lotties/Alert.json";
 import Swal from "sweetalert2";
-
 import ModalEditarCliente from "../clientes/ModalEditarCliente";
 import ModalEnviarMensaje from "../clientes/ModalEnviarMensaje";
 import pago from "../../../public/lotties/billing.json";
 import calendario from "../../../public/lotties/calendar.json";
 import cuenta from "../../../public/lotties/Currency.json";
 import activar from "../../../public/lotties/Success.json";
-
-import ContableCliente from "../clientes/ContableCliente";
 import ModalRegistrarPago from "../clientes/ModalRegistrarPago";
 import ModalEditarPago from "../clientes/ModalEditarPago";
 import useProfesores from "@/hooks/useProfesores";
 import ClasesProfesorPerfil from "./ClasesProfesorPerfil";
 import ModalClaseProfePerfilAdmin from "./ModalClaseProfePerfilAdmin";
 import ContableProfesor from "./ContableProfesor";
-import ModalRegistrarPagoProfesor from "../paginaProfesores/ModalRegistrarPagoProfesor";
 import ModalRegistrarPagoPerfilProfesor from "./ModalRegistrarPagoPerfilProfesor";
+import ModalEditarProfe from "./ModalEditarProfe";
 
 const PerfilProfesor = () => {
   const {
-    obtenerCliente,
     cliente,
-    idClienteEditar,
-    desactivarCliente,
     setNombreCliente,
     setApellidoCliente,
     setDniCliente,
@@ -48,33 +41,22 @@ const PerfilProfesor = () => {
     setEmailCliente,
     setCelularContactoEmergencia,
     modalEditarCliente,
-    handleModalEditarCliente,
     handleModalEnviarMensaje,
     modalEnviarMensaje,
     selectPerfil,
     setSelectPerfil,
     handleModalPago,
     modalPago,
-    obtenerPagos,
     modalEditarPago,
-    pagosCliente,
-    activarCliente,
   } = useClientes();
   const { handleCargando, cargando } = useAuth();
 
   const {
     modalAsignarClaseACliente,
-    handleModalAsignarClaseACliente,
     actualizoClasesCliente,
     setActualizoClasesCliente,
-    obtenerClasesClienteAdmin,
     clasesCliente,
-    setClasesCliente,
-    inasistenciaCliente,
-    verificarInasistenciaClietne,
-    setInasistenciaCliente,
     modalClaseProfePerfilAdmin,
-    handleModalClaseProfePerfilAdmin,
     modalPagoProfesorPerfil,
   } = useClases();
 
@@ -85,6 +67,17 @@ const PerfilProfesor = () => {
     registrosContbalesProfe,
     obtenerRegistrosContablesProfesorAdmin,
     desactivarProfe,
+    handleEditarProfe,
+    modalEditarProfe,
+    setNombreProfe,
+    setApellidoProfe,
+    setDniProfe,
+    setEmailProfe,
+    setCeluProfe,
+    setFechaNacimientoProfe,
+    setDomicilioProfe,
+    idProfeEditar,
+    setIdProfeEditar,
   } = useProfesores();
 
   useEffect(() => {
@@ -103,11 +96,6 @@ const PerfilProfesor = () => {
     };
     obtenerInfo();
   }, []);
-
-  const handleAsignarClase = (e) => {
-    e.preventDefault();
-    handleModalAsignarClaseACliente();
-  };
 
   const editRef = useRef(null);
   const envelopeRef = useRef(null);
@@ -187,6 +175,18 @@ const PerfilProfesor = () => {
     }
   }, [clasesCliente.length === 0]);
 
+  useEffect(() => {
+    const obtenerInfo = async () => {
+      if (actualizoClasesCliente) {
+        handleCargando();
+        await obtenerProfesor(idProfesor);
+        setActualizoClasesCliente(false);
+        handleCargando();
+      }
+    };
+    obtenerInfo();
+  }, [actualizoClasesCliente]);
+
   const handleDesactivar = async (e) => {
     e.preventDefault();
     if (profesor.isActivo) {
@@ -231,18 +231,15 @@ const PerfilProfesor = () => {
 
   const handleEditar = (e) => {
     e.preventDefault();
-
-    setNombreCliente(cliente.nombre),
-      setApellidoCliente(cliente.apellido),
-      setDniCliente(cliente.dni),
-      setCelularCliente(cliente.celular),
-      setEmailCliente(cliente.email);
-    setFechaNacimientoCliente(cliente.fechaNacimiento),
-      setDiagnosticoCliente(cliente.diagnostico),
-      setAptoFisicoCliente(cliente.aptoFisico),
-      setNombreContactoEmergencia(cliente.nombreContactoEmergencia),
-      setCelularContactoEmergencia(cliente.celularContactoEmergencia);
-    handleModalEditarCliente();
+    setNombreProfe(profesor.nombre);
+    setApellidoProfe(profesor.apellido);
+    setDniProfe(profesor.dni);
+    setEmailProfe(profesor.email);
+    setCeluProfe(profesor.celular);
+    setFechaNacimientoProfe(profesor.fechaNacimiento);
+    setDomicilioProfe(profesor.domicilio);
+    setIdProfeEditar(profesor._id);
+    handleEditarProfe();
   };
 
   const handleMensaje = (e) => {
@@ -339,7 +336,7 @@ const PerfilProfesor = () => {
           </div>
         </div>
 
-        <div class="mt-5 border-b pb-12 text-center">
+        <div class="mt-14 border-b pb-12 text-center">
           <div class=" flex">
             {/* <!-- Columna izquierda --> */}
             <div class="flex-1 font-light text-gray-600"></div>
@@ -350,7 +347,7 @@ const PerfilProfesor = () => {
                 ""
               ) : (
                 <div class="flex flex-col justify-center">
-                  <button className="font-bold text-red-200">
+                  <button className="font-bold uppercase text-red-200">
                     Profesor Inactivo
                   </button>
                 </div>
@@ -408,6 +405,7 @@ const PerfilProfesor = () => {
       {modalEditarPago ? <ModalEditarPago /> : ""}
       {modalClaseProfePerfilAdmin ? <ModalClaseProfePerfilAdmin /> : ""}
       {modalPagoProfesorPerfil ? <ModalRegistrarPagoPerfilProfesor /> : ""}
+      {modalEditarProfe ? <ModalEditarProfe /> : ""}
       <Cargando />
     </div>
   );

@@ -77,13 +77,16 @@ export function SignIn() {
         <Card className="absolute left-2/4 top-2/4 w-full max-w-[24rem] -translate-x-2/4 -translate-y-2/4">
           <CardHeader
             variant="gradient"
-            // color="blue"
             className="mb-4 grid h-28 place-items-center bg-blue-gray-200"
           >
+            <Typography variant="h2" color="white" className="uppercase">
+              KINESTRETCH
+            </Typography>
             <Typography variant="h3" color="white" className="uppercase">
               Ingresar
             </Typography>
           </CardHeader>
+
           <CardBody className="flex flex-col gap-4">
             <Input
               type="email"

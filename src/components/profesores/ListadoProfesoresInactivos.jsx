@@ -20,14 +20,8 @@ import Cargando from "../Cargando";
 import useAuth from "@/hooks/useAuth";
 
 const ListadoProfesoresInactivos = () => {
-  const {
-    obtenerProfesores,
-    profesores,
-    idProfesor,
-    setIdProfesor,
-    profesoresInactivos,
-    obtenerProfesoresInactivos,
-  } = useProfesores();
+  const { setIdProfesor, profesoresInactivos, obtenerProfesoresInactivos } =
+    useProfesores();
 
   const { handleCargando } = useAuth();
 

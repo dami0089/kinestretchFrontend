@@ -22,9 +22,15 @@ const ProfesoresProvider = ({ children }) => {
   const [modalClasesProfe, setModalClasesProfe] = useState(false);
   const [modalRegistrarRetiro, setModalRegistrarRetiro] = useState(false);
   const [idProfesor, setIdProfesor] = useState("");
+  const [modalEditarProfe, setModalEditarProfe] = useState(false);
+  const [idProfeEditar, setIdProfeEditar] = useState("");
 
   const handleRetiro = () => {
     setModalRegistrarRetiro((prev) => !prev);
+  };
+
+  const handleEditarProfe = () => {
+    setModalEditarProfe((prev) => !prev);
   };
 
   const handleModalClasesProfe = () => {
@@ -432,6 +438,61 @@ const ProfesoresProvider = ({ children }) => {
     }
   };
 
+  const editarProfe = async (
+    id,
+    nombre,
+    apellido,
+    dni,
+    email,
+    celu,
+    fechanac,
+    domicilio
+  ) => {
+    const profe = {
+      nombre: nombre,
+      apellido: apellido,
+      dni: dni,
+      email: email,
+      celular: celu,
+      fechaNacimiento: fechanac,
+      domicilio: domicilio,
+    };
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      await clienteAxios.put(`/profesores/${id}`, profe, config);
+
+      //Mostrar la alerta
+      toast.success("Profesor Editado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ProfesoresContext.Provider
       value={{
@@ -470,6 +531,11 @@ const ProfesoresProvider = ({ children }) => {
         desactivarProfe,
         profesoresInactivos,
         obtenerProfesoresInactivos,
+        modalEditarProfe,
+        handleEditarProfe,
+        editarProfe,
+        idProfeEditar,
+        setIdProfeEditar,
       }}
     >
       {children}
