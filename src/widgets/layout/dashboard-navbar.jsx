@@ -75,9 +75,9 @@ export function DashboardNavbar() {
   }, [autenticado]);
 
   useEffect(() => {
-    const socket = io("http://localhost:3000");
+    // const socket = io("http://localhost:3000");
     // const socket = io("http://34.235.146.116:3000");
-    // const socket = io("https://peopleapp.com.ar");
+    const socket = io("https://postural.com.ar");
 
     socket.on("connection-successful", () => {
       console.log("Connection with WhatsApp is successful!");
