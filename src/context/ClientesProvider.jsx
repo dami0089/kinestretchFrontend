@@ -108,7 +108,9 @@ const ClientesProvider = ({ children }) => {
         },
       };
 
-      await clienteAxios.post("/clientes", cliente, config);
+      const { data } = await clienteAxios.post("/clientes", cliente, config);
+
+      setIdClienteEditar(data._id);
 
       toast.success("Cliente creado correctamente", {
         position: "top-right",

@@ -20,6 +20,16 @@ const SedesProvider = ({ children }) => {
   const [idVerSede, setIdVerSede] = useState("");
   const [sede, setSede] = useState("");
   const [modalVerClase, setModalVerClase] = useState(false);
+  const [modalNuevaSecretaria, setModalNuevaSecretaria] = useState(false);
+  const [nombreSecreatria, setNombreSecretaria] = useState("");
+  const [apellidoSecretaria, setApellidoSecretaria] = useState("");
+  const [dniSecretaria, setDniSecretaria] = useState("");
+  const [emailSecretaria, setEmailSecretaria] = useState("");
+  const [idSedeSecretaria, setIdSedeSecretaria] = useState("");
+
+  const handleModalNuevaSecretaria = () => {
+    setModalNuevaSecretaria(!modalNuevaSecretaria);
+  };
 
   //abre o cierra el modal nuevo sede
   const handleModalNuevaSede = () => {
@@ -204,6 +214,75 @@ const SedesProvider = ({ children }) => {
     }
   };
 
+  const nuevaSecretaria = async (nombre, apellido, dni, email, sede) => {
+    const secretaria = {
+      nombre,
+      apellido,
+      dni,
+      email,
+      sede,
+    };
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post("/sedes/nueva-secretaria", secretaria, config);
+
+      toast.success("Secretaria creada correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const [secretarias, setSecretarias] = useState([]);
+
+  const obtenerSecretarias = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        "/sedes/obtener-secretarias",
+
+        config
+      );
+
+      setSecretarias(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SedesContext.Provider
       value={{
@@ -226,6 +305,21 @@ const SedesProvider = ({ children }) => {
         sede,
         modalVerClase,
         handleModalVerClase,
+        handleModalNuevaSecretaria,
+        modalNuevaSecretaria,
+        nombreSecreatria,
+        setNombreSecretaria,
+        apellidoSecretaria,
+        setApellidoSecretaria,
+        dniSecretaria,
+        setDniSecretaria,
+        emailSecretaria,
+        setEmailSecretaria,
+        idSedeSecretaria,
+        setIdSedeSecretaria,
+        nuevaSecretaria,
+        secretarias,
+        obtenerSecretarias,
       }}
     >
       {children}

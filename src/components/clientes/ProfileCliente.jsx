@@ -134,7 +134,7 @@ const ProfileCliente = () => {
     const chequearInasistencias = async () => {
       if (cliente) {
         setInasistenciaCliente([]);
-        // await verificarInasistenciaClietne(cliente.clases[0], idClienteEditar);
+        await verificarInasistenciaClietne(cliente.clases[0], idClienteEditar);
       }
     };
     chequearInasistencias();
@@ -440,7 +440,7 @@ const ProfileCliente = () => {
             {/* <!-- Columna del centro --> */}
             <div class="flex-1 font-light text-gray-600">
               <h1 class="text-4xl font-medium text-gray-700">
-                {cliente.nombre}
+                {cliente.nombre} {cliente.apellido}
               </h1>
               <p class="mt-3 font-light text-gray-600">
                 Miembro desde:{" "}

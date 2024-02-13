@@ -817,6 +817,33 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const eliminarClase = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.delete(`/clases/eliminar-clase/${id}`, config);
+      toast.success("Cliente eliminado de la clase correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -904,7 +931,7 @@ const ClasesProvider = ({ children }) => {
         obtenerAsistenciasCliente,
         setClasesOrdenadas,
         registrarInasistenciaPaginaProfe,
-
+        eliminarClase,
         consultarPrimerClase,
       }}
     >

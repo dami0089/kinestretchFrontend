@@ -35,7 +35,15 @@ const AuthProvider = ({ children }) => {
       try {
         const { data } = await clienteAxios("/usuarios/perfil", config);
         setAuth(data);
-        navigate("/inicio");
+
+        const isDisponibilidadSedePath = location.pathname.startsWith(
+          "/disponibilidad-sede/"
+        );
+
+        if (!isDisponibilidadSedePath) {
+          navigate("/inicio");
+        }
+
         if (data._id && location.pathname === "/") {
           navigate("/inicio");
         }

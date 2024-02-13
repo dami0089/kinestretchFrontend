@@ -28,8 +28,10 @@ import useClases from "@/hooks/useClases";
 import ModalNuevaClaseSede from "./ModalNuevaClaseSede";
 import ClasesSedes from "../clases/ClasesSedes";
 import Cargando from "../Cargando";
+import { useNavigate } from "react-router-dom";
 
 import ModalClaseSede from "./ModalClaseSede";
+import useAuth from "@/hooks/useAuth";
 
 export function ProfileSede() {
   const { idVerSede, obtenerSede, sede, modalVerClase } = useSedes();
@@ -41,9 +43,15 @@ export function ProfileSede() {
     handleModalNuevaClaseSede,
   } = useClases();
 
+  const navigate = useNavigate();
+
+  const { handleCargando } = useAuth();
+
   useEffect(() => {
     const traerData = async () => {
+      handleCargando();
       await obtenerSede(idVerSede);
+      handleCargando();
     };
     traerData();
   }, []);
@@ -54,6 +62,12 @@ export function ProfileSede() {
     };
     traerData();
   }, []);
+
+  const handleCompartir = (e) => {
+    e.preventDefault();
+    const url = `/disponibilidad-sede/${idVerSede}`; // Construye la URL
+    window.open(url, "_blank"); // Abre la URL en una nueva pestaña
+  };
 
   return (
     <>
@@ -125,6 +139,14 @@ export function ProfileSede() {
                       // onClick={(e) => handleClickEditar()}
                     >
                       Editar Sede
+                    </Button>
+                  </div>
+                  <div className="mb-2">
+                    <Button
+                      className={`w-full bg-blue-gray-400`}
+                      onClick={(e) => handleCompartir(e)}
+                    >
+                      Compartir Disponibilidad
                     </Button>
                   </div>
                 </div>

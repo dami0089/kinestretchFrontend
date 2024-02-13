@@ -7,6 +7,8 @@ import clienteAxios from "@/configs/clinteAxios";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const ModalResumen = () => {
   const {
@@ -37,7 +39,10 @@ const ModalResumen = () => {
     setFechaApto,
     linkApto,
     setLinkApto,
+    setIdClienteEditar,
   } = useClientes();
+
+  const navigate = useNavigate();
 
   const { auth, usuarioAutenticado, handleCargando } = useAuth();
 
@@ -84,6 +89,25 @@ const ModalResumen = () => {
       setCelularContactoEmergencia("");
       setFechaApto("");
       setLinkApto("");
+
+      Swal.fire({
+        title: "Queres entrar al perfil del cliente?",
+        text: "De esta manera podras agregarlo a nuevas clases",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "No",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          handleCargando();
+          navigate("/clientes/perfil");
+          handleCargando();
+        } else {
+          setIdClienteEditar("");
+        }
+      });
     } catch (error) {
       toast.error(error.response.data.msg, {
         position: "top-right",

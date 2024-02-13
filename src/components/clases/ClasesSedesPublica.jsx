@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { DateTime } from "luxon";
+import { useParams } from "react-router-dom";
 import { Typography } from "@material-tailwind/react";
 import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import { CalendarIcon } from "@heroicons/react/24/solid";
+import Cargando from "../Cargando";
 
-const ClasesSedes = () => {
+const ClasesSedesPublica = () => {
   const {
     obtenerClasesSedeDia,
     clasesDia,
@@ -16,7 +18,10 @@ const ClasesSedes = () => {
     setSedeClase,
   } = useClases();
   const { handleCargando } = useAuth();
-  const { idVerSede, handleModalVerClase } = useSedes();
+  const params = useParams();
+  const { id } = params;
+
+  const { idVerSede, handleModalVerClase, sede, obtenerSede } = useSedes();
   const diasDeLaSemana = [
     "Lunes",
     "Martes",
@@ -54,9 +59,20 @@ const ClasesSedes = () => {
   }, []);
 
   useEffect(() => {
+    const traerData = async () => {
+      handleCargando();
+      await obtenerSede(id);
+      handleCargando();
+    };
+    traerData();
+  }, []);
+
+  useEffect(() => {
     const traerInfo = async () => {
       handleCargando();
-      await obtenerClasesSedeDia(idVerSede, diaSeleccionado);
+      console.log(id);
+      console.log(diaSeleccionado);
+      await obtenerClasesSedeDia(id, diaSeleccionado);
       handleCargando();
     };
     traerInfo();
@@ -64,7 +80,10 @@ const ClasesSedes = () => {
 
   const handleVerClase = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
     e.preventDefault();
-
+    console.log(_id);
+    console.log(diaDeLaSemana);
+    console.log(horarioInicio);
+    console.log(nombreSede);
     setIdVerClase(_id);
     setDiaClase(diaDeLaSemana);
     setHoraClase(horarioInicio);
@@ -74,6 +93,9 @@ const ClasesSedes = () => {
 
   return (
     <>
+      <Typography className="mt-8 text-center font-bold uppercase">
+        Clases para la Sede {sede.nombre}
+      </Typography>
       <div className="mb-8 mt-8 flex justify-center">
         {diasDeLaSemana.map((dia) => (
           <button
@@ -199,8 +221,9 @@ const ClasesSedes = () => {
           <button class="">No hay clases para este dia</button>
         </div>
       )}
+      <Cargando />
     </>
   );
 };
 
-export default ClasesSedes;
+export default ClasesSedesPublica;

@@ -13,6 +13,7 @@ import {
 } from "@material-tailwind/react";
 import clienteAxios from "@/configs/clinteAxios";
 import useAuth from "@/hooks/useAuth";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { ToastContainer, toast } from "react-toastify";
 import imagen from "../../../public/img/DSC_4871.jpg";
 import Cargando from "@/components/Cargando";
@@ -20,6 +21,7 @@ import Cargando from "@/components/Cargando";
 export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const { setAuth, handleCargando } = useAuth();
 
@@ -65,6 +67,12 @@ export function SignIn() {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   return (
     <>
       <img
@@ -89,21 +97,35 @@ export function SignIn() {
 
           <CardBody className="flex flex-col gap-4">
             <Input
-              type="email"
-              label="Email"
+              type="text"
+              label="Usuario o Email"
               size="lg"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              // onKeyDown={(e) => handleSubmit()}
+              onKeyPress={handleKeyPress}
             />
-            <Input
-              type="password"
-              label="Password"
-              size="lg"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              // onKeyDown={(e) => handleSubmit()}
-            />
+            <div className="relative">
+              {" "}
+              {/* Contenedor relativo para el input y el ícono */}
+              <Input
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                size="lg"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+              <div
+                className="absolute right-4 top-1/2 -translate-y-1/2 transform cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-6 w-6" />
+                ) : (
+                  <EyeIcon className="h-6 w-6" />
+                )}
+              </div>
+            </div>
           </CardBody>
           <CardFooter className="pt-0">
             <Button

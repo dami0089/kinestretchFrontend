@@ -1,6 +1,10 @@
 import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
-import { EllipsisVerticalIcon, EyeIcon } from "@heroicons/react/24/solid";
+import {
+  EllipsisVerticalIcon,
+  EyeIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 import {
   Avatar,
   Card,
@@ -18,6 +22,7 @@ import {
 import React, { useEffect } from "react";
 import { DateTime } from "luxon";
 import ModalClaseSede from "./ModalClaseSede";
+import Swal from "sweetalert2";
 
 const ProximaClaseSede = () => {
   const {
@@ -77,6 +82,25 @@ const ProximaClaseSede = () => {
     handleModalVerClase();
   };
 
+  const handleEliminar = async (e, id) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "Eliminamos la clase?",
+      text: "Esta accion es irrecuperable",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await eliminarClase(id);
+        setRecargoProximasClases(true);
+      }
+    });
+  };
+
   return (
     <>
       {clasesSede && clasesSede.length !== 0 ? (
@@ -125,6 +149,7 @@ const ProximaClaseSede = () => {
                       clientes,
                       nombreSede,
                       _id,
+                      cupo,
                     },
                     key
                   ) => {
@@ -165,10 +190,14 @@ const ProximaClaseSede = () => {
                               variant="small"
                               className="mb-1 block text-xs font-medium text-blue-gray-600"
                             >
-                              {percent(clientes.length)}%
+                              {clientes.length}/{cupo}
                             </Typography>
                             <Progress
-                              value={percent(clientes.length)}
+                              value={
+                                clientes.length >= 8
+                                  ? 100
+                                  : (clientes.length / 8) * 100
+                              }
                               variant="gradient"
                               color={clientes.length === 8 ? "green" : "blue"}
                               className="h-1"
@@ -188,6 +217,10 @@ const ProximaClaseSede = () => {
                                   nombreSede
                                 )
                               }
+                            />
+                            <TrashIcon
+                              className="h-8 w-8 text-blue-gray-600 hover:cursor-pointer"
+                              onClick={(e) => handleEliminar(e, _id)}
                             />
                           </div>
                         </td>

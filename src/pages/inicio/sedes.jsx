@@ -9,6 +9,7 @@ import useClientes from "@/hooks/useClientes";
 import Cargando from "@/components/Cargando";
 import useSedes from "@/hooks/useSedes";
 import ModalNuevaSede from "@/components/sedes/ModalNuevaSede";
+import ModalNuevaSecretaria from "@/components/sedes/ModalNuevaSecretaria";
 
 export function Sedes() {
   const {
@@ -26,11 +27,26 @@ export function Sedes() {
   } = useClientes();
   const navigate = useNavigate();
 
-  const { modalNuevaSede, handleModalNuevaSede } = useSedes();
+  const {
+    modalNuevaSede,
+    handleModalNuevaSede,
+    modalNuevaSecretaria,
+    handleModalNuevaSecretaria,
+  } = useSedes();
 
   const handleNavigate = (e) => {
     e.preventDefault();
     navigate("/sedes/activas");
+  };
+
+  const handleNavigateSecretarias = (e) => {
+    e.preventDefault();
+    navigate("/sedes/listado-secretarias");
+  };
+
+  const handleSecretaria = (e) => {
+    e.preventDefault();
+    handleModalNuevaSecretaria();
   };
 
   return (
@@ -111,7 +127,7 @@ export function Sedes() {
         </div>
         <div
           className="w-full p-2 hover:cursor-pointer md:w-1/3"
-          onClick={(e) => setSeleccion(3)}
+          onClick={(e) => handleSecretaria(e)}
         >
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between gap-4">
@@ -148,7 +164,7 @@ export function Sedes() {
       <div className="mt-10 flex flex-wrap justify-between">
         <div
           className="w-full p-2 hover:cursor-pointer md:w-1/3"
-          // onClick={handleModalNuevoCliente}
+          onClick={(e) => handleNavigateSecretarias(e)}
         >
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between gap-4">
@@ -185,7 +201,8 @@ export function Sedes() {
       </div>
 
       <Cargando />
-      {modalNuevaSede ? <ModalNuevaSede /> : ""}
+      {modalNuevaSede ? <ModalNuevaSede /> : null}
+      {modalNuevaSecretaria ? <ModalNuevaSecretaria /> : null}
     </>
   );
 }

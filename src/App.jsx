@@ -24,6 +24,8 @@ import PerfilCliente from "./components/paginaClientes/PerfilCliente";
 import PagosCliente from "./components/paginaClientes/PagosCliente";
 import PerfilProfesor from "./components/profesores/PerfilProfesor";
 import ListadoProfesoresInactivos from "./components/profesores/ListadoProfesoresInactivos";
+import ListadoSecretarias from "./components/sedes/ListadoSecretarias";
+import ClasesSedesPublica from "./components/clases/ClasesSedesPublica";
 
 //TODO:FALTA AGREGAR EL BAR AL MENU
 function App() {
@@ -36,6 +38,8 @@ function App() {
       <Route path="crear-password/:token" element={<PrimerPassword />} />
       <Route path="olvide-password" element={<OlvidePassword />} />
       <Route path="olvide-password/:token" element={<NuevoPassword />} />
+      <Route path="/disponibilidad-sede/:id" element={<ClasesSedesPublica />} />
+
       {/* <Route path="/auth/*" element={<Auth />} />
       <Route path="*" element={<Navigate to="/dashboard/home" replace />} /> */}
 
@@ -64,6 +68,10 @@ function App() {
             <Route index element={<Sedes />} />
             <Route path="activas" element={<ListadoDeSedes />} />
             <Route path="profile-sede" element={<ProfileSede />} />
+            <Route
+              path="listado-secretarias"
+              element={<ListadoSecretarias />}
+            />
           </Route>
           {/* Clases Routes */}
           <Route path="/clases" element={<RutaProtegida />}>
@@ -91,6 +99,40 @@ function App() {
           </Route>
           <Route path="/contable" element={<RutaProtegida />}>
             <Route path="contable-profe" element={<ContableProfesores />} />
+          </Route>
+        </>
+      ) : auth.rol === "secretaria" ? (
+        <>
+          <Route path="/inicio" element={<RutaProtegida />}>
+            <Route index element={<Home />} />
+          </Route>
+          {/* Clientes Routes */}
+          <Route path="/clientes" element={<RutaProtegida />}>
+            <Route index element={<Clientes />} />
+            <Route path="activos" element={<ListadodeClientes />} />
+            <Route path="inactivos" element={<ListadoClientesInactivos />} />
+            <Route path="perfil" element={<ProfileCliente />} />
+          </Route>
+          {/* Profesores Routes */}
+          <Route path="/profesores" element={<RutaProtegida />}>
+            <Route index element={<Profesores />} />
+            <Route path="activos" element={<ListadoProfesoresActivos />} />
+            <Route path="perfil-profesor" element={<PerfilProfesor />} />
+            <Route path="inactivos" element={<ListadoProfesoresInactivos />} />
+          </Route>
+          {/* Sedes Routes */}
+          <Route path="/sedes" element={<RutaProtegida />}>
+            <Route index element={<Sedes />} />
+            <Route path="activas" element={<ListadoDeSedes />} />
+            <Route path="profile-sede" element={<ProfileSede />} />
+            <Route
+              path="listado-secretarias"
+              element={<ListadoSecretarias />}
+            />
+          </Route>
+          {/* Clases Routes */}
+          <Route path="/clases" element={<RutaProtegida />}>
+            <Route index element={<Clases />} />
           </Route>
         </>
       ) : (
