@@ -46,8 +46,10 @@ const ListadodeClientes = () => {
     const inputValue = e.target.value;
     setNombreFiltrado(inputValue);
 
-    const coincidencias = clientes.filter((cliente) =>
-      cliente.nombre.toLowerCase().includes(inputValue.toLowerCase())
+    const coincidencias = clientes.filter(
+      (cliente) =>
+        cliente.nombre.toLowerCase().includes(inputValue.toLowerCase()) ||
+        cliente.apellido.toLowerCase().includes(inputValue.toLowerCase())
     );
     setClientesFiltrados(coincidencias);
   };

@@ -2,77 +2,54 @@ import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useClientes from "@/hooks/useClientes";
 import { ToastContainer, toast } from "react-toastify";
+import { Checkbox, Button } from "@material-tailwind/react";
 import clienteAxios from "@/configs/clinteAxios";
+import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
-
-import useSedes from "@/hooks/useSedes";
-import useClases from "@/hooks/useClases";
-import useProfesores from "@/hooks/useProfesores";
+import Cargando from "../Cargando";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
-const ModalRegistrarPago = () => {
-  const { obtenerSedes, sedes } = useSedes();
-  const { usuarioAutenticado, handleCargando, auth } = useAuth();
-
-  const { obtenerProfesores, profesores } = useProfesores();
-
-  const { setActualizoClasesCliente } = useClases();
-
+const ModalEditarDiagnostico = () => {
   const {
-    cliente,
-    handleModalPago,
-    modalPago,
-    importePagado,
-    setImportePagado,
-    registrarPago,
+    diagnosticoEditar,
+    setDiagnosticoEditar,
+    IdCliente,
+
+    handleModalEditarDiagnostico,
+    modalEditarDiagnostico,
+    editarDiagnostico,
+
+    setActualizarListado,
   } = useClientes();
+
+  const navigate = useNavigate();
+
+  const { auth, usuarioAutenticado, handleCargando } = useAuth();
 
   //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ([importePagado].includes("")) {
-      toast("⚠️ El importe es obligatorio para continuar", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return;
-    }
-    Swal.fire({
-      title: "Imputamos el pago al cliente?",
-      text: "Esta accion marcara en los listados que el cliente tiene el mes pago",
-      icon: "question",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await registrarPago(cliente._id, importePagado, auth._id);
-        setActualizoClasesCliente(true);
-        setImportePagado("");
-        handleModalPago();
-      }
-    });
+    handleCargando();
+    await editarDiagnostico(IdCliente, diagnosticoEditar);
+    setActualizarListado(true);
+    handleCargando();
+    handleModalEditarDiagnostico();
   };
-  const handleCerrarModal = () => {
-    setImportePagado("");
-    handleModalPago();
+
+  const handleCancelar = (e) => {
+    e.preventDefault();
+    setActualizarListado(true);
+    handleModalEditarDiagnostico();
   };
 
   return (
-    <Transition.Root show={modalPago} as={Fragment}>
+    <Transition.Root show={modalEditarDiagnostico} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={handleCerrarModal}
+        onClose={handleModalEditarDiagnostico}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <ToastContainer pauseOnFocusLoss={false} />
@@ -111,7 +88,7 @@ const ModalRegistrarPago = () => {
                 <button
                   type="button"
                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={handleCerrarModal}
+                  onClick={handleModalEditarDiagnostico}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -135,42 +112,49 @@ const ModalRegistrarPago = () => {
                     as="h3"
                     className="text-xl font-bold leading-6 text-gray-900"
                   >
-                    Registrar Pago
+                    Editar Diagnostico
                   </Dialog.Title>
 
                   <form className="mx-2 my-2" onSubmit={handleSubmit}>
-                    <div>
+                    <div className="mb-1">
                       <label
                         className="text-sm font-bold uppercase text-gray-700"
-                        htmlFor="origen"
+                        htmlFor="diagnostico"
                       >
-                        Importe Abonado
+                        Diagnostico
                       </label>
-
-                      <input
-                        id="origen"
-                        className="mb-5 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                      <textarea
+                        id="diagnostico"
                         type="text"
-                        placeholder="Ingrese el importe"
-                        value={importePagado}
-                        onChange={(e) => setImportePagado(e.target.value)}
-                      ></input>
+                        placeholder="Diagnostico"
+                        rows={3}
+                        className="mt-2 w-full resize-none rounded-md border-2 p-2 placeholder-gray-400"
+                        value={diagnosticoEditar}
+                        onChange={(e) => setDiagnosticoEditar(e.target.value)}
+                      />
                     </div>
-
-                    <input
-                      type="submit"
-                      className="w-full cursor-pointer rounded bg-blue-600 p-3 text-sm font-bold uppercase text-white transition-colors hover:bg-blue-300"
-                      value={"Guardar"}
-                    />
                   </form>
+                  <Button
+                    className="mb-5 w-full cursor-pointer rounded bg-blue-600 p-3 text-sm font-bold uppercase text-white transition-colors hover:bg-blue-300"
+                    onClick={(e) => handleSubmit(e)}
+                  >
+                    Guardar
+                  </Button>
+                  <Button
+                    className="w-full cursor-pointer rounded bg-red-600 p-3 text-sm font-bold uppercase text-white transition-colors hover:bg-blue-300"
+                    onClick={(e) => handleCancelar(e)}
+                  >
+                    Cancelar
+                  </Button>
                 </div>
               </div>
             </div>
           </Transition.Child>
+          <Cargando />
         </div>
       </Dialog>
     </Transition.Root>
   );
 };
 
-export default ModalRegistrarPago;
+export default ModalEditarDiagnostico;

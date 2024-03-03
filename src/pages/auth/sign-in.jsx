@@ -15,7 +15,7 @@ import clienteAxios from "@/configs/clinteAxios";
 import useAuth from "@/hooks/useAuth";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { ToastContainer, toast } from "react-toastify";
-import imagen from "../../../public/img/DSC_4871.jpg";
+import imagen from "../../../public/img/Kinestretch-.png";
 import Cargando from "@/components/Cargando";
 
 export function SignIn() {

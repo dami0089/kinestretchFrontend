@@ -30,7 +30,7 @@ const ModalAsignarClaseACliente = () => {
     setActualizoClasesCliente,
   } = useClases();
 
-  const { cliente } = useClientes();
+  const { cliente, primerClase, setPrimerClase } = useClientes();
 
   const [renderizarClases, setRenderizarClases] = useState(false);
 
@@ -83,7 +83,7 @@ const ModalAsignarClaseACliente = () => {
 
     try {
       handleCargando();
-      await asignarClienteAClase(cliente._id, idClaseSeleccionada);
+      await asignarClienteAClase(cliente._id, idClaseSeleccionada, primerClase);
       setIdSede("");
       setDiaDeLaSemana("");
       setIdClaseSeleccionada("");
@@ -245,6 +245,25 @@ const ModalAsignarClaseACliente = () => {
                             {clase.nombreProfe} - {clase.horarioInicio}:00 hs
                           </option>
                         ))}
+                      </select>
+                    </div>
+
+                    <div className="mb-3">
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="apto"
+                      >
+                        Es su primer clase?
+                      </label>
+                      <select
+                        id="apto"
+                        className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                        value={primerClase}
+                        onChange={(e) => setPrimerClase(e.target.value)}
+                      >
+                        <option value="">--Seleccionar--</option>
+                        <option value="si">Si</option>
+                        <option value="no">No</option>
                       </select>
                     </div>
 

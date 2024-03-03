@@ -24,6 +24,11 @@ const ProfesoresProvider = ({ children }) => {
   const [idProfesor, setIdProfesor] = useState("");
   const [modalEditarProfe, setModalEditarProfe] = useState(false);
   const [idProfeEditar, setIdProfeEditar] = useState("");
+  const [modalEditarDatosProfe, setModalEditardatosProfe] = useState(false);
+
+  const handleModalEditarDatosProfe = () => {
+    setModalEditardatosProfe((prev) => !prev);
+  };
 
   const handleRetiro = () => {
     setModalRegistrarRetiro((prev) => !prev);
@@ -536,6 +541,8 @@ const ProfesoresProvider = ({ children }) => {
         editarProfe,
         idProfeEditar,
         setIdProfeEditar,
+        modalEditarDatosProfe,
+        handleModalEditarDatosProfe,
       }}
     >
       {children}

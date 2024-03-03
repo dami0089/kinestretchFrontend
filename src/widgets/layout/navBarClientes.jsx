@@ -31,6 +31,7 @@ import io from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
+import Swal from "sweetalert2";
 
 export function DashboardNavbarClientes() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -42,13 +43,28 @@ export function DashboardNavbarClientes() {
     auth,
 
     setUsuarioAutenticado,
+    handleCargando,
   } = useAuth();
 
   const handleclose = () => {
-    cerrarSesionAuth();
-    setUsuarioAutenticado("");
-    localStorage.removeItem("token");
-    navigate("/");
+    Swal.fire({
+      title: "Cerrar Sesion?",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        cerrarSesionAuth();
+        setUsuarioAutenticado("");
+        localStorage.removeItem("token");
+        navigate("/");
+        handleCargando();
+      }
+    });
   };
 
   return (

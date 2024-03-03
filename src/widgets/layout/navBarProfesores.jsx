@@ -31,26 +31,49 @@ import io from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
+import Swal from "sweetalert2";
 
 export function DashboardNavbarProfesores() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar, openSidenav } = controller;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+
   const { cerrarSesionAuth, auth, handleCargando, setUsuarioAutenticado } =
     useAuth();
 
   const handleclose = () => {
-    cerrarSesionAuth();
-    setUsuarioAutenticado("");
-    localStorage.removeItem("token");
-    navigate("/");
+    Swal.fire({
+      title: "Cerrar Sesion?",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        cerrarSesionAuth();
+        setUsuarioAutenticado("");
+        localStorage.removeItem("token");
+        navigate("/");
+        handleCargando();
+      }
+    });
   };
 
   const handleContable = (e) => {
     e.preventDefault();
     handleCargando();
     navigate("/contable/contable-profe");
+    handleCargando();
+  };
+
+  const handlePerfil = (e) => {
+    e.preventDefault();
+    handleCargando();
+    navigate("/perfil/perfil-profe");
     handleCargando();
   };
 
@@ -69,7 +92,10 @@ export function DashboardNavbarProfesores() {
             <Link to="/inicio" className="text-white hover:text-gray-300">
               Inicio
             </Link>
-            <Link to="/seccion2" className="text-white hover:text-gray-300">
+            <Link
+              className="text-white hover:text-gray-300"
+              onClick={(e) => handlePerfil(e)}
+            >
               Mi perfil
             </Link>
             <Link
@@ -116,7 +142,10 @@ export function DashboardNavbarProfesores() {
             <Link to="/inicio" className="text-white hover:text-gray-300">
               Inicio
             </Link>
-            <Link to="/seccion2" className="text-white hover:text-gray-300">
+            <Link
+              className="text-white hover:text-gray-300"
+              onClick={(e) => handlePerfil(e)}
+            >
               Mi perfil
             </Link>
             <Link

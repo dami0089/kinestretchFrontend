@@ -32,6 +32,7 @@ import { useEffect } from "react";
 import { QRCode } from "qrcode";
 
 import useAuth from "@/hooks/useAuth";
+import Swal from "sweetalert2";
 
 import { useNavigate } from "react-router-dom";
 
@@ -48,15 +49,31 @@ export function DashboardNavbar() {
     setAutenticado,
     consultarAutenticacion,
     setUsuarioAutenticado,
+    handleCargando,
   } = useAuth();
 
   const navigate = useNavigate();
 
-  const handleclose = () => {
-    cerrarSesionAuth();
-    setUsuarioAutenticado("");
-    localStorage.removeItem("token");
-    navigate("/");
+  const handleclose = (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "Cerrar Sesion?",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        cerrarSesionAuth();
+        setUsuarioAutenticado("");
+        localStorage.removeItem("token");
+        navigate("/");
+        handleCargando();
+      }
+    });
   };
 
   const handleAbrirModal = () => {
@@ -116,7 +133,7 @@ export function DashboardNavbar() {
       <div className="flex flex-col-reverse justify-center gap-6 md:flex-row md:items-center md:justify-between">
         <div className="items-center text-center capitalize">
           <div className="mr-auto md:mr-4 md:w-56">
-            <Input label="Buscar cliente" />
+            {/* <Input label="Buscar cliente" /> */}
           </div>
         </div>
         <div className="flex items-center text-center">
@@ -163,7 +180,7 @@ export function DashboardNavbar() {
               <IconButton variant="text" color="blue-gray">
                 <ArrowLeftOnRectangleIcon
                   className="h-5 w-5 text-blue-gray-500"
-                  onClick={handleclose}
+                  onClick={(e) => handleclose(e)}
                 />
               </IconButton>
             </MenuHandler>

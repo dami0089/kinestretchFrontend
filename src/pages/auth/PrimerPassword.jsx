@@ -10,7 +10,9 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
-import fondo from "../../../public/img/DSC_4871.jpg";
+// import fondo from "../../../public/img/DSC_4871.jpg";
+import fondo from "../../../public/img/Kinestretch-.png";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import clienteAxios from "@/configs/clinteAxios";

@@ -111,7 +111,7 @@ const ClasesManana = () => {
             <Typography variant="h6" color="blue-gray" className="mb-1">
               Proximas Mañana{" "}
               <span className="text-blue-500">
-                {diaSemanaActual.toUpperCase()}
+                {diaSemanaActual?.toUpperCase()}
               </span>
             </Typography>
           </div>

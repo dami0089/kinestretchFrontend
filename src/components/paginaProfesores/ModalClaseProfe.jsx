@@ -43,6 +43,8 @@ const ModalClaseProfe = () => {
     registrarInasistenciaPaginaProfe,
 
     consultarPrimerClase,
+    diaSeleccionado,
+    setDiaSeleccionado,
   } = useClases();
   const [primerasClases, setPrimerasClases] = useState({});
   const { handleCargando } = useAuth();
@@ -228,6 +230,8 @@ const ModalClaseProfe = () => {
       if (result.isConfirmed) {
         handleCargando();
         await desactivarCliente(id);
+        setActualizo(true);
+        setDiaSeleccionado(diaActual);
         handleCargando();
         handleModalClasesProfe();
       }

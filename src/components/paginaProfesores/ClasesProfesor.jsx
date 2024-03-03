@@ -6,6 +6,7 @@ import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import useProfesores from "@/hooks/useProfesores";
 import { CalendarIcon } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 
 const ClasesProfesor = () => {
   const {
@@ -20,11 +21,15 @@ const ClasesProfesor = () => {
     sedeClase,
     setSedeClase,
     limpiarAsistencias,
+    diaSeleccionado,
+    setDiaSeleccionado,
   } = useClases();
   const { handleCargando } = useAuth();
   const { idVerSede, handleModalVerClase } = useSedes();
   const { auth } = useAuth();
   const { handleModalClasesProfe, profesor } = useProfesores();
+  const navigate = useNavigate();
+
   const diasDeLaSemana = [
     "Lunes",
     "Martes",
@@ -33,8 +38,6 @@ const ClasesProfesor = () => {
     "Viernes",
     "Sabado",
   ];
-
-  const [diaSeleccionado, setDiaSeleccionado] = useState(""); // Por defecto, mostrará las clases del Lunes.
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -57,12 +60,9 @@ const ClasesProfesor = () => {
   useEffect(() => {
     const limpiarAsist = async () => {
       await limpiarAsistencias(diaActual);
+      setDiaSeleccionado(diaActual);
     };
     limpiarAsist();
-  }, []);
-
-  useEffect(() => {
-    setDiaSeleccionado(diaActual);
   }, []);
 
   useEffect(() => {
@@ -76,16 +76,17 @@ const ClasesProfesor = () => {
 
   const handleVerClase = (e, _id, dia, hora, sede) => {
     e.preventDefault();
-    setIdVerClase(_id);
-    setDiaClase(dia);
-    setHoraClase(hora);
-    setSedeClase(sede);
-    handleModalClasesProfe();
+    // setIdVerClase(_id);
+    // setDiaClase(dia);
+    // setHoraClase(hora);
+    // setSedeClase(sede);
+    // handleModalClasesProfe();
+    navigate(`/clase/${_id}`);
   };
 
   return (
     <>
-      <div className="mb-8 mt-8 flex justify-center">
+      <div className="mb-8 mt-8 flex h-full justify-center">
         {/* Para dispositivos móviles: menú desplegable */}
         <select
           onChange={(e) => seleccionarDia(e.target.value)}

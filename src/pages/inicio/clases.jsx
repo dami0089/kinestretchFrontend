@@ -13,10 +13,10 @@ export function Clases() {
 
   const { handleModalNuevaClase, modalNuevaClase } = useClases();
 
-  // const handleNavigate = (e) => {
-  //   e.preventDefault();
-  //   navigate("/clientes/activos");
-  // };
+  const handleNavigateClases = (e) => {
+    e.preventDefault();
+    navigate("/clases/listado-clases");
+  };
 
   return (
     <>
@@ -62,7 +62,7 @@ export function Clases() {
 
         <div
           className="w-full p-2 hover:cursor-pointer md:w-1/2"
-          onClick={(e) => handleNavigate(e)}
+          onClick={(e) => handleNavigateClases(e)}
         >
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between gap-4">

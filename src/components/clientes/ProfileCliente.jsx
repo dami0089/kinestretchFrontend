@@ -19,12 +19,14 @@ import pago from "../../../public/lotties/billing.json";
 import calendario from "../../../public/lotties/calendar.json";
 import cuenta from "../../../public/lotties/Currency.json";
 import activar from "../../../public/lotties/Success.json";
+import doctor from "../../../public/lotties/doctor.json";
 
 import ContableCliente from "./ContableCliente";
 import ModalRegistrarPago from "./ModalRegistrarPago";
 import ModalEditarPago from "./ModalEditarPago";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@material-tailwind/react";
+import ModalCertificadoMedico from "./ModalCertificadoMedico";
 
 const ProfileCliente = () => {
   const {
@@ -61,6 +63,8 @@ const ProfileCliente = () => {
     setFechaApto,
     linkApto,
     setLinkApto,
+    handleModalCertificado,
+    modalCertificadoMedico,
   } = useClientes();
   const { handleCargando, cargando } = useAuth();
 
@@ -134,7 +138,12 @@ const ProfileCliente = () => {
     const chequearInasistencias = async () => {
       if (cliente) {
         setInasistenciaCliente([]);
-        await verificarInasistenciaClietne(cliente.clases[0], idClienteEditar);
+        if (cliente.clases?.length > 0) {
+          await verificarInasistenciaClietne(
+            cliente.clases[0],
+            idClienteEditar
+          );
+        }
       }
     };
     chequearInasistencias();
@@ -164,6 +173,7 @@ const ProfileCliente = () => {
   const cal = useRef(null);
   const cur = useRef(null);
   const act = useRef(null);
+  const doc = useRef(null);
 
   useEffect(() => {
     // Cargando las animaciones
@@ -219,6 +229,14 @@ const ProfileCliente = () => {
       loop: true,
       autoplay: true,
       animationData: activar,
+    });
+
+    lottie.loadAnimation({
+      container: doc.current,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: doctor,
     });
   }, []);
 
@@ -317,6 +335,11 @@ const ProfileCliente = () => {
     });
   };
 
+  const handleCertificado = (e) => {
+    e.preventDefault();
+    handleModalCertificado();
+  };
+
   return (
     <div class="p-16">
       <ToastContainer pauseOnFocusLoss={false} />
@@ -357,6 +380,14 @@ const ProfileCliente = () => {
           </div>
 
           <div class="mt-32 flex justify-between space-x-8 md:mt-0 md:justify-center">
+            {/* doc Icon */}
+            <div
+              ref={doc}
+              title="Editar"
+              className="hover:cursor-pointer"
+              onClick={(e) => handleCertificado(e)}
+              style={{ width: 50, height: 50 }}
+            ></div>
             {/* Edit Icon */}
             <div
               ref={editRef}
@@ -507,6 +538,7 @@ const ProfileCliente = () => {
       {modalEnviarMensaje ? <ModalEnviarMensaje /> : ""}
       {modalPago ? <ModalRegistrarPago /> : ""}
       {modalEditarPago ? <ModalEditarPago /> : ""}
+      {modalCertificadoMedico ? <ModalCertificadoMedico /> : ""}
       <Cargando />
     </div>
   );

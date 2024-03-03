@@ -11,30 +11,39 @@ import useClases from "@/hooks/useClases";
 import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import ListadoAlumnosClaseClasesVistaProfe from "@/components/paginaProfesores/ListadoAlumnosClaseClasesVistaProfe";
 
-export function PaginaProfesores() {
+export function ClasesProfe() {
   const { auth } = useAuth();
   const { modalClasesProfe, obtenerProfesor, profesor } = useProfesores();
-  const { modalRegistrarPagoProfe, limpiarAsistencias } = useClases();
+  const { modalRegistrarPagoProfe, limpiarAsistencias, obtenerClase, clase } =
+    useClases();
+  const { handleCargando } = useAuth();
+  const params = useParams();
+
+  const { id } = params;
 
   useEffect(() => {
-    const obtenerInfo = async () => {
-      await obtenerProfesor(auth.profesor);
+    const obtenerDataClase = async () => {
+      handleCargando();
+      await obtenerClase(id);
+      handleCargando();
     };
-    obtenerInfo();
+    obtenerDataClase();
   }, []);
 
   return (
     <>
       <ToastContainer pauseOnFocusLoss={false} />
 
-      <section className="relative block h-[50vh]">
+      <section className="relative block h-[40vh]">
         <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('/img/trainer-grupo-personas-ayudando-ejercicios-estiramiento.jpg')] bg-cover bg-center" />
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
       </section>
       <section className="relative h-auto bg-blue-gray-50/50 px-4 py-16">
         <div className="container mx-auto">
-          <div className="relative -mt-64 mb-6 flex w-full min-w-0 flex-col break-words rounded-3xl bg-white shadow-xl shadow-gray-500/5">
+          <div className="relative -mt-64 mb-6 flex h-full w-full min-w-0 flex-col break-words rounded-3xl bg-white shadow-xl shadow-gray-500/5">
             <div className="px-6">
               <div className="flex flex-wrap justify-center">
                 <div className="flex w-full justify-center px-4 lg:order-2 lg:w-3/12">
@@ -55,18 +64,12 @@ export function PaginaProfesores() {
               </div>
               <div className="my-8 text-center">
                 <Typography variant="h2" color="blue-gray" className="mb-2">
-                  {profesor.nombre} {profesor.apellido}
+                  Clase del {clase.diaDeLaSemana} - {clase.horarioInicio}:00 HS
                 </Typography>
-                <div className="mb-2 flex items-center justify-center gap-2">
-                  <UserIcon className="-mt-px h-4 w-4 text-blue-gray-700" />
-                  <Typography className="font-medium text-blue-gray-700">
-                    Profesor
-                  </Typography>
-                </div>
               </div>
             </div>
             <div className="align-middle ">
-              <ClasesProfesor />
+              <ListadoAlumnosClaseClasesVistaProfe />
             </div>
             <Cargando />
           </div>
@@ -78,4 +81,4 @@ export function PaginaProfesores() {
   );
 }
 
-export default PaginaProfesores;
+export default ClasesProfe;

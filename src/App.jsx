@@ -26,6 +26,10 @@ import PerfilProfesor from "./components/profesores/PerfilProfesor";
 import ListadoProfesoresInactivos from "./components/profesores/ListadoProfesoresInactivos";
 import ListadoSecretarias from "./components/sedes/ListadoSecretarias";
 import ClasesSedesPublica from "./components/clases/ClasesSedesPublica";
+import ListadoDeClases from "./components/clases/ListadoDeClases";
+import ListadoAlumnosClaseClases from "./components/clases/ListadoAlumnosClaseClases";
+import PerfilProfesorPagina from "./components/paginaProfesores/PerfilProfesor";
+import ClasesProfe from "./pages/inicio/clasesProfesor";
 
 //TODO:FALTA AGREGAR EL BAR AL MENU
 function App() {
@@ -76,6 +80,11 @@ function App() {
           {/* Clases Routes */}
           <Route path="/clases" element={<RutaProtegida />}>
             <Route index element={<Clases />} />
+            <Route path="listado-clases" element={<ListadoDeClases />} />
+            <Route
+              path="listado-alumnos-clase"
+              element={<ListadoAlumnosClaseClases />}
+            />
           </Route>
         </>
       ) : auth.rol === "cliente" ? (
@@ -99,6 +108,12 @@ function App() {
           </Route>
           <Route path="/contable" element={<RutaProtegida />}>
             <Route path="contable-profe" element={<ContableProfesores />} />
+          </Route>
+          <Route path="/perfil" element={<RutaProtegida />}>
+            <Route path="perfil-profe" element={<PerfilProfesorPagina />} />
+          </Route>
+          <Route path="/clase/:id" element={<RutaProtegida />}>
+            <Route index element={<ClasesProfe />} />
           </Route>
         </>
       ) : auth.rol === "secretaria" ? (

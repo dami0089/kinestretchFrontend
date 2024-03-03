@@ -50,6 +50,17 @@ const ContableCliente = () => {
     pagos();
   }, [actualizoClasesCliente]);
 
+  useEffect(() => {
+    const pagos = async () => {
+      if (actualizoClasesCliente) {
+        handleCargando();
+        await obtenerPagos(idClienteEditar);
+        handleCargando();
+      }
+    };
+    pagos();
+  }, []);
+
   const formatDate = (dateString) => {
     // Tomamos solo la parte de la fecha (año, mes, día)
     const dateOnly = dateString.split("T")[0];

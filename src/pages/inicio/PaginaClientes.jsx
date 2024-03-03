@@ -48,7 +48,7 @@ export function PaginaClientes() {
     <>
       <ToastContainer />
       <section className="relative block h-[50vh]">
-        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('../../../public/img/trainer-grupo-personas-ayudando-ejercicios-estiramiento.jpg')] bg-cover bg-center" />
+        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('/img/trainer-grupo-personas-ayudando-ejercicios-estiramiento.jpg')] bg-cover bg-center" />
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
       </section>
 
@@ -61,7 +61,7 @@ export function PaginaClientes() {
                   <div className="relative">
                     <div className="-mt-20 w-40">
                       <Avatar
-                        src="../../../public/img/lado-frontal-usuario-fondo-blanco.jpg"
+                        src="/img/lado-frontal-usuario-fondo-blanco.jpg"
                         alt="Profile picture"
                         variant="circular"
                         className="h-full w-full shadow-xl"

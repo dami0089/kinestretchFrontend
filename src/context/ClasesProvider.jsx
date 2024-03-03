@@ -43,6 +43,8 @@ const ClasesProvider = ({ children }) => {
   const [modalPagoProfesorPerfil, setModalPagoProfesorPerfil] = useState(false);
   const [cupo, setCupo] = useState(0);
   const [modalClaseRecupero, setModalClaseRecupero] = useState(false);
+  const [idClaseVer, setIdClaseVer] = useState("");
+  const [diaSeleccionado, setDiaSeleccionado] = useState(""); // Por defecto, mostrará las clases del Lunes.
 
   const handleModalPagoProfesorPerfil = () => {
     setModalPagoProfesorPerfil((prev) => !prev);
@@ -274,7 +276,7 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
-  const asignarClienteAClase = async (id, idClase) => {
+  const asignarClienteAClase = async (id, idClase, primerClase) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -287,7 +289,7 @@ const ClasesProvider = ({ children }) => {
 
       await clienteAxios.post(
         `/clases/asignar-cliente-a-clase/${id}`,
-        { idClase },
+        { idClase, primerClase },
         config
       );
       toast.success("Cliente Asignado correctamente", {
@@ -642,8 +644,32 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
-      console.log(data);
+
       setAsist(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [inasist, setInasist] = useState([]);
+
+  const comprobarInasistencia = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios(
+        `/clases/consultar-inasistencias/${id}`,
+
+        config
+      );
+
+      setInasist(data);
     } catch (error) {
       console.log(error);
     }
@@ -829,6 +855,85 @@ const ClasesProvider = ({ children }) => {
       };
 
       await clienteAxios.delete(`/clases/eliminar-clase/${id}`, config);
+
+      toast.success("Clase eliminada correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [clases, setClases] = useState([]);
+
+  const obtenerClases = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios("/clases/obtener-clases", config);
+
+      setClases(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [clientesClaseVer, setClientesClaseVer] = useState([]);
+
+  const obtenerClientesClaseVer = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-clientes-clase/${id}`,
+        {},
+        config
+      );
+
+      setClientesClaseVer(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const eliminarClienteDeClase = async (id, clienteId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clases/eliminar-cliente-listado/${id}`,
+        { clienteId },
+        config
+      );
+
       toast.success("Cliente eliminado de la clase correctamente", {
         position: "top-right",
         autoClose: 1500,
@@ -839,6 +944,30 @@ const ClasesProvider = ({ children }) => {
         progress: undefined,
         theme: "light",
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [asistencias, setAsistencias] = useState([]);
+
+  const obtenerAsistenciasClase = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clases/consultar-asistencias/${id}`,
+        config
+      );
+      console.log(data);
+      setAsistencias(data);
     } catch (error) {
       console.log(error);
     }
@@ -933,6 +1062,19 @@ const ClasesProvider = ({ children }) => {
         registrarInasistenciaPaginaProfe,
         eliminarClase,
         consultarPrimerClase,
+        clases,
+        obtenerClases,
+        idClaseVer,
+        setIdClaseVer,
+        clientesClaseVer,
+        obtenerClientesClaseVer,
+        eliminarClienteDeClase,
+        diaSeleccionado,
+        setDiaSeleccionado,
+        asistencias,
+        obtenerAsistenciasClase,
+        inasist,
+        comprobarInasistencia,
       }}
     >
       {children}

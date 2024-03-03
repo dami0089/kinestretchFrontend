@@ -42,6 +42,24 @@ const ClientesProvider = ({ children }) => {
   const [creditosCliente, setCreditosCliente] = useState(0);
   const [fechaApto, setFechaApto] = useState("");
   const [linkApto, setLinkApto] = useState("");
+  const [primerClase, setPrimerClase] = useState("si");
+  const [modalCertificadoMedico, setModalCertificadoMedico] = useState(false);
+  const [fechaEntregaCertificado, setFechaEntregaCertificado] = useState("");
+  const [fechaVencimientoCertificado, setFechaVencimientoCertificado] =
+    useState("");
+  const [linkCertificado, setLinkCertificado] = useState("");
+  const [modalEditarDiagnostico, setModalEditarDiagnostico] = useState(false);
+  const [diagnosticoEditar, setDiagnosticoEditar] = useState("");
+  const [IdCliente, setIdCliente] = useState("");
+  const [actualizarListado, setActualizarListado] = useState(false);
+
+  const handleModalEditarDiagnostico = () => {
+    setModalEditarDiagnostico(!modalEditarDiagnostico);
+  };
+
+  const handleModalCertificado = () => {
+    setModalCertificadoMedico(!modalCertificadoMedico);
+  };
 
   const handleModalDatosCliente = () => {
     setModalEditarDatosPerfilCliente(!modalEditarDatosPerfilCliente);
@@ -689,6 +707,136 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const [certificado, setCertificado] = useState([]);
+
+  const obtenerCertificados = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clientes/obtener-certificados/${id}`,
+        config
+      );
+
+      setFechaEntregaCertificado(data.fechaEntrega);
+      setFechaVencimientoCertificado(data.fechaVencimiento);
+      setLinkCertificado(data.linkDrive);
+
+      setCertificado(data);
+
+      toast.success(data.msg, {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const guardarCertificado = async (id, fechaE, fechaV, link) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clientes/guardar-certificado/${id}`,
+        { fechaE, fechaV, link },
+        config
+      );
+
+      toast.success(data.msg, {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const editarDiagnostico = async (id, diagnostico) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clientes/editar-diagnostico/${id}`,
+        { diagnostico },
+        config
+      );
+
+      toast.success(data.msg, {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ClientesContext.Provider
       value={{
@@ -773,6 +921,28 @@ const ClientesProvider = ({ children }) => {
         setFechaApto,
         linkApto,
         setLinkApto,
+        primerClase,
+        setPrimerClase,
+        fechaEntregaCertificado,
+        setFechaEntregaCertificado,
+        fechaVencimientoCertificado,
+        setFechaVencimientoCertificado,
+        linkCertificado,
+        setLinkCertificado,
+        handleModalCertificado,
+        modalCertificadoMedico,
+        certificado,
+        obtenerCertificados,
+        guardarCertificado,
+        diagnosticoEditar,
+        setDiagnosticoEditar,
+        IdCliente,
+        setIdCliente,
+        handleModalEditarDiagnostico,
+        modalEditarDiagnostico,
+        editarDiagnostico,
+        actualizarListado,
+        setActualizarListado,
       }}
     >
       {children}
