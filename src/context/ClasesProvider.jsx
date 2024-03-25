@@ -392,6 +392,7 @@ const ClasesProvider = ({ children }) => {
         `/clases/obtener-clases-cliente2/${id}`,
         config
       );
+      console.log(data);
       setClasesCliente(data);
     } catch (error) {
       console.log(error);

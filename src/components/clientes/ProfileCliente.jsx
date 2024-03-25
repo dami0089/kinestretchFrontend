@@ -27,6 +27,7 @@ import ModalEditarPago from "./ModalEditarPago";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@material-tailwind/react";
 import ModalCertificadoMedico from "./ModalCertificadoMedico";
+import ModalRecuperoAdmin from "./ModalRecuperoAdmin";
 
 const ProfileCliente = () => {
   const {
@@ -65,6 +66,9 @@ const ProfileCliente = () => {
     setLinkApto,
     handleModalCertificado,
     modalCertificadoMedico,
+    quitarCredito,
+    modalRecuperoAdmin,
+    handleModalRecuperoAdmin,
   } = useClientes();
   const { handleCargando, cargando } = useAuth();
 
@@ -163,6 +167,11 @@ const ProfileCliente = () => {
   const handleAsignarClase = (e) => {
     e.preventDefault();
     handleModalAsignarClaseACliente();
+  };
+
+  const recupero = (e) => {
+    e.preventDefault();
+    handleModalRecuperoAdmin();
   };
 
   const editRef = useRef(null);
@@ -335,6 +344,25 @@ const ProfileCliente = () => {
     });
   };
 
+  const restarCredito = (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: `Restamos 1 credito al cliente?`,
+      text: "Se le restara ese credito a su cuenta",
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await quitarCredito(idClienteEditar);
+        setActualizoClasesCliente(true);
+      }
+    });
+  };
+
   const handleCertificado = (e) => {
     e.preventDefault();
     handleModalCertificado();
@@ -352,14 +380,33 @@ const ProfileCliente = () => {
               </p>
               <p class="p-1 text-gray-400">Creditos Disponibles</p>
             </div>
-            <div>
-              <p class="text-xl font-bold text-gray-700">←</p>
-              <Button
-                onClick={(e) => creditos(e)}
-                class="m-0 rounded-lg bg-light-blue-300 p-1 text-white"
-              >
-                Asignar un credito
-              </Button>
+            <div className="w-full">
+              <p class="text-xl font-bold text-gray-700">← Creditos</p>
+              <div className="flex justify-between">
+                {cliente.creditos > 0 ? (
+                  <Button
+                    onClick={(e) => restarCredito(e)}
+                    className=" h-8 w-8 rounded-lg bg-orange-300 p-1 text-white"
+                  >
+                    -
+                  </Button>
+                ) : null}
+
+                <Button
+                  onClick={(e) => creditos(e)}
+                  className=" h-8 w-8 rounded-lg bg-green-300 p-1 text-white"
+                >
+                  +
+                </Button>
+                {cliente.creditos > 0 ? (
+                  <Button
+                    onClick={(e) => recupero(e)}
+                    className=" h-8 w-8 rounded-lg bg-light-blue-300 p-1 text-white"
+                  >
+                    A
+                  </Button>
+                ) : null}
+              </div>
             </div>
           </div>
           <div class="relative">
@@ -432,7 +479,8 @@ const ProfileCliente = () => {
               style={{ width: 50, height: 50 }}
             ></div>
             {/* Asignar Clase Icon */}
-            {clasesCliente && clasesCliente.length === 0 ? (
+            {(clasesCliente && clasesCliente.length === 0) ||
+            (clasesCliente && cliente.creditos > 0) ? (
               <div
                 ref={alert}
                 title="Asignar Clase"
@@ -513,7 +561,7 @@ const ProfileCliente = () => {
         </div>
         {selectPerfil === 1 ? (
           <div class="mt-4 flex flex-col justify-center">
-            {cliente && cliente.clases && cliente.clases.length !== 0 ? (
+            {clasesCliente.length !== 0 ? (
               <ClasesPorCliente />
             ) : (
               <div class="mt-5 flex flex-col justify-center">
@@ -539,6 +587,7 @@ const ProfileCliente = () => {
       {modalPago ? <ModalRegistrarPago /> : ""}
       {modalEditarPago ? <ModalEditarPago /> : ""}
       {modalCertificadoMedico ? <ModalCertificadoMedico /> : ""}
+      {modalRecuperoAdmin ? <ModalRecuperoAdmin /> : null}
       <Cargando />
     </div>
   );

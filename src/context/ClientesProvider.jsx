@@ -53,6 +53,12 @@ const ClientesProvider = ({ children }) => {
   const [IdCliente, setIdCliente] = useState("");
   const [actualizarListado, setActualizarListado] = useState(false);
 
+  const [modalRecuperoAdmin, setModalRecuperoAdmin] = useState(false);
+
+  const handleModalRecuperoAdmin = () => {
+    setModalRecuperoAdmin(!modalRecuperoAdmin);
+  };
+
   const handleModalEditarDiagnostico = () => {
     setModalEditarDiagnostico(!modalEditarDiagnostico);
   };
@@ -707,6 +713,43 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const quitarCredito = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clientes/quitar-creditos/${id}`, {}, config);
+
+      toast.success("Credito Restado Correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   const [certificado, setCertificado] = useState([]);
 
   const obtenerCertificados = async (id) => {
@@ -943,6 +986,9 @@ const ClientesProvider = ({ children }) => {
         editarDiagnostico,
         actualizarListado,
         setActualizarListado,
+        quitarCredito,
+        modalRecuperoAdmin,
+        handleModalRecuperoAdmin,
       }}
     >
       {children}
