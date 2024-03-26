@@ -19,6 +19,7 @@ import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import useClases from "@/hooks/useClases";
 import Swal from "sweetalert2";
+import ModalEnviarMensajeClase from "./ModalEnviarMensajeClase";
 
 const ListadoAlumnosClaseClases = () => {
   const {
@@ -44,6 +45,8 @@ const ListadoAlumnosClaseClases = () => {
     obtenerClientesClaseVer,
     idClaseVer,
     eliminarClienteDeClase,
+    handleModalEnviarMensajeClase,
+    modalEnviarMensajeClase,
   } = useClases();
 
   const { handleCargando } = useAuth();
@@ -124,15 +127,29 @@ const ListadoAlumnosClaseClases = () => {
     }
   };
 
+  const handleMensaje = (e) => {
+    e.preventDefault();
+
+    handleModalEnviarMensajeClase();
+  };
+
+  const handlePerfil = (e, id) => {
+    e.preventDefault();
+    setIdClienteEditar(id);
+    navigate("/clientes/perfil");
+  };
+
   return (
     <>
       <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-3">
-          <div className="mb-3 mt-8 flex items-center justify-between text-black">
+          <div className="mr-5 mt-10 flex justify-between">
             <Typography className="ml-4  font-bold">
               Listado de Clientes en la clase
             </Typography>
-
+            <Button onClick={(e) => handleMensaje(e)}>Comunicar</Button>
+          </div>
+          <div className="mb-3 mt-8 flex items-center justify-between text-black">
             <div className="mr-5 flex items-center space-x-4"></div>
           </div>
           <CardBody className="overflow-x-scroll px-0 pb-2 pt-0">
@@ -176,7 +193,8 @@ const ListadoAlumnosClaseClases = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-bold"
+                              className="font-bold hover:cursor-pointer hover:text-blue-300"
+                              onClick={(e) => handlePerfil(e, _id)}
                             >
                               {nombre} {apellido}{" "}
                               {esRecupero ? "(Recupero)" : null}
@@ -252,6 +270,7 @@ const ListadoAlumnosClaseClases = () => {
         </Button>
       </div>
       <Cargando />
+      {modalEnviarMensajeClase ? <ModalEnviarMensajeClase /> : null}
     </>
   );
 };

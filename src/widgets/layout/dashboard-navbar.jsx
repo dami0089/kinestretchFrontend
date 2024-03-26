@@ -91,35 +91,35 @@ export function DashboardNavbar() {
     }
   }, [autenticado]);
 
-  // useEffect(() => {
-  //   // const socket = io("http://localhost:3000");
-  //   // const socket = io("http://34.235.146.116:3000");
-  //   // const socket = io("https://postural.com.ar");
+  useEffect(() => {
+    // const socket = io("http://localhost:3000");
+    // const socket = io("http://34.235.146.116:3000");
+    const socket = io("https://postural.com.ar:3000");
 
-  //   socket.on("connection-successful", () => {
-  //     console.log("Connection with WhatsApp is successful!");
-  //     // Aquí puedes realizar cualquier otra lógica que necesites una vez conectado.
-  //   });
+    socket.on("connection-successful", () => {
+      console.log("Connection with WhatsApp is successful!");
+      // Aquí puedes realizar cualquier otra lógica que necesites una vez conectado.
+    });
 
-  //   socket.on("authentication-status", async (status) => {
-  //     if (status === "authenticated") {
-  //       setAutenticado("1");
-  //     } else if (status === "requires-authentication") {
-  //       setAutenticado("2");
+    socket.on("authentication-status", async (status) => {
+      if (status === "authenticated") {
+        setAutenticado("1");
+      } else if (status === "requires-authentication") {
+        setAutenticado("2");
 
-  //       // Espera a que el evento "qr" sea emitido por el backend.
-  //       socket.on("qr", async (qrText) => {
-  //         // Genera la imagen QR a partir de la cadena recibida
-  //         const qrImageUrl = await QRCode.toDataURL(qrText);
-  //         setQr(qrImageUrl);
-  //       });
-  //     }
-  //   });
+        // Espera a que el evento "qr" sea emitido por el backend.
+        socket.on("qr", async (qrText) => {
+          // Genera la imagen QR a partir de la cadena recibida
+          const qrImageUrl = await QRCode.toDataURL(qrText);
+          setQr(qrImageUrl);
+        });
+      }
+    });
 
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <Navbar

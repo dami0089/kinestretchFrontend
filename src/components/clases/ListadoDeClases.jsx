@@ -20,6 +20,7 @@ import Cargando from "../Cargando";
 import Swal from "sweetalert2";
 
 import useClases from "@/hooks/useClases";
+import ModalEditarClase from "./ModalEditarClase";
 
 const ListadoDeClases = () => {
   const { setIdClienteEditar, setCliente } = useClientes();
@@ -28,14 +29,23 @@ const ListadoDeClases = () => {
     setClasesCliente,
     clases,
     obtenerClases,
+    setIdSede,
     idClaseVer,
     setIdClaseVer,
     eliminarClase,
+    handleModalEditarClase,
+    modalEditarClase,
+    idClaseEditar,
+    setDiaDeLaSemana,
+    setIdClaseEditar,
+    setHoraInicio,
+    setIdProfesor,
+    setCupo,
+    recargoListado,
+    setRecargoListado,
   } = useClases();
 
   const { handleCargando } = useAuth();
-
-  const [recargoListado, setRecargoListado] = useState(false);
 
   useEffect(() => {
     const obtenerInfo = async () => {
@@ -119,6 +129,17 @@ const ListadoDeClases = () => {
     });
   };
 
+  const editarClase = (e, id, idSede, dia, hora, profe, cupo) => {
+    e.preventDefault();
+    setIdClaseEditar(id);
+    setIdSede(idSede);
+    setDiaDeLaSemana(dia);
+    setHoraInicio(hora);
+    setIdProfesor(profe);
+    setCupo(cupo);
+    handleModalEditarClase();
+  };
+
   return (
     <>
       <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
@@ -160,6 +181,9 @@ const ListadoDeClases = () => {
                       diaDeLaSemana,
                       horarioInicio,
                       nombreProfe,
+                      sede,
+                      profesor,
+                      cupo,
                     },
                     key
                   ) => {
@@ -214,6 +238,33 @@ const ListadoDeClases = () => {
                         </td>
                         <td className={className}>
                           <div className="flex items-center justify-center gap-4">
+                            <EyeIcon
+                              className="h-8 w-8 hover:cursor-pointer"
+                              onClick={(e) => handleProfile(e, _id)}
+                            />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1em"
+                              height="1em"
+                              viewBox="0 0 24 24"
+                              className="h-8 w-8 hover:cursor-pointer"
+                              onClick={(e) =>
+                                editarClase(
+                                  e,
+                                  _id,
+                                  sede,
+                                  diaDeLaSemana,
+                                  horarioInicio,
+                                  profesor,
+                                  cupo
+                                )
+                              }
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M5 19h1.425L16.2 9.225L14.775 7.8L5 17.575zm-1 2q-.425 0-.712-.288T3 20v-2.425q0-.4.15-.763t.425-.637L16.2 3.575q.3-.275.663-.425t.762-.15q.4 0 .775.15t.65.45L20.425 5q.3.275.437.65T21 6.4q0 .4-.138.763t-.437.662l-12.6 12.6q-.275.275-.638.425t-.762.15zM19 6.4L17.6 5zm-3.525 2.125l-.7-.725L16.2 9.225z"
+                              />
+                            </svg>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="1em"
@@ -227,10 +278,6 @@ const ListadoDeClases = () => {
                                 d="M216 50H40a6 6 0 0 0 0 12h10v146a14 14 0 0 0 14 14h128a14 14 0 0 0 14-14V62h10a6 6 0 0 0 0-12m-22 158a2 2 0 0 1-2 2H64a2 2 0 0 1-2-2V62h132ZM82 24a6 6 0 0 1 6-6h80a6 6 0 0 1 0 12H88a6 6 0 0 1-6-6"
                               />
                             </svg>
-                            <EyeIcon
-                              className="h-8 w-8 hover:cursor-pointer"
-                              onClick={(e) => handleProfile(e, _id)}
-                            />
                           </div>
                         </td>
                       </tr>
@@ -264,6 +311,7 @@ const ListadoDeClases = () => {
         </Button>
       </div>
       <Cargando />
+      {modalEditarClase ? <ModalEditarClase /> : null}
     </>
   );
 };

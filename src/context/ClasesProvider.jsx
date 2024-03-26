@@ -45,6 +45,20 @@ const ClasesProvider = ({ children }) => {
   const [modalClaseRecupero, setModalClaseRecupero] = useState(false);
   const [idClaseVer, setIdClaseVer] = useState("");
   const [diaSeleccionado, setDiaSeleccionado] = useState(""); // Por defecto, mostrará las clases del Lunes.
+  const [modalEditarClase, setModalEditarClase] = useState(false);
+  const [idClaseEditar, setIdClaseEditar] = useState("");
+
+  const [recargoListado, setRecargoListado] = useState(false);
+
+  const [modalEnviarMensajeClase, setModalEnviarMensajeClase] = useState(false);
+
+  const handleModalEnviarMensajeClase = () => {
+    setModalEnviarMensajeClase(!modalEnviarMensajeClase);
+  };
+
+  const handleModalEditarClase = () => {
+    setModalEditarClase(!modalEditarClase);
+  };
 
   const handleModalPagoProfesorPerfil = () => {
     setModalPagoProfesorPerfil((prev) => !prev);
@@ -974,6 +988,100 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const editarClase = async (
+    id,
+    sede,
+    diaDeLaSemana,
+    horarioInicio,
+    profesor,
+    creador,
+    cupo
+  ) => {
+    const clase = {
+      sede,
+      diaDeLaSemana,
+      horarioInicio,
+      profesor,
+      creador,
+      cupo,
+    };
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clases/editar-clase/${id}`, clase, config);
+
+      toast.success("Clase editada correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const enviarMensajeClase = async (id, mensaje) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clases/enviar-mensaje/${id}`,
+        { mensaje },
+        config
+      );
+
+      toast.success("Mensaje enviado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -1076,6 +1184,16 @@ const ClasesProvider = ({ children }) => {
         obtenerAsistenciasClase,
         inasist,
         comprobarInasistencia,
+        handleModalEditarClase,
+        modalEditarClase,
+        idClaseEditar,
+        setIdClaseEditar,
+        editarClase,
+        recargoListado,
+        setRecargoListado,
+        handleModalEnviarMensajeClase,
+        modalEnviarMensajeClase,
+        enviarMensajeClase,
       }}
     >
       {children}
