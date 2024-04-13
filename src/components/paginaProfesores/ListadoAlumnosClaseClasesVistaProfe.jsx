@@ -161,8 +161,6 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
 
   const registrarAsistencia = async (e, _id) => {
     e.preventDefault();
-    console.log(diaActual);
-    console.log(clase.diaDeLaSemana);
     if (asistencias.includes(_id)) {
       toast.error("Ya registraste esta asistencia", {
         position: "top-right",

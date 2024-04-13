@@ -611,7 +611,6 @@ const ClasesProvider = ({ children }) => {
   };
 
   const asistencia = async (id, idCliente) => {
-    console.log(idCliente);
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -1082,6 +1081,38 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const enviarEncuesta = async (
+    pregunta1,
+    pregunta2,
+    pregunta3,
+    pregunta4,
+    id
+  ) => {
+    try {
+      console.log("En enviar encuesta", id);
+      await clienteAxios.post(`/clases/encuesta-recibida/${id}`, {
+        pregunta1,
+        pregunta2,
+        pregunta3,
+        pregunta4,
+      });
+      toast.success("Encuesta Registrada", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () =>
+          (window.location.href = "https://www.kinestretch.com.ar"), // Aquí se maneja la redirección
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -1194,6 +1225,7 @@ const ClasesProvider = ({ children }) => {
         handleModalEnviarMensajeClase,
         modalEnviarMensajeClase,
         enviarMensajeClase,
+        enviarEncuesta,
       }}
     >
       {children}

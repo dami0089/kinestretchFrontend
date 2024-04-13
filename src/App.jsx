@@ -30,8 +30,8 @@ import ListadoDeClases from "./components/clases/ListadoDeClases";
 import ListadoAlumnosClaseClases from "./components/clases/ListadoAlumnosClaseClases";
 import PerfilProfesorPagina from "./components/paginaProfesores/PerfilProfesor";
 import ClasesProfe from "./pages/inicio/clasesProfesor";
+import Encuesta from "./components/clientes/Encuesta";
 
-//TODO:FALTA AGREGAR EL BAR AL MENU
 function App() {
   const { auth } = useAuth();
 
@@ -43,9 +43,7 @@ function App() {
       <Route path="olvide-password" element={<OlvidePassword />} />
       <Route path="olvide-password/:token" element={<NuevoPassword />} />
       <Route path="/disponibilidad-sede/:id" element={<ClasesSedesPublica />} />
-
-      {/* <Route path="/auth/*" element={<Auth />} />
-      <Route path="*" element={<Navigate to="/dashboard/home" replace />} /> */}
+      <Route path="/encuesta/:id/:kind" element={<Encuesta />} />
 
       {/* Inicio Rouotes */}
       {auth.rol === "admin" ? (
