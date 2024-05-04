@@ -85,9 +85,9 @@ export function DashboardNavbarClientes() {
             <Link to="/perfil" className="text-white hover:text-gray-300">
               Mi perfil
             </Link>
-            <Link to="/pagos" className="text-white hover:text-gray-300">
+            {/* <Link to="/pagos" className="text-white hover:text-gray-300">
               Pagos
-            </Link>
+            </Link> */}
           </div>
 
           {/* Botón Hamburguesa y Botón de Salir */}
@@ -129,9 +129,9 @@ export function DashboardNavbarClientes() {
             <Link to="/perfil" className="text-white hover:text-gray-300">
               Mi perfil
             </Link>
-            <Link to="/pagos" className="text-white hover:text-gray-300">
+            {/* <Link to="/pagos" className="text-white hover:text-gray-300">
               Pagos
-            </Link>
+            </Link> */}
           </div>
         )}
       </Navbar>

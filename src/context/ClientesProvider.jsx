@@ -396,7 +396,7 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const enviarMensaje = async (id, mensaje) => {
+  const enviarMensaje = async (id, mensaje, asunto) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -409,7 +409,7 @@ const ClientesProvider = ({ children }) => {
 
       await clienteAxios.post(
         `/clientes/enviar-mensaje/${id}`,
-        { mensaje },
+        { mensaje, asunto },
         config
       );
 

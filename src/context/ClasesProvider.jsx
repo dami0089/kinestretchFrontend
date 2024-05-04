@@ -224,20 +224,9 @@ const ClasesProvider = ({ children }) => {
 
   const obtenerClasesSedeDia = async (id, dia) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await clienteAxios.post(
-        `/clases/obtener-dia/${id}`,
-        { dia },
-        config
-      );
+      const { data } = await clienteAxios.post(`/clases/obtener-dia/${id}`, {
+        dia,
+      });
       setClasesDia(data);
     } catch (error) {
       console.log(error);
@@ -1040,7 +1029,7 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
-  const enviarMensajeClase = async (id, mensaje) => {
+  const enviarMensajeClase = async (id, mensaje, asunto) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -1053,7 +1042,7 @@ const ClasesProvider = ({ children }) => {
 
       await clienteAxios.post(
         `/clases/enviar-mensaje/${id}`,
-        { mensaje },
+        { mensaje, asunto },
         config
       );
 

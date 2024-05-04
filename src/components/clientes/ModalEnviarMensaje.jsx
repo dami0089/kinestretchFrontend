@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useClientes from "@/hooks/useClientes";
 import { ToastContainer, toast } from "react-toastify";
@@ -7,6 +7,7 @@ import useAuth from "@/hooks/useAuth";
 
 const ModalEnviarMensaje = () => {
   const { handleCargando } = useAuth();
+  const [asunto, setAsunto] = useState("");
 
   const {
     cliente,
@@ -37,7 +38,7 @@ const ModalEnviarMensaje = () => {
 
     try {
       handleCargando();
-      await enviarMensaje(cliente._id, mensaje);
+      await enviarMensaje(cliente._id, mensaje, asunto);
       handleCerrar();
       handleCargando();
     } catch (error) {
@@ -56,6 +57,7 @@ const ModalEnviarMensaje = () => {
 
   const handleCerrar = () => {
     setMensaje("");
+    setAsunto("");
     handleModalEnviarMensaje();
   };
 
@@ -131,6 +133,22 @@ const ModalEnviarMensaje = () => {
                   </Dialog.Title>
 
                   <form className="mx-2 my-2" onSubmit={handleSubmit}>
+                    <div>
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="profe"
+                      >
+                        Asunto
+                      </label>
+
+                      <input
+                        id="profe"
+                        className="mb-3 mt-2 w-full resize-none overflow-scroll rounded-md border-2 p-2 placeholder-gray-400"
+                        placeholder="Asunto del mensaje"
+                        value={asunto}
+                        onChange={(e) => setAsunto(e.target.value)}
+                      />
+                    </div>
                     <div>
                       <label
                         className="text-sm font-bold uppercase text-gray-700"
