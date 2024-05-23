@@ -35,6 +35,10 @@ const ListadoClasesCliente = () => {
     setActualizoClasesCliente,
     registrarInasistenciaCliente,
     inasistencias,
+    handleModalCancelarClase,
+    idClaseCancelar,
+    setIdClaseCancelar,
+    inasistenciaRecupero,
   } = useClases();
 
   const { handleCargando, auth } = useAuth();
@@ -73,33 +77,53 @@ const ListadoClasesCliente = () => {
 
   const navigate = useNavigate();
 
-  const handleCancelarClase = (e, clase) => {
+  const handleCancelarClases = (e, clase, esRecupero) => {
     e.preventDefault();
-    Swal.fire({
-      title: "Queres Cancelar Tu clase?",
-      icon: "question",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        handleCargando();
-        await registrarInasistenciaCliente(auth._id, clase);
-        setActualizoClasesCliente(true);
-        window.location.reload();
-        handleCargando();
-      }
-    });
+    setIdClaseCancelar(clase);
+    if (!esRecupero) {
+      handleModalCancelarClase();
+    } else {
+      Swal.fire({
+        title: "Queres Cancelar Tu clase?",
+        text: "Si cancelas esta clase de recupero, deberas contactarnos si deseas reprogramarla.",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "No",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          handleCargando();
+          await inasistenciaRecupero(auth._id, clase);
+          setActualizoClasesCliente(true);
+          // window.location.reload();
+          handleCargando();
+        }
+      });
+    }
   };
 
-  const esClaseCancelada = (idClase) => {
+  const esClaseCancelada = (idClase, claseFechacompleta) => {
+    // Extraer día y mes de claseFechacompleta
+    const [day, month] = claseFechacompleta.split("/").map(Number);
+
     if (inasistencias.length > 0) {
-      return inasistencias.some(
-        (inasistencia) => inasistencia.clase === idClase
-      );
+      return inasistencias.some((inasistencia) => {
+        // Convertir fechaInasistencia a un objeto Date
+        const fechaInasistencia = new Date(inasistencia.fechaInasistencia);
+        // Extraer día y mes de fechaInasistencia
+        const inasistenciaDay = fechaInasistencia.getUTCDate();
+        const inasistenciaMonth = fechaInasistencia.getUTCMonth() + 1; // getUTCMonth() devuelve un índice de mes basado en cero
+
+        return (
+          inasistencia.clase === idClase &&
+          inasistenciaDay === day &&
+          inasistenciaMonth === month
+        );
+      });
     }
+    return false;
   };
 
   const obtenerProximaFecha = (diaSemana, horaInicio) => {
@@ -185,7 +209,9 @@ const ListadoClasesCliente = () => {
               <div
                 key={clase._id}
                 className={`mx-auto mb-5 max-w-md overflow-hidden rounded-lg border ${
-                  esClaseCancelada(clase._id) ? "bg-gray-300" : "bg-white"
+                  esClaseCancelada(clase._id, clase.fechaCompleta)
+                    ? "bg-gray-300"
+                    : "bg-white"
                 } shadow-md xl:mx-0`}
               >
                 <div className="flex">
@@ -208,10 +234,12 @@ const ListadoClasesCliente = () => {
                     <div className="mt-4 flex items-center justify-between">
                       <span
                         className={`text-l text-gray-600 ${
-                          esClaseCancelada(clase._id) ? "text-red-500" : ""
+                          esClaseCancelada(clase._id, clase.fechaCompleta)
+                            ? "text-red-500"
+                            : ""
                         }`}
                       >
-                        {esClaseCancelada(clase._id)
+                        {esClaseCancelada(clase._id, clase.fechaCompleta)
                           ? "CANCELASTE ESTA CLASE"
                           : clase.nombreSede}
                         <span className="font-bold uppercase">
@@ -220,13 +248,15 @@ const ListadoClasesCliente = () => {
                         </span>
                       </span>
 
-                      {esClaseCancelada(clase._id) ? (
+                      {esClaseCancelada(clase._id, clase.fechaCompleta) ? (
                         ""
                       ) : (
                         <XCircleIcon
                           title="Cancelar clase"
                           className="h-8 w-8 text-red-300 hover:cursor-pointer"
-                          onClick={(e) => handleCancelarClase(e, clase._id)}
+                          onClick={(e) =>
+                            handleCancelarClases(e, clase._id, clase.esRecupero)
+                          }
                         />
                       )}
                     </div>

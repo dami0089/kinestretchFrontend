@@ -13,12 +13,19 @@ import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ListadoAlumnosClaseClasesVistaProfe from "@/components/paginaProfesores/ListadoAlumnosClaseClasesVistaProfe";
+import ListadoAlumnosAusenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAusenteClaseProfe";
 
 export function ClasesProfe() {
   const { auth } = useAuth();
   const { modalClasesProfe, obtenerProfesor, profesor } = useProfesores();
-  const { modalRegistrarPagoProfe, limpiarAsistencias, obtenerClase, clase } =
-    useClases();
+  const {
+    modalRegistrarPagoProfe,
+    limpiarAsistencias,
+    obtenerClase,
+    clase,
+    inasistentesClase,
+    obtenerInasistentesClase,
+  } = useClases();
   const { handleCargando } = useAuth();
   const params = useParams();
 
@@ -28,6 +35,8 @@ export function ClasesProfe() {
     const obtenerDataClase = async () => {
       handleCargando();
       await obtenerClase(id);
+      await obtenerInasistentesClase(id);
+
       handleCargando();
     };
     obtenerDataClase();
@@ -71,6 +80,13 @@ export function ClasesProfe() {
             <div className="align-middle ">
               <ListadoAlumnosClaseClasesVistaProfe />
             </div>
+
+            {inasistentesClase.length > 0 ? (
+              <div className="align-middle ">
+                <ListadoAlumnosAusenteClaseProfe />
+              </div>
+            ) : null}
+
             <Cargando />
           </div>
           {modalClasesProfe ? <ModalClaseProfe /> : ""}

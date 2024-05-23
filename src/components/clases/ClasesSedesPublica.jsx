@@ -70,8 +70,6 @@ const ClasesSedesPublica = () => {
   useEffect(() => {
     const traerInfo = async () => {
       handleCargando();
-      console.log(id);
-      console.log(diaSeleccionado);
       await obtenerClasesSedeDia(id, diaSeleccionado);
       handleCargando();
     };
@@ -156,11 +154,11 @@ const ClasesSedesPublica = () => {
                               : "text-red-600"
                           }`}
                         >
-                          {clase.clientes.length === 0
-                            ? "Aun no hay alumnos inscriptos"
-                            : clase.clientes.length >= clase.cupo
+                          {clase.disponibilidad === clase.cupo
+                            ? "Hay Disponibilidad"
+                            : clase.disponibilidad >= clase.cupo
                             ? `Cupo Completo`
-                            : `${clase.clientes.length} de ${clase.cupo} Alumnos inscriptos`}
+                            : `Hay Disponibilidad`}
                         </div>
                       </div>
                     </div>
@@ -216,10 +214,10 @@ const ClasesSedesPublica = () => {
                           }`}
                         >
                           {clase.clientes.length === 0
-                            ? "Aun no hay alumnos inscriptos"
+                            ? "Hay Disponibilidad"
                             : clase.clientes.length >= clase.cupo
                             ? `Cupo Completo`
-                            : `${clase.clientes.length} de ${clase.cupo} Alumnos inscriptos`}
+                            : `Hay Disponibilidad`}
                         </div>
                       </div>
                     </div>

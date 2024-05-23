@@ -51,6 +51,11 @@ const ClasesProvider = ({ children }) => {
   const [recargoListado, setRecargoListado] = useState(false);
 
   const [modalEnviarMensajeClase, setModalEnviarMensajeClase] = useState(false);
+  const [modalCancelarClase, setModalCancelarClase] = useState(false);
+
+  const handleModalCancelarClase = () => {
+    setModalCancelarClase((prev) => !prev);
+  };
 
   const handleModalEnviarMensajeClase = () => {
     setModalEnviarMensajeClase(!modalEnviarMensajeClase);
@@ -196,6 +201,30 @@ const ClasesProvider = ({ children }) => {
 
       const { data } = await clienteAxios(`/clases/obtener/${id}`, config);
       setClasesSede(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [clasesClienteFecha, setClaseClienteFecha] = useState([]);
+
+  const obtenerClasesConFecha = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clases/obtener-clases-mes/${id}`,
+        config
+      );
+      console.log(data);
+      setClaseClienteFecha(data);
     } catch (error) {
       console.log(error);
     }
@@ -699,7 +728,10 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
-  const registrarInasistenciaCliente = async (id, claseId) => {
+  const [fechaCancelar, setFechaCancelar] = useState("");
+  const [idClaseCancelar, setIdClaseCancelar] = useState("");
+
+  const registrarInasistenciaCliente = async (id, claseId, fecha) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -710,8 +742,8 @@ const ClasesProvider = ({ children }) => {
         },
       };
       const { data } = await clienteAxios.post(
-        `/clases/cancelar-clase-cliente/${id}`,
-        { claseId },
+        `/clases/cancelar-clase-cliente-nuevo/${id}`,
+        { claseId, fecha },
         config
       );
 
@@ -739,7 +771,8 @@ const ClasesProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      toast.error(error, {
+      console.log(error.response.data.error);
+      toast.error(error.response.data.error, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -915,6 +948,31 @@ const ClasesProvider = ({ children }) => {
       );
 
       setClientesClaseVer(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [inasistentesClase, setInasistentesClase] = useState([]);
+
+  const obtenerInasistentesClase = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-inasistentes-clase/${id}`,
+        {},
+        config
+      );
+
+      setInasistentesClase(data);
     } catch (error) {
       console.log(error);
     }
@@ -1102,6 +1160,47 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const inasistenciaRecupero = async (id, idClase) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clases/eliminar-cliente-recupero/${id}`,
+        { idClase },
+        config
+      );
+
+      toast.success("Recupero Cancelado correctamente", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error.response.data.error, {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -1215,6 +1314,18 @@ const ClasesProvider = ({ children }) => {
         modalEnviarMensajeClase,
         enviarMensajeClase,
         enviarEncuesta,
+        modalCancelarClase,
+        handleModalCancelarClase,
+        clasesClienteFecha,
+        obtenerClasesConFecha,
+        setClaseClienteFecha,
+        fechaCancelar,
+        setFechaCancelar,
+        idClaseCancelar,
+        setIdClaseCancelar,
+        inasistentesClase,
+        obtenerInasistentesClase,
+        inasistenciaRecupero,
       }}
     >
       {children}

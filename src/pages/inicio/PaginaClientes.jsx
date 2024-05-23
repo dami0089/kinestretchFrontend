@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import useClases from "@/hooks/useClases";
 import ModalClaseRecupero from "@/components/paginaClientes/ModalClaseRecupero";
 import Cargando from "@/components/Cargando";
+import ModalCancelarClase from "@/components/paginaClientes/ModalCancelarClase";
 
 export function PaginaClientes() {
   const { auth } = useAuth();
@@ -23,6 +24,7 @@ export function PaginaClientes() {
     handleModalClaseRecupero,
     inasistencias,
     obtenerInasistencias,
+    modalCancelarClase,
   } = useClases();
 
   useEffect(() => {
@@ -119,6 +121,7 @@ export function PaginaClientes() {
         </div>
       </section>
       {modalClaseRecupero ? <ModalClaseRecupero /> : ""}
+      {modalCancelarClase ? <ModalCancelarClase /> : ""}
       <Cargando />
     </>
   );

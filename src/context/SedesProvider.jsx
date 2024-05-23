@@ -153,7 +153,6 @@ const SedesProvider = ({ children }) => {
   };
 
   const obtenerSede = async (id) => {
-    console.log("Voy a mandar la peticion");
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
