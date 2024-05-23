@@ -234,6 +234,38 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     });
   };
 
+  const handleEmergencia = (
+    e,
+    nombreContactoEmergencia,
+    celularContactoEmergencia
+  ) => {
+    e.preventDefault();
+    Swal.fire({
+      title: `${
+        nombreContactoEmergencia
+          ? `Nombre Contacto: ${nombreContactoEmergencia}`
+          : ""
+      }`,
+      text: `${
+        celularContactoEmergencia
+          ? `Telefono Contacto: ${celularContactoEmergencia}`
+          : "No tiene telefono de emergencia"
+      }`,
+      imageUrl:
+        "https://www.shutterstock.com/image-photo/doctor-medical-office-reviewing-data-600nw-2244599039.jpg",
+      imageWidth: 450,
+      imageHeight: 170,
+      imageAlt: "Diagnostico",
+      confirmButtonText: "Listo",
+      showDenyButton: false,
+      denyButtonColor: "#008eff",
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+      }
+    });
+  };
+
   return (
     <>
       <div className="  mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
@@ -251,6 +283,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                     "Nombre",
                     "Diagnostico",
                     "Apto Fisico",
+                    "Contacto de Emergencia",
                     "Accion",
                   ].map((el) => (
                     <th
@@ -280,6 +313,8 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                       esPrimeraClase,
                       diagnostico,
                       linkApto,
+                      nombreContactoEmergencia,
+                      celularContactoEmergencia,
                     },
                     key
                   ) => {
@@ -402,6 +437,33 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                                 />
                               </svg>
                             </a>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center justify-center gap-4">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1em"
+                              height="1em"
+                              viewBox="0 0 24 24"
+                              className={`h-8 w-8 hover:cursor-pointer ${
+                                nombreContactoEmergencia
+                                  ? "text-green-500"
+                                  : "text-red-500"
+                              }`}
+                              onClick={(e) =>
+                                handleEmergencia(
+                                  e,
+                                  nombreContactoEmergencia,
+                                  celularContactoEmergencia
+                                )
+                              }
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M10.25 21v-5.95L5.1 18.025L3.35 15l5.15-3l-5.15-2.975L5.1 6l5.15 2.975V3h3.5v5.975L18.9 6l1.75 3.025L15.5 12l5.15 3l-1.75 3.025l-5.15-2.975V21z"
+                              />
+                            </svg>
                           </div>
                         </td>
 

@@ -49,7 +49,6 @@ const ClasesPorCliente = () => {
       if (result.isConfirmed) {
         await cancelarClaseCliente(cliente._id, id);
         setActualizoClasesCliente(true);
-        handleVerClase();
       }
     });
   };
