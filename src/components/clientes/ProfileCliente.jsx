@@ -16,6 +16,7 @@ import ModalEditarPago from "./ModalEditarPago";
 import { Button } from "@material-tailwind/react";
 import ModalCertificadoMedico from "./ModalCertificadoMedico";
 import ModalRecuperoAdmin from "./ModalRecuperoAdmin";
+import ListadoAsistenciasInasistenciasCliente from "./ListadoAsistenciasInasistenciasCliente";
 
 const ProfileCliente = () => {
   const {
@@ -71,6 +72,8 @@ const ProfileCliente = () => {
     inasistenciaCliente,
     verificarInasistenciaClietne,
     setInasistenciaCliente,
+    asistenciasInasistenciasCliente,
+    obtenerAsistenciasInasistenciasClienteAdmin,
   } = useClases();
 
   useEffect(() => {
@@ -97,6 +100,7 @@ const ProfileCliente = () => {
       setClasesCliente([]);
       handleCargando();
       await obtenerClasesClienteAdmin(idClienteEditar);
+      await obtenerAsistenciasInasistenciasClienteAdmin(idClienteEditar);
       handleCargando();
     };
     obtenerInfo();
@@ -522,6 +526,24 @@ const ProfileCliente = () => {
                 </g>
               </svg>
             ) : null}
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1em"
+              height="1em"
+              viewBox="0 0 24 24"
+              className="mb-4 h-[35px] w-[35px] text-[#C5CAE8] hover:cursor-pointer"
+              onClick={(e) => setSelectPerfil(3)}
+            >
+              <title>Ver Asistencias/Inasistencias</title>
+
+              <path
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                d="M17 7h6v16H7v-4m16-8h-6M13 0v3M1 7h16M1 3h16v16H1zm4-3v3m-1 8h2m2 0h6M4 15h2m2 0h6"
+              />
+            </svg>
           </div>
         </div>
 
@@ -624,7 +646,7 @@ const ProfileCliente = () => {
               </div>
             )}
           </div>
-        ) : (
+        ) : selectPerfil === 2 ? (
           <div class="mt-4 flex flex-col justify-center">
             {pagosCliente && pagosCliente.length > 0 ? (
               <ContableCliente />
@@ -634,7 +656,18 @@ const ProfileCliente = () => {
               </div>
             )}
           </div>
-        )}
+        ) : selectPerfil === 3 ? (
+          <div class="mt-4 flex flex-col justify-center">
+            {asistenciasInasistenciasCliente &&
+            asistenciasInasistenciasCliente.length > 0 ? (
+              <ListadoAsistenciasInasistenciasCliente />
+            ) : (
+              <div class="mt-5 flex flex-col justify-center">
+                <button class="">El cliente no tiene registros</button>
+              </div>
+            )}
+          </div>
+        ) : null}
       </div>
       {modalAsignarClaseACliente ? <ModalAsignarClaseACliente /> : ""}
       {modalEditarCliente ? <ModalEditarCliente /> : ""}

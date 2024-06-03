@@ -946,7 +946,7 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
-
+      console.log(data);
       setClientesClaseVer(data);
     } catch (error) {
       console.log(error);
@@ -973,6 +973,31 @@ const ClasesProvider = ({ children }) => {
       );
 
       setInasistentesClase(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [asistenciasClase, setAsistenciasClase] = useState([]);
+
+  const obtenerTodasLasAsistenciasClase = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/obtener-todas-asistencias-clase/${id}`,
+        {},
+        config
+      );
+      console.log(data);
+      setAsistenciasClase(data);
     } catch (error) {
       console.log(error);
     }
@@ -1201,6 +1226,31 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const [asistenciasInasistenciasCliente, setAsistenciasInasistenciasCliente] =
+    useState([]);
+
+  const obtenerAsistenciasInasistenciasClienteAdmin = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clases/obtener-registros-asistencia/${id}`,
+        config
+      );
+      console.log(data);
+      setAsistenciasInasistenciasCliente(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -1326,6 +1376,10 @@ const ClasesProvider = ({ children }) => {
         inasistentesClase,
         obtenerInasistentesClase,
         inasistenciaRecupero,
+        asistenciasClase,
+        obtenerTodasLasAsistenciasClase,
+        asistenciasInasistenciasCliente,
+        obtenerAsistenciasInasistenciasClienteAdmin,
       }}
     >
       {children}

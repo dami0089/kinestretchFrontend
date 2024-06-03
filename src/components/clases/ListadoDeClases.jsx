@@ -80,7 +80,7 @@ const ListadoDeClases = () => {
     e.preventDefault();
     handleCargando();
     setIdClaseVer(id);
-    navigate("/clases/listado-alumnos-clase");
+    navigate(`/clases/listado-alumnos-clase/${id}`);
     handleCargando();
   };
 

@@ -149,15 +149,13 @@ const ClasesSedesPublica = () => {
                         </div>
                         <div
                           className={`text-sm text-gray-600 ${
-                            clase.clientes.length < clase.cupo
+                            clase.disponibilidad !== 0
                               ? "text-green-600"
                               : "text-red-600"
                           }`}
                         >
-                          {clase.disponibilidad === clase.cupo
-                            ? "Hay Disponibilidad"
-                            : clase.disponibilidad >= clase.cupo
-                            ? `Cupo Completo`
+                          {clase.disponibilidad === 0
+                            ? "Cupo Completo"
                             : `Hay Disponibilidad`}
                         </div>
                       </div>
@@ -208,15 +206,13 @@ const ClasesSedesPublica = () => {
                         </div>
                         <div
                           className={`text-sm text-gray-600 ${
-                            clase.clientes.length < clase.cupo
+                            clase.disponibilidad !== 0
                               ? "text-green-600"
                               : "text-red-600"
                           }`}
                         >
-                          {clase.clientes.length === 0
-                            ? "Hay Disponibilidad"
-                            : clase.clientes.length >= clase.cupo
-                            ? `Cupo Completo`
+                          {clase.disponibilidad === 0
+                            ? "Cupo Completo"
                             : `Hay Disponibilidad`}
                         </div>
                       </div>

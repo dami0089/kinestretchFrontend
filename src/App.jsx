@@ -79,10 +79,7 @@ function App() {
           <Route path="/clases" element={<RutaProtegida />}>
             <Route index element={<Clases />} />
             <Route path="listado-clases" element={<ListadoDeClases />} />
-            <Route
-              path="listado-alumnos-clase"
-              element={<ListadoAlumnosClaseClases />}
-            />
+            <Route path="listado-alumnos-clase/:id" element={<ClasesProfe />} />
           </Route>
         </>
       ) : auth.rol === "cliente" ? (

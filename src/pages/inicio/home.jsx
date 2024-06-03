@@ -5,7 +5,7 @@ import useClientes from "@/hooks/useClientes";
 
 import { ToastContainer } from "react-toastify";
 import useAuth from "@/hooks/useAuth";
-import Qr from "@/components/Qr";
+// import Qr from "@/components/Qr";
 import TarjetasDash from "@/widgets/cards/tarjetas-dashboard";
 import clases from "../../../public/img/clases.svg";
 import clientes from "../../../public/img/clientes.svg";
@@ -100,7 +100,7 @@ export function Home() {
         <UltimasActualizaciones />
       </div>
 
-      {modalQr ? <Qr /> : ""}
+      {/* {modalQr ? <Qr /> : ""} */}
     </div>
   );
 }

@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ListadoAlumnosClaseClasesVistaProfe from "@/components/paginaProfesores/ListadoAlumnosClaseClasesVistaProfe";
 import ListadoAlumnosAusenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAusenteClaseProfe";
+import ListadoAlumnosAsistenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAsistenteClaseProfe";
 
 export function ClasesProfe() {
   const { auth } = useAuth();
@@ -25,6 +26,8 @@ export function ClasesProfe() {
     clase,
     inasistentesClase,
     obtenerInasistentesClase,
+    asistenciasClase,
+    obtenerTodasLasAsistenciasClase,
   } = useClases();
   const { handleCargando } = useAuth();
   const params = useParams();
@@ -36,6 +39,7 @@ export function ClasesProfe() {
       handleCargando();
       await obtenerClase(id);
       await obtenerInasistentesClase(id);
+      await obtenerTodasLasAsistenciasClase(id);
 
       handleCargando();
     };
@@ -84,6 +88,12 @@ export function ClasesProfe() {
             {inasistentesClase.length > 0 ? (
               <div className="align-middle ">
                 <ListadoAlumnosAusenteClaseProfe />
+              </div>
+            ) : null}
+
+            {asistenciasClase.length > 0 ? (
+              <div className="align-middle ">
+                <ListadoAlumnosAsistenteClaseProfe />
               </div>
             ) : null}
 
