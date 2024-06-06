@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import ListadoAlumnosClaseClasesVistaProfe from "@/components/paginaProfesores/ListadoAlumnosClaseClasesVistaProfe";
 import ListadoAlumnosAusenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAusenteClaseProfe";
 import ListadoAlumnosAsistenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAsistenteClaseProfe";
+import ModalEnviarMensajeClase from "@/components/clases/ModalEnviarMensajeClase";
 
 export function ClasesProfe() {
   const { auth, handleCargando } = useAuth();
@@ -28,6 +29,8 @@ export function ClasesProfe() {
     obtenerInasistentesClase,
     asistenciasClase,
     obtenerTodasLasAsistenciasClase,
+    modalEnviarMensajeClase,
+    handleModalEnviarMensajeClase,
   } = useClases();
 
   const params = useParams();
@@ -45,6 +48,12 @@ export function ClasesProfe() {
     };
     obtenerDataClase();
   }, []);
+
+  const handleMensaje = (e) => {
+    e.preventDefault();
+
+    handleModalEnviarMensajeClase();
+  };
 
   return (
     <>
@@ -107,6 +116,7 @@ export function ClasesProfe() {
           </div>
           {modalClasesProfe ? <ModalClaseProfe /> : ""}
           {modalRegistrarPagoProfe ? <ModalRegistrarPagoProfesor /> : ""}
+          {modalEnviarMensajeClase ? <ModalEnviarMensajeClase /> : null}
         </div>
       </section>
     </>
