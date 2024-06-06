@@ -17,7 +17,7 @@ import ListadoAlumnosAusenteClaseProfe from "@/components/paginaProfesores/Lista
 import ListadoAlumnosAsistenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAsistenteClaseProfe";
 
 export function ClasesProfe() {
-  const { auth } = useAuth();
+  const { auth, handleCargando } = useAuth();
   const { modalClasesProfe, obtenerProfesor, profesor } = useProfesores();
   const {
     modalRegistrarPagoProfe,
@@ -29,7 +29,7 @@ export function ClasesProfe() {
     asistenciasClase,
     obtenerTodasLasAsistenciasClase,
   } = useClases();
-  const { handleCargando } = useAuth();
+
   const params = useParams();
 
   const { id } = params;
@@ -80,6 +80,12 @@ export function ClasesProfe() {
                   Clase del {clase.diaDeLaSemana} - {clase.horarioInicio}:00 HS
                 </Typography>
               </div>
+
+              {auth.rol === "admin" ? (
+                <div>
+                  <Button onClick={(e) => handleMensaje(e)}>Comunicar</Button>
+                </div>
+              ) : null}
             </div>
             <div className="align-middle ">
               <ListadoAlumnosClaseClasesVistaProfe />
