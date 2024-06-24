@@ -54,6 +54,8 @@ const ClientesProvider = ({ children }) => {
   const [actualizarListado, setActualizarListado] = useState(false);
 
   const [modalRecuperoAdmin, setModalRecuperoAdmin] = useState(false);
+  const [medioPago, setMedioPago] = useState("");
+  const [refrescarListado, setRefrescarListado] = useState(false);
 
   const handleModalRecuperoAdmin = () => {
     setModalRecuperoAdmin(!modalRecuperoAdmin);
@@ -437,10 +439,12 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const registrarPago = async (id, importe, usuario) => {
+  const registrarPago = async (id, importe, usuario, via, fecha) => {
     const info = {
+      fechaPago: fecha,
       importe: importe,
       usuario: usuario,
+      medio: via,
     };
 
     try {
@@ -543,10 +547,11 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const editarPago = async (id, fecha, importe) => {
+  const editarPago = async (id, fecha, importe, medio) => {
     const pago = {
-      fecha: fecha,
+      fechaPago: fecha,
       importe: importe,
+      medio: medio,
     };
     try {
       const token = localStorage.getItem("token");
@@ -565,6 +570,48 @@ const ClientesProvider = ({ children }) => {
 
       //Mostrar la alerta
       toast.success("Pago Editado correctamente", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      //redireccionar
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const eliminarPago = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.delete(
+        `/clientes/eliminar-pago/${id}`,
+
+        config
+      );
+
+      //Mostrar la alerta
+      toast.success(data.msg, {
         position: "top-right",
         autoClose: 1000,
         hideProgressBar: false,
@@ -989,6 +1036,11 @@ const ClientesProvider = ({ children }) => {
         quitarCredito,
         modalRecuperoAdmin,
         handleModalRecuperoAdmin,
+        medioPago,
+        setMedioPago,
+        refrescarListado,
+        setRefrescarListado,
+        eliminarPago,
       }}
     >
       {children}

@@ -11,12 +11,7 @@ import useProfesores from "@/hooks/useProfesores";
 import Swal from "sweetalert2";
 
 const ModalRegistrarPago = () => {
-  const { obtenerSedes, sedes } = useSedes();
-  const { usuarioAutenticado, handleCargando, auth } = useAuth();
-
-  const { obtenerProfesores, profesores } = useProfesores();
-
-  const { setActualizoClasesCliente } = useClases();
+  const { handleCargando, auth } = useAuth();
 
   const {
     cliente,
@@ -25,6 +20,12 @@ const ModalRegistrarPago = () => {
     importePagado,
     setImportePagado,
     registrarPago,
+    medioPago,
+    setMedioPago,
+    fechaPago,
+    setFechaPago,
+    refrescarListado,
+    setRefrescarListado,
   } = useClientes();
 
   //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
@@ -55,9 +56,18 @@ const ModalRegistrarPago = () => {
       confirmButtonText: "Si",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await registrarPago(cliente._id, importePagado, auth._id);
-        setActualizoClasesCliente(true);
+        handleCargando();
+        await registrarPago(
+          cliente._id,
+          importePagado,
+          auth._id,
+          medioPago,
+          fechaPago
+        );
+        setRefrescarListado(true);
         setImportePagado("");
+        setMedioPago("");
+        handleCargando();
         handleModalPago();
       }
     });
@@ -144,6 +154,23 @@ const ModalRegistrarPago = () => {
                         className="text-sm font-bold uppercase text-gray-700"
                         htmlFor="origen"
                       >
+                        Fecha Pago
+                      </label>
+
+                      <input
+                        id="origen"
+                        className="mb-5 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                        type="date"
+                        placeholder="fecha"
+                        value={fechaPago}
+                        onChange={(e) => setFechaPago(e.target.value)}
+                      ></input>
+                    </div>
+                    <div>
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="origen"
+                      >
                         Importe Abonado
                       </label>
 
@@ -155,6 +182,28 @@ const ModalRegistrarPago = () => {
                         value={importePagado}
                         onChange={(e) => setImportePagado(e.target.value)}
                       ></input>
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="dia"
+                      >
+                        Via de pago
+                      </label>
+                      <select
+                        id="dia"
+                        className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                        value={medioPago}
+                        onChange={(e) => setMedioPago(e.target.value)}
+                      >
+                        <option value="">--Seleccionar--</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia Bancaria">
+                          Transferencia Bancaria
+                        </option>
+                        <option value="Mercado Pago">Mercado Pago</option>
+                      </select>
                     </div>
 
                     <input

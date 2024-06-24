@@ -27,6 +27,9 @@ const ModalEditarPago = () => {
     setImportePagoEditar,
     editarPago,
     pagoId,
+    medioPago,
+    setMedioPago,
+    setRefrescarListado,
   } = useClientes();
 
   //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
@@ -47,13 +50,13 @@ const ModalEditarPago = () => {
       return;
     }
     handleCargando();
-    await editarPago(pagoId, fechaPago, importePagoEditar);
-
+    await editarPago(pagoId, fechaPago, importePagoEditar, medioPago);
     setFechaPago("");
     setImportePagoEditar("");
+    setMedioPago("");
     handleCargando();
+    setRefrescarListado(true);
     handleModalEditarPago();
-    setActualizoClasesCliente(true);
   };
   const handleCerrarModal = () => {
     setFechaPago("");
@@ -166,6 +169,28 @@ const ModalEditarPago = () => {
                         value={importePagoEditar}
                         onChange={(e) => setImportePagoEditar(e.target.value)}
                       ></input>
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="dia"
+                      >
+                        Via de pago
+                      </label>
+                      <select
+                        id="dia"
+                        className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                        value={medioPago}
+                        onChange={(e) => setMedioPago(e.target.value)}
+                      >
+                        <option value="">--Seleccionar--</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia Bancaria">
+                          Transferencia Bancaria
+                        </option>
+                        <option value="Mercado Pago">Mercado Pago</option>
+                      </select>
                     </div>
 
                     <input

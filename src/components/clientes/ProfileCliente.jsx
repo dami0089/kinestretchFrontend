@@ -58,6 +58,8 @@ const ProfileCliente = () => {
     quitarCredito,
     modalRecuperoAdmin,
     handleModalRecuperoAdmin,
+    refrescarListado,
+    setRefrescarListado,
   } = useClientes();
   const { handleCargando, cargando } = useAuth();
 
@@ -155,6 +157,18 @@ const ProfileCliente = () => {
     };
     chequearInasistencias();
   }, [actualizoClasesCliente]);
+
+  useEffect(() => {
+    const pagos = async () => {
+      if (refrescarListado) {
+        handleCargando();
+        await obtenerPagos(idClienteEditar);
+        setRefrescarListado(false);
+        handleCargando();
+      }
+    };
+    pagos();
+  }, [refrescarListado]);
 
   const handleAsignarClase = (e) => {
     e.preventDefault();

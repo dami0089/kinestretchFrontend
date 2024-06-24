@@ -16,6 +16,7 @@ import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import useClases from "@/hooks/useClases";
+import Swal from "sweetalert2";
 
 const ContableCliente = () => {
   const {
@@ -33,6 +34,10 @@ const ContableCliente = () => {
     setImportePagoEditar,
     pagoId,
     setPagoId,
+    refrescarListado,
+    setRefrescarListado,
+    setMedioPago,
+    eliminarPago,
   } = useClientes();
 
   const { actualizoClasesCliente, setActualizoClasesCliente } = useClases();
@@ -40,23 +45,21 @@ const ContableCliente = () => {
 
   useEffect(() => {
     const pagos = async () => {
-      if (actualizoClasesCliente) {
+      if (refrescarListado) {
         handleCargando();
         await obtenerPagos(idClienteEditar);
+        setRefrescarListado(false);
         handleCargando();
-        setActualizoClasesCliente(false);
       }
     };
     pagos();
-  }, [actualizoClasesCliente]);
+  }, [refrescarListado]);
 
   useEffect(() => {
     const pagos = async () => {
-      if (actualizoClasesCliente) {
-        handleCargando();
-        await obtenerPagos(idClienteEditar);
-        handleCargando();
-      }
+      handleCargando();
+      await obtenerPagos(idClienteEditar);
+      handleCargando();
     };
     pagos();
   }, []);
@@ -67,12 +70,33 @@ const ContableCliente = () => {
     return dateOnly;
   };
 
-  const editarpago = (e, fecha, importe, id) => {
+  const editarpago = (e, fecha, importe, id, medio) => {
     e.preventDefault();
     setPagoId(id);
     setFechaPago(formatDate(fecha));
     setImportePagoEditar(importe);
+    setMedioPago(medio);
     handleModalEditarPago();
+  };
+
+  const handleEliminarPago = async (e, id) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "Estas seguro de eliminar el pago?",
+      text: "Esta accion no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        await eliminarPago(id);
+        setRefrescarListado(true);
+        handleCargando();
+      }
+    });
   };
 
   return (
@@ -86,7 +110,7 @@ const ContableCliente = () => {
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Dia", "Importe", "Accion"].map((el) => (
+                  {["Fecha", "Importe", "Medio pago", "Accion"].map((el) => (
                     <th
                       key={el}
                       className="border-b border-blue-gray-50 bg-orange-50 px-6 py-3 text-center"
@@ -102,7 +126,7 @@ const ContableCliente = () => {
                 </tr>
               </thead>
               <tbody>
-                {pagosCliente.map(({ _id, importe, fecha }, key) => {
+                {pagosCliente.map(({ _id, importe, fechaPago, medio }, key) => {
                   const className = `py-3 px-5 ${
                     key === projectsTableData.length - 1
                       ? ""
@@ -118,7 +142,7 @@ const ContableCliente = () => {
                             color="blue-gray"
                             className="font-bold"
                           >
-                            {formatearFecha(fecha)}
+                            {formatearFecha(fechaPago)}
                           </Typography>
                         </div>
                       </td>
@@ -132,13 +156,38 @@ const ContableCliente = () => {
                           </Typography>
                         </div>
                       </td>
+                      <td className={className}>
+                        <div className="flex items-center justify-center gap-4">
+                          <Typography
+                            variant="small"
+                            className="text-xs font-medium text-blue-gray-600"
+                          >
+                            {medio}
+                          </Typography>
+                        </div>
+                      </td>
 
                       <td className={className}>
                         <div className="flex items-center justify-center gap-4">
                           <PencilSquareIcon
                             className="h-8 w-8 hover:cursor-pointer"
-                            onClick={(e) => editarpago(e, fecha, importe, _id)}
+                            onClick={(e) =>
+                              editarpago(e, fechaPago, importe, _id, medio)
+                            }
                           />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="1em"
+                            height="1em"
+                            viewBox="0 0 24 24"
+                            className="h-8 w-8 hover:cursor-pointer"
+                            onClick={(e) => handleEliminarPago(e, _id)}
+                          >
+                            <path
+                              fill="currentColor"
+                              d="m9.4 16.5l2.6-2.6l2.6 2.6l1.4-1.4l-2.6-2.6L16 9.9l-1.4-1.4l-2.6 2.6l-2.6-2.6L8 9.9l2.6 2.6L8 15.1zM7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21z"
+                            />
+                          </svg>
                         </div>
                       </td>
                     </tr>
