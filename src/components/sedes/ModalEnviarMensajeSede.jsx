@@ -4,20 +4,23 @@ import { ToastContainer, toast } from "react-toastify";
 import useClientes from "@/hooks/useClientes";
 import useAuth from "@/hooks/useAuth";
 import useClases from "@/hooks/useClases";
+import useSedes from "@/hooks/useSedes";
 
 // Asegúrate de que el modal se vincule con el div #root del HTML
 Modal.setAppElement("#root");
 
-const ModalEnviarMensajeClase = () => {
+const ModalEnviarMensajeSede = () => {
   const { handleCargando } = useAuth();
   const { mensaje, setMensaje, enviarMensaje } = useClientes();
 
+  const { idClaseVer, enviarMensajeClase } = useClases();
+
   const {
-    handleModalEnviarMensajeClase,
-    modalEnviarMensajeClase,
-    idClaseVer,
-    enviarMensajeClase,
-  } = useClases();
+    handleModalEnviarMensajeSede,
+    modalEnviarMensajeSede,
+    idVerSede,
+    enviarMensajeSede,
+  } = useSedes();
 
   const [asunto, setAsunto] = useState("");
 
@@ -40,7 +43,7 @@ const ModalEnviarMensajeClase = () => {
 
     try {
       handleCargando();
-      await enviarMensajeClase(idClaseVer, mensaje, asunto);
+      await enviarMensajeSede(idVerSede, mensaje, asunto);
       handleCerrar();
       handleCargando();
     } catch (error) {
@@ -60,12 +63,12 @@ const ModalEnviarMensajeClase = () => {
   const handleCerrar = () => {
     setMensaje("");
     setAsunto("");
-    handleModalEnviarMensajeClase();
+    handleModalEnviarMensajeSede();
   };
 
   return (
     <Modal
-      isOpen={modalEnviarMensajeClase}
+      isOpen={modalEnviarMensajeSede}
       onRequestClose={handleCerrar}
       contentLabel="Enviar Mensaje a la clase"
       className="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto"
@@ -138,4 +141,4 @@ const ModalEnviarMensajeClase = () => {
   );
 };
 
-export default ModalEnviarMensajeClase;
+export default ModalEnviarMensajeSede;

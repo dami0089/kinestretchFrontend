@@ -124,7 +124,7 @@ const ClasesProvider = ({ children }) => {
 
       toast.success("Clase creada correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -165,7 +165,7 @@ const ClasesProvider = ({ children }) => {
       //Mostrar la alerta
       toast.success("Cliente actualizado correctamente", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -177,7 +177,7 @@ const ClasesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -326,7 +326,7 @@ const ClasesProvider = ({ children }) => {
       );
       toast.success("Cliente Asignado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -545,7 +545,7 @@ const ClasesProvider = ({ children }) => {
 
       toast.success("Clase Cancelada correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -560,7 +560,7 @@ const ClasesProvider = ({ children }) => {
           : "Error al cancelar la clase.";
       toast.error(errorMsg, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -615,7 +615,7 @@ const ClasesProvider = ({ children }) => {
       );
       toast.success("Cliente eliminado de la clase correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -646,7 +646,7 @@ const ClasesProvider = ({ children }) => {
       );
       toast.success("Asistencia Registrada", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -761,7 +761,7 @@ const ClasesProvider = ({ children }) => {
       } else {
         toast.success(data.msg2, {
           position: "top-right",
-          autoClose: 1500,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -894,7 +894,7 @@ const ClasesProvider = ({ children }) => {
 
       toast.success("Clase eliminada correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1022,7 +1022,7 @@ const ClasesProvider = ({ children }) => {
 
       toast.success("Cliente eliminado de la clase correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1090,7 +1090,7 @@ const ClasesProvider = ({ children }) => {
 
       toast.success("Clase editada correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1131,7 +1131,7 @@ const ClasesProvider = ({ children }) => {
 
       toast.success("Mensaje enviado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1170,7 +1170,7 @@ const ClasesProvider = ({ children }) => {
       });
       toast.success("Encuesta Registrada", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1204,7 +1204,7 @@ const ClasesProvider = ({ children }) => {
 
       toast.success("Recupero Cancelado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1215,7 +1215,7 @@ const ClasesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error.response.data.error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

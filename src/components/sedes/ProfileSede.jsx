@@ -32,9 +32,17 @@ import { useNavigate } from "react-router-dom";
 
 import ModalClaseSede from "./ModalClaseSede";
 import useAuth from "@/hooks/useAuth";
+import ModalEnviarMensajeSede from "./ModalEnviarMensajeSede";
 
 export function ProfileSede() {
-  const { idVerSede, obtenerSede, sede, modalVerClase } = useSedes();
+  const {
+    idVerSede,
+    obtenerSede,
+    sede,
+    modalVerClase,
+    handleModalEnviarMensajeSede,
+    modalEnviarMensajeSede,
+  } = useSedes();
   const [valueProfile, setValueProfile] = useState(1);
   const {
     obtenerClasesSede,
@@ -149,6 +157,14 @@ export function ProfileSede() {
                       Compartir Disponibilidad
                     </Button>
                   </div>
+                  <div className="mb-2">
+                    <Button
+                      className={`w-full bg-blue-gray-300`}
+                      onClick={(e) => handleModalEnviarMensajeSede()}
+                    >
+                      Comunicar Sede
+                    </Button>
+                  </div>
                 </div>
               </div>
               {clasesSede.length > 3 ? (
@@ -219,6 +235,7 @@ export function ProfileSede() {
           )}
           {modalNuevaClaseSede ? <ModalNuevaClaseSede /> : ""}
           {modalVerClase ? <ModalClaseSede /> : ""}
+          {modalEnviarMensajeSede ? <ModalEnviarMensajeSede /> : null}
           <Cargando />
         </CardBody>
       </Card>

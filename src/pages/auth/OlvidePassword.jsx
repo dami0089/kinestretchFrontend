@@ -24,7 +24,7 @@ export function OlvidePassword() {
     if (email === "" || email.length < 6) {
       toast("⚠️ Por favor ingresa tu mail!", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -37,7 +37,7 @@ export function OlvidePassword() {
     if (!/\S+@\S+\.\S+/.test(email)) {
       toast("⚠️ Email invalido", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -54,7 +54,7 @@ export function OlvidePassword() {
       });
       toast.success(data.msg, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

@@ -51,7 +51,7 @@ const ModalRegistrarPagoPerfilProfesor = () => {
     if ([importePagado].includes("")) {
       toast("⚠️ El importe es obligatorio para continuar", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

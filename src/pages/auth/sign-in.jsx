@@ -31,7 +31,7 @@ export function SignIn() {
     if ([email, password].includes("")) {
       toast("⚠️ Todos los campos son obligatorios!", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

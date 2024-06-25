@@ -140,7 +140,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success("Cliente creado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -262,7 +262,7 @@ const ClientesProvider = ({ children }) => {
       //Mostrar la alerta
       toast.success("Cliente Editado correctamente", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -274,7 +274,7 @@ const ClientesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -339,7 +339,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success("Cliente desactivado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -376,7 +376,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success("Cliente activado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -417,7 +417,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success("Mensaje enviado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -461,7 +461,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success("Pago Registrado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -507,7 +507,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success("Pago Registrado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -571,7 +571,7 @@ const ClientesProvider = ({ children }) => {
       //Mostrar la alerta
       toast.success("Pago Editado correctamente", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -583,7 +583,7 @@ const ClientesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -613,7 +613,7 @@ const ClientesProvider = ({ children }) => {
       //Mostrar la alerta
       toast.success(data.msg, {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -625,7 +625,7 @@ const ClientesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -675,7 +675,7 @@ const ClientesProvider = ({ children }) => {
       //Mostrar la alerta
       toast.success("Datos editados correctamente", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -687,7 +687,7 @@ const ClientesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -738,7 +738,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success("Credito Asignado Correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -775,7 +775,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success("Credito Restado Correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -823,7 +823,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success(data.msg, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -864,7 +864,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success(data.msg, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -905,7 +905,7 @@ const ClientesProvider = ({ children }) => {
 
       toast.success(data.msg, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

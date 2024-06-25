@@ -31,7 +31,7 @@ const ModalNuevaSede = () => {
     if ([direccionSede, localidadSede].includes("")) {
       toast("⚠️ Direccion y localidad son obligatorios", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

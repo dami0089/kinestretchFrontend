@@ -25,7 +25,7 @@ const ModalEnviarMensaje = () => {
     if ([mensaje].includes("")) {
       toast("⚠️ Escribe un mensaje para enviar", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

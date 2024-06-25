@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { set } from "date-fns";
 
 const SedesContext = createContext();
 
@@ -26,7 +27,13 @@ const SedesProvider = ({ children }) => {
   const [dniSecretaria, setDniSecretaria] = useState("");
   const [emailSecretaria, setEmailSecretaria] = useState("");
   const [idSedeSecretaria, setIdSedeSecretaria] = useState("");
+  const [idSede, setIdSede] = useState("");
 
+  const [modalEnviarMensajeSede, setModalEnviarMensajeSede] = useState(false);
+
+  const handleModalEnviarMensajeSede = () => {
+    setModalEnviarMensajeSede(!modalEnviarMensajeSede);
+  };
   const handleModalNuevaSecretaria = () => {
     setModalNuevaSecretaria(!modalNuevaSecretaria);
   };
@@ -69,7 +76,7 @@ const SedesProvider = ({ children }) => {
 
       toast.success("Sede creada correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -129,7 +136,7 @@ const SedesProvider = ({ children }) => {
       //Mostrar la alerta
       toast.success("Cliente actualizado correctamente", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -141,7 +148,7 @@ const SedesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -191,7 +198,7 @@ const SedesProvider = ({ children }) => {
 
       toast.success("Estado del cliente actualizado correctamente", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -202,7 +209,7 @@ const SedesProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -235,7 +242,7 @@ const SedesProvider = ({ children }) => {
 
       toast.success("Secretaria creada correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -282,6 +289,50 @@ const SedesProvider = ({ children }) => {
     }
   };
 
+  const enviarMensajeSede = async (id, mensaje, asunto) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/sedes/enviar-mensaje/${id}`,
+        { mensaje, asunto },
+        config
+      );
+
+      toast.success(
+        "Mensaje enviado correctamente, se procedera a enviar a toda la sede",
+        {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <SedesContext.Provider
       value={{
@@ -319,6 +370,11 @@ const SedesProvider = ({ children }) => {
         nuevaSecretaria,
         secretarias,
         obtenerSecretarias,
+        handleModalEnviarMensajeSede,
+        modalEnviarMensajeSede,
+        idSede,
+        setIdSede,
+        enviarMensajeSede,
       }}
     >
       {children}

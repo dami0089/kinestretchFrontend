@@ -44,7 +44,7 @@ const ModalCancelarClase = () => {
     if ([fechaCancelar].includes("")) {
       toast("⚠️ Elije la clase a cancelar", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

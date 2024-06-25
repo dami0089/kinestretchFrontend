@@ -119,7 +119,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     if (asistencias.includes(_id)) {
       toast.error("Ya registraste una asistencia para este cliente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -145,7 +145,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
         setActualizarListado(true);
         toast.success("Inasistencia registrada", {
           position: "top-right",
-          autoClose: 1500,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -164,7 +164,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     if (asistencias.includes(_id)) {
       toast.error("Ya registraste esta asistencia", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -177,7 +177,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     if (inasist.includes(_id)) {
       toast.error("Ya registraste una inasistencia", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -192,7 +192,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
         "No se puede marcar una asistencia a un dia que no es el de hoy",
         {
           position: "top-right",
-          autoClose: 1500,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

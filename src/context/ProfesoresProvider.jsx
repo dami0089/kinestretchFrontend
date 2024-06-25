@@ -77,7 +77,7 @@ const ProfesoresProvider = ({ children }) => {
 
       toast.success("Profesor creado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -163,7 +163,7 @@ const ProfesoresProvider = ({ children }) => {
       //Mostrar la alerta
       toast.success("Cliente actualizado correctamente", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -175,7 +175,7 @@ const ProfesoresProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -234,7 +234,7 @@ const ProfesoresProvider = ({ children }) => {
 
       toast.success("Estado del cliente actualizado correctamente", {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -245,7 +245,7 @@ const ProfesoresProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -322,7 +322,7 @@ const ProfesoresProvider = ({ children }) => {
 
       toast.success("Retiro Registrado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -363,7 +363,7 @@ const ProfesoresProvider = ({ children }) => {
 
       toast.success("Cierre Hecho Correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -400,7 +400,7 @@ const ProfesoresProvider = ({ children }) => {
 
       toast.success("Profesor desactivado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -476,7 +476,7 @@ const ProfesoresProvider = ({ children }) => {
       //Mostrar la alerta
       toast.success("Profesor Editado correctamente", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -487,7 +487,7 @@ const ProfesoresProvider = ({ children }) => {
     } catch (error) {
       toast.error(error, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

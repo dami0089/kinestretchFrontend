@@ -26,7 +26,7 @@ export function SignUp() {
     if ([nombre, apellido, email].includes("")) {
       toast("⚠️ Todos los campos son obligatorios!", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -39,7 +39,7 @@ export function SignUp() {
     if (!/\S+@\S+\.\S+/.test(email)) {
       toast("⚠️ Email invalido", {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -62,7 +62,7 @@ export function SignUp() {
       // });
       toast.success(data.msg, {
         position: "top-right",
-        autoClose: 1500,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
