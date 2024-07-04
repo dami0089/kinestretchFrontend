@@ -324,7 +324,7 @@ const ClasesProvider = ({ children }) => {
         { idClase, primerClase },
         config
       );
-      toast.success("Cliente Asignado correctamente", {
+      toast.success("Asignado correctamente", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -364,7 +364,7 @@ const ClasesProvider = ({ children }) => {
         { idClase },
         config
       );
-      toast.success("Cliente Asignado correctamente", {
+      toast.success("Asignado correctamente", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -447,6 +447,7 @@ const ClasesProvider = ({ children }) => {
         { dia },
         config
       );
+      console.log(data);
       setClasesOrdenadas(data);
     } catch (error) {
       console.log(error);
