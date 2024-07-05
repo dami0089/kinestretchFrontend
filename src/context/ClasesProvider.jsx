@@ -53,6 +53,20 @@ const ClasesProvider = ({ children }) => {
   const [modalEnviarMensajeClase, setModalEnviarMensajeClase] = useState(false);
   const [modalCancelarClase, setModalCancelarClase] = useState(false);
 
+  const [modalRegistrarFeriado, setModalRegistrarFeriado] = useState(false);
+  const [fechaFeriado, setFechaFeriado] = useState("");
+  const [motivoFeriado, setMotivoFeriado] = useState("");
+  const [modalCancelarClaseACliente, setModalCancelarClaseACliente] =
+    useState(false);
+
+  const handleModalCancelarClaseACliente = () => {
+    setModalCancelarClaseACliente((prev) => !prev);
+  };
+
+  const handleModalRegistrarFeriado = () => {
+    setModalRegistrarFeriado((prev) => !prev);
+  };
+
   const handleModalCancelarClase = () => {
     setModalCancelarClase((prev) => !prev);
   };
@@ -256,6 +270,7 @@ const ClasesProvider = ({ children }) => {
       const { data } = await clienteAxios.post(`/clases/obtener-dia/${id}`, {
         dia,
       });
+      console.log(data);
       setClasesDia(data);
     } catch (error) {
       console.log(error);
@@ -375,7 +390,7 @@ const ClasesProvider = ({ children }) => {
         theme: "light",
       });
     } catch (error) {
-      toast.error(error, {
+      toast.error(error.response.data.msg, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -1252,6 +1267,200 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const registrarFeriado = async (fecha, motivo) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clases/registrar-feriado`,
+        { fecha, motivo },
+        config
+      );
+
+      toast.success("Feriado Registrado correctamente", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error.response.data.error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const [feriados, setFeriados] = useState([]);
+
+  const obtenerFeriados = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(`/clases/obtener-feriados`, config);
+
+      setFeriados(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const comunicarFeriado = async (fecha, motivo) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clases/comunicar-feriado`,
+        { fecha, motivo },
+        config
+      );
+
+      toast.success("Feriado Comunicado correctamente", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error.response.data.error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const eliminarFeriado = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(`/clases/eliminar-feriado/${id}`, {}, config);
+
+      toast.success("Feriado Eliminado correctamente", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error.response.data.error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const registrarInasistenciaClienteLadoAdmin = async (id, claseId, fecha) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.post(
+        `/clases/cancelar-clase-cliente-nuevo-lado-admin/${id}`,
+        { claseId, fecha },
+        config
+      );
+
+      if (data.msg1) {
+        toast.warning(data.msg1, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        toast.success(data.msg2, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      console.log(error.response.data.error);
+      toast.error(error.response.data.error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -1381,6 +1590,20 @@ const ClasesProvider = ({ children }) => {
         obtenerTodasLasAsistenciasClase,
         asistenciasInasistenciasCliente,
         obtenerAsistenciasInasistenciasClienteAdmin,
+        modalRegistrarFeriado,
+        handleModalRegistrarFeriado,
+        fechaFeriado,
+        setFechaFeriado,
+        registrarFeriado,
+        feriados,
+        obtenerFeriados,
+        comunicarFeriado,
+        motivoFeriado,
+        setMotivoFeriado,
+        eliminarFeriado,
+        modalCancelarClaseACliente,
+        handleModalCancelarClaseACliente,
+        registrarInasistenciaClienteLadoAdmin,
       }}
     >
       {children}

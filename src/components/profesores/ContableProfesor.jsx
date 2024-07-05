@@ -8,7 +8,7 @@ import Cargando from "@/components/Cargando";
 import useProfesores from "@/hooks/useProfesores";
 import ModalClaseProfe from "@/components/paginaProfesores/ModalClaseProfe";
 import useClases from "@/hooks/useClases";
-import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
+
 import { ToastContainer, toast } from "react-toastify";
 import ListadoPagosCobradosPorProfesor from "../paginaProfesores/ListadoPagosCobradosPorProfesor";
 
@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import ModalRegistrarRetiro from "../paginaProfesores/ModalRegistrarRetiro";
 import Swal from "sweetalert2";
 import ListadoPagosCobradosProfesorAdmin from "./ListadoPagosCobradosProfesorAdmin";
+import ModalRegistrarPagoProfesor from "../paginaProfesores/ModalRegistrarPagoProfesor";
 
 export function ContableProfesor() {
   const { auth, handleCargando } = useAuth();

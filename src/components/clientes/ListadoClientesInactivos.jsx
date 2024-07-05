@@ -18,6 +18,7 @@ import { ArrowLeftCircleIcon, EyeIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import useClases from "@/hooks/useClases";
+import Swal from "sweetalert2";
 
 const ListadodeClientes = () => {
   const {
@@ -35,6 +36,7 @@ const ListadodeClientes = () => {
     setCliente,
     clientesInactivos,
     obtenerClientesInactivos,
+    eliminarCliente,
   } = useClientes();
 
   useEffect(() => {
@@ -106,6 +108,27 @@ const ListadodeClientes = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
+  };
+
+  const handleEliminarCliente = async (e, id) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esta acción",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        await eliminarCliente(id);
+        await obtenerClientesInactivos();
+        handleCargando();
+      }
+    });
   };
 
   return (
@@ -212,6 +235,19 @@ const ListadodeClientes = () => {
                                   className="h-8 w-8 hover:cursor-pointer"
                                   onClick={(e) => handleProfile(e, _id)}
                                 />
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="1em"
+                                  height="1em"
+                                  viewBox="0 0 24 24"
+                                  className="h-8 w-8 hover:cursor-pointer"
+                                  onClick={(e) => handleEliminarCliente(e, _id)}
+                                >
+                                  <path
+                                    fill="currentColor"
+                                    d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"
+                                  />
+                                </svg>
                               </div>
                             </td>
                           </tr>
@@ -281,6 +317,19 @@ const ListadodeClientes = () => {
                                   className="h-8 w-8 hover:cursor-pointer"
                                   onClick={(e) => handleProfile(e, _id)}
                                 />
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="1em"
+                                  height="1em"
+                                  viewBox="0 0 24 24"
+                                  className="h-8 w-8 hover:cursor-pointer"
+                                  onClick={(e) => handleEliminarCliente(e, _id)}
+                                >
+                                  <path
+                                    fill="currentColor"
+                                    d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"
+                                  />
+                                </svg>
                               </div>
                             </td>
                           </tr>

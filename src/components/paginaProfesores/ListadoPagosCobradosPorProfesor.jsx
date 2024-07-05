@@ -17,6 +17,7 @@ import Cargando from "../Cargando";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
+import ModalEditarPagoProfe from "./ModalEditarPagoProfe";
 
 const ListadoPagosCobradosPorProfesor = () => {
   const {
@@ -34,6 +35,14 @@ const ListadoPagosCobradosPorProfesor = () => {
     setImportePagoEditar,
     pagoId,
     setPagoId,
+    setImportePagado,
+    setMedioPago,
+    setIdClientePago,
+    setComentarioPago,
+    modalEditarPagoProfe,
+    handleModalEditarPagoProfe,
+    actualizarListado,
+    setActualizarListado,
   } = useClientes();
 
   const { registrosContbalesProfe, obtenerRegistrosContablesProfesor } =
@@ -44,7 +53,9 @@ const ListadoPagosCobradosPorProfesor = () => {
 
   useEffect(() => {
     const obtener = async () => {
+      handleCargando();
       await obtenerRegistrosContablesProfesor(auth._id);
+      handleCargando();
     };
     obtener();
   }, []);
@@ -61,18 +72,33 @@ const ListadoPagosCobradosPorProfesor = () => {
     pagos();
   }, [actualizoClasesCliente]);
 
+  useEffect(() => {
+    const pagos = async () => {
+      if (actualizarListado) {
+        handleCargando();
+        await obtenerRegistrosContablesProfesor(auth._id);
+        handleCargando();
+        setActualizarListado(false);
+      }
+    };
+    pagos();
+  }, [actualizarListado]);
+
   const formatDate = (dateString) => {
     // Tomamos solo la parte de la fecha (año, mes, día)
     const dateOnly = dateString.split("T")[0];
     return dateOnly;
   };
 
-  const editarpago = (e, fecha, importe, id) => {
+  const editarpago = (e, fecha, importe, id, comentario, medio, cliente) => {
     e.preventDefault();
     setPagoId(id);
     setFechaPago(formatDate(fecha));
-    setImportePagoEditar(importe);
-    handleModalEditarPago();
+    setImportePagado(importe),
+      setMedioPago(medio),
+      setIdClientePago(cliente),
+      setComentarioPago(comentario),
+      handleModalEditarPagoProfe();
   };
 
   return (
@@ -87,7 +113,7 @@ const ListadoPagosCobradosPorProfesor = () => {
               <table className="w-full min-w-[640px] table-auto">
                 <thead>
                   <tr>
-                    {["Nombre", "Dia", "Importe", "Accion"].map((el) => (
+                    {["Fecha", "Cliente", "Importe", "Accion"].map((el) => (
                       <th
                         key={el}
                         className="border-b border-blue-gray-50 bg-orange-50 px-6 py-3 text-center"
@@ -105,7 +131,16 @@ const ListadoPagosCobradosPorProfesor = () => {
                 <tbody>
                   {registrosContbalesProfe.map(
                     (
-                      { _id, importe, fecha, nombreCliente, nombreProfe },
+                      {
+                        _id,
+                        importe,
+                        fechaPago,
+                        nombreCliente,
+                        nombreProfe,
+                        comentario,
+                        medio,
+                        cliente,
+                      },
                       key
                     ) => {
                       const className = `py-3 px-5 ${
@@ -120,6 +155,17 @@ const ListadoPagosCobradosPorProfesor = () => {
                             <div className="flex items-center justify-center gap-4">
                               <Typography
                                 variant="small"
+                                color="blue-gray"
+                                className="font-bold"
+                              >
+                                {formatearFecha(fechaPago)}
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={className}>
+                            <div className="flex items-center justify-center gap-4">
+                              <Typography
+                                variant="small"
                                 className={`text-xs font-medium  ${
                                   nombreCliente
                                     ? "text-blue-gray-600"
@@ -130,17 +176,7 @@ const ListadoPagosCobradosPorProfesor = () => {
                               </Typography>
                             </div>
                           </td>
-                          <td className={className}>
-                            <div className="flex items-center justify-center gap-4">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-bold"
-                              >
-                                {formatearFecha(fecha)}
-                              </Typography>
-                            </div>
-                          </td>
+
                           <td className={className}>
                             <div className="flex items-center justify-center gap-4">
                               <Typography
@@ -159,7 +195,15 @@ const ListadoPagosCobradosPorProfesor = () => {
                               <PencilSquareIcon
                                 className="h-8 w-8 hover:cursor-pointer"
                                 onClick={(e) =>
-                                  editarpago(e, fecha, importe, _id)
+                                  editarpago(
+                                    e,
+                                    fechaPago,
+                                    importe,
+                                    _id,
+                                    comentario,
+                                    medio,
+                                    cliente
+                                  )
                                 }
                               />
                             </div>
@@ -181,6 +225,7 @@ const ListadoPagosCobradosPorProfesor = () => {
           </button>
         </div>
       )}
+      {modalEditarPagoProfe ? <ModalEditarPagoProfe /> : null}
     </>
   );
 };

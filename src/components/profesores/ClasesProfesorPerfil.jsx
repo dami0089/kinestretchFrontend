@@ -5,7 +5,6 @@ import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import useProfesores from "@/hooks/useProfesores";
-import ModalRegistrarPagoPerfilProfesor from "./ModalRegistrarPagoPerfilProfesor";
 
 const ClasesProfesorPerfil = () => {
   const {

@@ -34,6 +34,7 @@ const ProximaClaseSede = () => {
     setDiaClase,
     setHoraClase,
     setSedeClase,
+    eliminarClase,
   } = useClases();
   const { idVerSede, modalVerClase, handleModalVerClase } = useSedes();
 

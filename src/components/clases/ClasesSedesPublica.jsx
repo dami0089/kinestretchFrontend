@@ -9,14 +9,7 @@ import { CalendarIcon } from "@heroicons/react/24/solid";
 import Cargando from "../Cargando";
 
 const ClasesSedesPublica = () => {
-  const {
-    obtenerClasesSedeDia,
-    clasesDia,
-    setIdVerClase,
-    setDiaClase,
-    setHoraClase,
-    setSedeClase,
-  } = useClases();
+  const { obtenerClasesSedeDia, clasesDia } = useClases();
   const { handleCargando } = useAuth();
   const params = useParams();
   const { id } = params;
@@ -47,9 +40,6 @@ const ClasesSedesPublica = () => {
     )
   );
 
-  useEffect(() => {
-    console.log(diaActual);
-  }, []);
   const seleccionarDia = (dia) => {
     setDiaSeleccionado(dia);
   };
@@ -75,19 +65,6 @@ const ClasesSedesPublica = () => {
     };
     traerInfo();
   }, [diaSeleccionado]);
-
-  const handleVerClase = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
-    e.preventDefault();
-    console.log(_id);
-    console.log(diaDeLaSemana);
-    console.log(horarioInicio);
-    console.log(nombreSede);
-    setIdVerClase(_id);
-    setDiaClase(diaDeLaSemana);
-    setHoraClase(horarioInicio);
-    setSedeClase(nombreSede);
-    handleModalVerClase();
-  };
 
   return (
     <>
@@ -121,16 +98,7 @@ const ClasesSedesPublica = () => {
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mx-2 mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
-                    onClick={(e) =>
-                      handleVerClase(
-                        e,
-                        clase._id,
-                        clase.diaDeLaSemana,
-                        clase.horarioInicio,
-                        clase.nombreSede
-                      )
-                    }
+                    className="mx-2 mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md  sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
@@ -149,14 +117,14 @@ const ClasesSedesPublica = () => {
                         </div>
                         <div
                           className={`text-sm text-gray-600 ${
-                            clase.disponibilidad !== 0
+                            clase.clientes.length < clase.cupo
                               ? "text-green-600"
-                              : "text-red-600"
+                              : `text-red-600`
                           }`}
                         >
-                          {clase.disponibilidad === 0
-                            ? "Cupo Completo"
-                            : `Hay Disponibilidad`}
+                          {clase.clientes.length < clase.cupo
+                            ? "Hay Disponibilidad"
+                            : `Cupo Completo`}
                         </div>
                       </div>
                     </div>
@@ -178,16 +146,7 @@ const ClasesSedesPublica = () => {
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mx-2 mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
-                    onClick={(e) =>
-                      handleVerClase(
-                        e,
-                        clase._id,
-                        clase.diaDeLaSemana,
-                        clase.horarioInicio,
-                        clase.nombreSede
-                      )
-                    }
+                    className="mx-2 mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md  sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
@@ -206,14 +165,14 @@ const ClasesSedesPublica = () => {
                         </div>
                         <div
                           className={`text-sm text-gray-600 ${
-                            clase.disponibilidad !== 0
+                            clase.clientes.length < clase.cupo
                               ? "text-green-600"
-                              : "text-red-600"
+                              : `text-red-600`
                           }`}
                         >
-                          {clase.disponibilidad === 0
-                            ? "Cupo Completo"
-                            : `Hay Disponibilidad`}
+                          {clase.clientes.length < clase.cupo
+                            ? "Hay Disponibilidad"
+                            : `Cupo Completo`}
                         </div>
                       </div>
                     </div>

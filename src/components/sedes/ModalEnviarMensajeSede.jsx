@@ -43,7 +43,8 @@ const ModalEnviarMensajeSede = () => {
 
     try {
       handleCargando();
-      await enviarMensajeSede(idVerSede, mensaje, asunto);
+      const mensajeHtml = mensaje.replace(/\n/g, "<br>");
+      await enviarMensajeSede(idVerSede, mensajeHtml, asunto);
       handleCerrar();
       handleCargando();
     } catch (error) {
@@ -70,7 +71,7 @@ const ModalEnviarMensajeSede = () => {
     <Modal
       isOpen={modalEnviarMensajeSede}
       onRequestClose={handleCerrar}
-      contentLabel="Enviar Mensaje a la clase"
+      contentLabel="Enviar Mensaje a la sede"
       className="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto"
       overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-75"
     >
@@ -97,7 +98,7 @@ const ModalEnviarMensajeSede = () => {
           </button>
         </div>
         <h3 className="text-center text-xl font-bold leading-6 text-gray-900">
-          Enviar Mensaje a la clase
+          Enviar Mensaje a la sede
         </h3>
         <form className="mt-4" onSubmit={handleSubmit}>
           <div className="mb-4">

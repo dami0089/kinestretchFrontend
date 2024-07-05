@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { set } from "date-fns";
 
 const SedesContext = createContext();
 
@@ -28,6 +27,7 @@ const SedesProvider = ({ children }) => {
   const [emailSecretaria, setEmailSecretaria] = useState("");
   const [idSedeSecretaria, setIdSedeSecretaria] = useState("");
   const [idSede, setIdSede] = useState("");
+  const [asistInasist, setAsistInasist] = useState("a");
 
   const [modalEnviarMensajeSede, setModalEnviarMensajeSede] = useState(false);
 
@@ -333,6 +333,117 @@ const SedesProvider = ({ children }) => {
     }
   };
 
+  const [pagosSede, setPagosSede] = useState([]);
+
+  const obtenerPagosSede = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(`/sedes/obtener-pagos/${id}`, config);
+
+      setPagosSede(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [cajasSede, setCajasSede] = useState([]);
+
+  const obtenerCajasSede = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(`/sedes/obtener-cajas/${id}`, config);
+      console.log(data);
+      setCajasSede(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const cerrarCaja = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/sedes/cerrar-caja/${id}`,
+        {},
+        config
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [asistenciasSede, setAsistenciasSede] = useState([]);
+
+  const obtenerAsistenciasFecha = async (id, fecha) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.post(
+        `/sedes/obtener-asistencias/${id}`,
+        { fecha },
+        config
+      );
+      console.log(data);
+      setAsistenciasSede(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [inasistenciasSede, setInasistenciasSede] = useState([]);
+
+  const obtenerinasistenciasSede = async (id, fecha) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.post(
+        `/sedes/obtener-inasistencias/${id}`,
+        { fecha },
+        config
+      );
+      console.log(data);
+      setInasistenciasSede(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SedesContext.Provider
       value={{
@@ -375,6 +486,17 @@ const SedesProvider = ({ children }) => {
         idSede,
         setIdSede,
         enviarMensajeSede,
+        pagosSede,
+        obtenerPagosSede,
+        cajasSede,
+        obtenerCajasSede,
+        cerrarCaja,
+        asistenciasSede,
+        obtenerAsistenciasFecha,
+        asistInasist,
+        setAsistInasist,
+        inasistenciasSede,
+        obtenerinasistenciasSede,
       }}
     >
       {children}

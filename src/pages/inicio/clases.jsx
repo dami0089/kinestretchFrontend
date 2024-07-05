@@ -7,15 +7,31 @@ import { ToastContainer } from "react-toastify";
 import Cargando from "@/components/Cargando";
 import ModalNuevaClase from "@/components/clases/ModalNuevaClase";
 import useClases from "@/hooks/useClases";
+import ModalRegistrarFeriado from "@/components/clases/ModalRegistrarFeriado";
 
 export function Clases() {
   const navigate = useNavigate();
 
-  const { handleModalNuevaClase, modalNuevaClase } = useClases();
+  const {
+    handleModalNuevaClase,
+    modalNuevaClase,
+    modalRegistrarFeriado,
+    handleModalRegistrarFeriado,
+  } = useClases();
 
   const handleNavigateClases = (e) => {
     e.preventDefault();
     navigate("/clases/listado-clases");
+  };
+
+  const handleFeriado = (e) => {
+    e.preventDefault();
+    handleModalRegistrarFeriado();
+  };
+
+  const handleListadoFeriados = (e) => {
+    e.preventDefault();
+    navigate("/clases/listado-feriados");
   };
 
   return (
@@ -100,7 +116,7 @@ export function Clases() {
       <div className="mt-10 flex flex-wrap justify-between">
         <div
           className="w-full p-2 hover:cursor-pointer md:w-1/2"
-          // onClick={handleModalNuevoCliente}
+          onClick={(e) => handleFeriado(e)}
         >
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between gap-4">
@@ -137,7 +153,7 @@ export function Clases() {
 
         <div
           className="w-full p-2 hover:cursor-pointer md:w-1/2"
-          onClick={(e) => handleNavigate(e)}
+          onClick={(e) => handleListadoFeriados(e)}
         >
           <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between gap-4">
@@ -173,6 +189,7 @@ export function Clases() {
 
       <Cargando />
       {modalNuevaClase ? <ModalNuevaClase /> : ""}
+      {modalRegistrarFeriado ? <ModalRegistrarFeriado /> : null}
     </>
   );
 }

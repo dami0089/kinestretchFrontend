@@ -7,6 +7,7 @@ import useAuth from "@/hooks/useAuth";
 import useProfesores from "@/hooks/useProfesores";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
+import Cargando from "../Cargando";
 
 const ClasesProfesor = () => {
   const {
@@ -76,12 +77,10 @@ const ClasesProfesor = () => {
 
   const handleVerClase = (e, _id, dia, hora, sede) => {
     e.preventDefault();
-    // setIdVerClase(_id);
-    // setDiaClase(dia);
-    // setHoraClase(hora);
-    // setSedeClase(sede);
-    // handleModalClasesProfe();
+
+    handleCargando();
     navigate(`/clase/${_id}`);
+    handleCargando();
   };
 
   return (
@@ -223,6 +222,7 @@ const ClasesProfesor = () => {
           <button class="">No hay clases para este dia</button>
         </div>
       )}
+      <Cargando />
     </>
   );
 };

@@ -26,6 +26,8 @@ const ModalRegistrarPago = () => {
     setFechaPago,
     refrescarListado,
     setRefrescarListado,
+    comentarioPago,
+    setComentarioPago,
   } = useClientes();
 
   //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
@@ -62,11 +64,13 @@ const ModalRegistrarPago = () => {
           importePagado,
           auth._id,
           medioPago,
-          fechaPago
+          fechaPago,
+          comentarioPago
         );
         setRefrescarListado(true);
         setImportePagado("");
         setMedioPago("");
+        setComentarioPago("");
         handleCargando();
         handleModalPago();
       }
@@ -204,6 +208,25 @@ const ModalRegistrarPago = () => {
                         </option>
                         <option value="Mercado Pago">Mercado Pago</option>
                       </select>
+                    </div>
+
+                    <div>
+                      <label
+                        className="text-sm font-bold uppercase text-gray-700"
+                        htmlFor="origen"
+                      >
+                        Comentario
+                      </label>
+
+                      <textarea
+                        id="origen"
+                        className="mb-5 mt-2 w-full resize-none rounded-md border-2 p-2 placeholder-gray-400"
+                        type="text"
+                        rows={3}
+                        placeholder="Espacio para comentarios"
+                        value={comentarioPago}
+                        onChange={(e) => setComentarioPago(e.target.value)}
+                      />
                     </div>
 
                     <input

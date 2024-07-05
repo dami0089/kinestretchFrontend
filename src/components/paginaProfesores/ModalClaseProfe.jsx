@@ -32,7 +32,7 @@ const ModalClaseProfe = () => {
     comprobarAsistencia,
 
     handleModalPagosProfes,
-    modalRegistrarPagoProfe,
+
     idPagoProfe,
     setIdPagoProfe,
     actualizo,

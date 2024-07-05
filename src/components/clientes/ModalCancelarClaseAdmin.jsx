@@ -2,54 +2,48 @@ import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useClientes from "@/hooks/useClientes";
 import { ToastContainer, toast } from "react-toastify";
-import clienteAxios from "@/configs/clinteAxios";
 import useAuth from "@/hooks/useAuth";
-
-import useSedes from "@/hooks/useSedes";
 import useClases from "@/hooks/useClases";
-import useProfesores from "@/hooks/useProfesores";
-import Swal from "sweetalert2";
+import { fechaCancelarClase } from "@/helpers/fechaCancelarClase";
 
-const ModalRegistrarPagoPerfilProfesor = () => {
-  const { obtenerSedes, sedes } = useSedes();
-  const { usuarioAutenticado, handleCargando, auth } = useAuth();
+const ModalCancelarClaseAdmin = () => {
+  const { handleCargando, auth } = useAuth();
 
   const {
-    handleModalClasesProfe,
-    profesor,
-    obtenerRegistrosContablesProfesorAdmin,
-  } = useProfesores();
+    diaDeLaSemana,
 
-  const {
     setActualizoClasesCliente,
-    idPagoProfe,
-    setActualizo,
-    modalPagoProfesorPerfil,
-    handleModalPagoProfesorPerfil,
-    handleModalClaseProfePerfilAdmin,
-    actualizoClasesCliente,
+
+    setClasesOrdenadas,
+
+    clasesClienteFecha,
+    obtenerClasesConFecha,
+    setClaseClienteFecha,
+    fechaCancelar,
+    setFechaCancelar,
+    registrarInasistenciaCliente,
+    idClaseCancelar,
+    setIdClaseCancelar,
+    registrarInasistenciaClienteLadoAdmin,
+    modalCancelarClaseACliente,
+    handleModalCancelarClaseACliente,
   } = useClases();
 
-  const { importePagado, setImportePagado, registrarPagoAdmin } = useClientes();
+  const { cliente } = useClientes();
 
   useEffect(() => {
-    const pagos = async () => {
-      if (actualizoClasesCliente) {
-        handleCargando();
-        await obtenerRegistrosContablesProfesorAdmin(profesor._id);
-        handleCargando();
-        setActualizoClasesCliente(false);
-      }
+    const obtenerClasesFechas = async () => {
+      await obtenerClasesConFecha(cliente._id);
     };
-    pagos();
-  }, [actualizoClasesCliente]);
+    obtenerClasesFechas();
+  }, []);
 
   //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ([importePagado].includes("")) {
-      toast("⚠️ El importe es obligatorio para continuar", {
+    if ([fechaCancelar].includes("")) {
+      toast("⚠️ Elije la clase a cancelar", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -61,39 +55,46 @@ const ModalRegistrarPagoPerfilProfesor = () => {
       });
       return;
     }
-    Swal.fire({
-      title: "Imputamos el pago al cliente?",
-      text: "Esta accion marcara en los listados que el cliente tiene el mes pago",
-      icon: "question",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await registrarPagoAdmin(idPagoProfe, importePagado, profesor._id);
-        setImportePagado("");
-        setActualizo(true);
-        setActualizoClasesCliente(true);
-        handleModalPagoProfesorPerfil();
-        handleModalClaseProfePerfilAdmin();
-      }
-      handleModalClaseProfePerfilAdmin();
-    });
+
+    try {
+      handleCargando();
+      await registrarInasistenciaClienteLadoAdmin(
+        cliente._id,
+        idClaseCancelar,
+        fechaCancelar
+      );
+      setIdClaseCancelar("");
+      setClaseClienteFecha([]);
+      setActualizoClasesCliente(true);
+      setFechaCancelar("");
+      handleCargando();
+      handleModalCancelarClaseACliente();
+    } catch (error) {
+      toast.error(error.response.data.msg, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
-  const handleCerrarModal = () => {
-    setImportePagado("");
-    handleModalPagoProfesorPerfil();
-    handleModalClaseProfePerfilAdmin();
+
+  const handleClose = () => {
+    setClasesOrdenadas([]);
+    setClaseClienteFecha([]);
+    handleModalCancelarClaseACliente();
   };
 
   return (
-    <Transition.Root show={modalPagoProfesorPerfil} as={Fragment}>
+    <Transition.Root show={modalCancelarClaseACliente} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={handleCerrarModal}
+        onClose={handleClose}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <ToastContainer pauseOnFocusLoss={false} />
@@ -132,7 +133,7 @@ const ModalRegistrarPagoPerfilProfesor = () => {
                 <button
                   type="button"
                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={handleCerrarModal}
+                  onClick={handleClose}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -156,31 +157,36 @@ const ModalRegistrarPagoPerfilProfesor = () => {
                     as="h3"
                     className="text-xl font-bold leading-6 text-gray-900"
                   >
-                    Registrar Pago
+                    Elige la clase a cancelar
                   </Dialog.Title>
 
                   <form className="mx-2 my-2" onSubmit={handleSubmit}>
-                    <div>
+                    <div className="mb-1">
                       <label
                         className="text-sm font-bold uppercase text-gray-700"
-                        htmlFor="origen"
+                        htmlFor="dia"
                       >
-                        Importe Abonado
+                        Clase
                       </label>
-
-                      <input
-                        id="origen"
-                        className="mb-5 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
-                        type="text"
-                        placeholder="Ingrese el importe"
-                        value={importePagado}
-                        onChange={(e) => setImportePagado(e.target.value)}
-                      ></input>
+                      <select
+                        id="dia"
+                        className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
+                        value={fechaCancelar}
+                        onChange={(e) => setFechaCancelar(e.target.value)}
+                      >
+                        <option value="">--Seleccionar--</option>
+                        {clasesClienteFecha.map((opcion, index) => (
+                          <option key={index} value={opcion.fecha}>
+                            {opcion.diaDeLaSemana}{" "}
+                            {fechaCancelarClase(opcion.fecha)}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <input
                       type="submit"
-                      className="w-full cursor-pointer rounded bg-blue-600 p-3 text-sm font-bold uppercase text-white transition-colors hover:bg-blue-300"
+                      className="mt-4 w-full cursor-pointer rounded bg-blue-600 p-3 text-sm font-bold uppercase text-white transition-colors hover:bg-blue-300"
                       value={"Guardar"}
                     />
                   </form>
@@ -194,4 +200,4 @@ const ModalRegistrarPagoPerfilProfesor = () => {
   );
 };
 
-export default ModalRegistrarPagoPerfilProfesor;
+export default ModalCancelarClaseAdmin;

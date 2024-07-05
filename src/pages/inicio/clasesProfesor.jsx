@@ -8,7 +8,7 @@ import Cargando from "@/components/Cargando";
 import useProfesores from "@/hooks/useProfesores";
 import ModalClaseProfe from "@/components/paginaProfesores/ModalClaseProfe";
 import useClases from "@/hooks/useClases";
-import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
+
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -16,6 +16,7 @@ import ListadoAlumnosClaseClasesVistaProfe from "@/components/paginaProfesores/L
 import ListadoAlumnosAusenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAusenteClaseProfe";
 import ListadoAlumnosAsistenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAsistenteClaseProfe";
 import ModalEnviarMensajeClase from "@/components/clases/ModalEnviarMensajeClase";
+import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
 
 export function ClasesProfe() {
   const { auth, handleCargando } = useAuth();
@@ -43,7 +44,6 @@ export function ClasesProfe() {
       await obtenerClase(id);
       await obtenerInasistentesClase(id);
       await obtenerTodasLasAsistenciasClase(id);
-
       handleCargando();
     };
     obtenerDataClase();
@@ -106,11 +106,11 @@ export function ClasesProfe() {
               </div>
             ) : null}
 
-            {asistenciasClase.length > 0 ? (
+            {/* {asistenciasClase.length > 0 ? (
               <div className="align-middle ">
                 <ListadoAlumnosAsistenteClaseProfe />
               </div>
-            ) : null}
+            ) : null} */}
 
             <Cargando />
           </div>

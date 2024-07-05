@@ -8,7 +8,7 @@ import Cargando from "@/components/Cargando";
 import useProfesores from "@/hooks/useProfesores";
 import ModalClaseProfe from "@/components/paginaProfesores/ModalClaseProfe";
 import useClases from "@/hooks/useClases";
-import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
+
 import { ToastContainer, toast } from "react-toastify";
 import ListadoPagosCobradosPorProfesor from "./ListadoPagosCobradosPorProfesor";
 import ModalEditarPago from "../clientes/ModalEditarPago";
@@ -16,6 +16,7 @@ import useClientes from "@/hooks/useClientes";
 import { useEffect, useState } from "react";
 import ModalRegistrarRetiro from "./ModalRegistrarRetiro";
 import Swal from "sweetalert2";
+import ModalRegistrarPagoProfesor from "./ModalRegistrarPagoProfesor";
 
 export function ContableProfesores() {
   const { auth, handleCargando } = useAuth();
@@ -62,41 +63,6 @@ export function ContableProfesores() {
     handleRetiro();
   };
 
-  const cierre = async (e) => {
-    e.preventDefault();
-    if (totalImporte !== 0) {
-      Swal.fire({
-        title: "Hacemos el cierre?",
-        text: "Esta accion creara una nueva liquidacion y sera informado al administrador",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "No",
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          handleCargando();
-          await hacerCierre(totalImporte, auth._id);
-          setTotalImporte(0);
-          setActualizoClasesCliente(true);
-          handleCargando();
-        }
-      });
-    } else {
-      toast.error("No hay nada para liquidar", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  };
-
   return (
     <>
       <ToastContainer pauseOnFocusLoss={false} />
@@ -123,15 +89,14 @@ export function ContableProfesores() {
                   </div>
                 </div>
                 <div className="mt-10 flex w-full justify-center px-4 lg:order-3 lg:mt-0 lg:w-4/12 lg:justify-end lg:self-center">
-                  <Button
-                    onClick={(e) => cierre(e)}
-                    className="mr-4 bg-blue-400"
-                  >
-                    Hacer Cierre
-                  </Button>
-                  <Button onClick={(e) => retiro(e)} className="bg-blue-400">
-                    Registrar Retiro
-                  </Button>
+                  <div className="mt-10 flex w-full justify-center px-4 lg:order-3 lg:mt-0 lg:w-8/12 lg:justify-end lg:self-center">
+                    <Button
+                      onClick={(e) => retiro(e)}
+                      className="w-full bg-blue-400"
+                    >
+                      Registrar Retiro
+                    </Button>
+                  </div>
                 </div>
                 <div className="w-full px-4 lg:order-1 lg:w-4/12"></div>
               </div>

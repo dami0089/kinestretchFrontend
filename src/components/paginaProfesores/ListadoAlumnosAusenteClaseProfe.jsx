@@ -100,7 +100,7 @@ const ListadoAlumnosAusenteClaseProfe = () => {
   return (
     <>
       <Typography className="ml-5 mt-8 font-bold uppercase">
-        Alumnos Inasistentes con aviso
+        Alumnos Inasistentes
       </Typography>
       <div className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3">
         {inasistentesClase.map(({ _id, nombre, apellido }, key) => (

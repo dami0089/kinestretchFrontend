@@ -24,8 +24,9 @@ import useProfesores from "@/hooks/useProfesores";
 import ClasesProfesorPerfil from "./ClasesProfesorPerfil";
 import ModalClaseProfePerfilAdmin from "./ModalClaseProfePerfilAdmin";
 import ContableProfesor from "./ContableProfesor";
-import ModalRegistrarPagoPerfilProfesor from "./ModalRegistrarPagoPerfilProfesor";
+
 import ModalEditarProfe from "./ModalEditarProfe";
+import ModalRegistrarPagoProfesor from "../paginaProfesores/ModalRegistrarPagoProfesor";
 
 const PerfilProfesor = () => {
   const {
@@ -82,7 +83,7 @@ const PerfilProfesor = () => {
 
   useEffect(() => {
     const obtener = async () => {
-      await obtenerRegistrosContablesProfesorAdmin(profesor._id);
+      // await obtenerRegistrosContablesProfesorAdmin(profesor._id);
     };
     obtener();
   }, []);
@@ -404,7 +405,7 @@ const PerfilProfesor = () => {
       {modalPago ? <ModalRegistrarPago /> : ""}
       {modalEditarPago ? <ModalEditarPago /> : ""}
       {modalClaseProfePerfilAdmin ? <ModalClaseProfePerfilAdmin /> : ""}
-      {modalPagoProfesorPerfil ? <ModalRegistrarPagoPerfilProfesor /> : ""}
+      {modalPagoProfesorPerfil ? <ModalRegistrarPagoProfesor /> : ""}
       {modalEditarProfe ? <ModalEditarProfe /> : ""}
       <Cargando />
     </div>

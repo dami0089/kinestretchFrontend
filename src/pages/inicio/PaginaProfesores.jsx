@@ -8,9 +8,10 @@ import Cargando from "@/components/Cargando";
 import useProfesores from "@/hooks/useProfesores";
 import ModalClaseProfe from "@/components/paginaProfesores/ModalClaseProfe";
 import useClases from "@/hooks/useClases";
-import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
+
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
+import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
 
 export function PaginaProfesores() {
   const { auth } = useAuth();

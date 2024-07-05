@@ -31,6 +31,7 @@ import ListadoAlumnosClaseClases from "./components/clases/ListadoAlumnosClaseCl
 import PerfilProfesorPagina from "./components/paginaProfesores/PerfilProfesor";
 import ClasesProfe from "./pages/inicio/clasesProfesor";
 import Encuesta from "./components/clientes/Encuesta";
+import ListadoDeFeriados from "./components/clases/ListadoDeFeriados";
 
 function App() {
   const { auth } = useAuth();
@@ -79,6 +80,7 @@ function App() {
           <Route path="/clases" element={<RutaProtegida />}>
             <Route index element={<Clases />} />
             <Route path="listado-clases" element={<ListadoDeClases />} />
+            <Route path="listado-feriados" element={<ListadoDeFeriados />} />
             <Route path="listado-alumnos-clase/:id" element={<ClasesProfe />} />
           </Route>
         </>

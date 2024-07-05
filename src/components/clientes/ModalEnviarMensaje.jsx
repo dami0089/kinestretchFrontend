@@ -2,7 +2,6 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useClientes from "@/hooks/useClientes";
 import { ToastContainer, toast } from "react-toastify";
-
 import useAuth from "@/hooks/useAuth";
 
 const ModalEnviarMensaje = () => {
@@ -18,7 +17,6 @@ const ModalEnviarMensaje = () => {
     enviarMensaje,
   } = useClientes();
 
-  //Comprueba que todos los campos esten ok, y de ser asi pasa a consultar si el cuit no corresponde a un usuario ya registrado
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -38,7 +36,8 @@ const ModalEnviarMensaje = () => {
 
     try {
       handleCargando();
-      await enviarMensaje(cliente._id, mensaje, asunto);
+      const mensajeHtml = mensaje.replace(/\n/g, "<br>");
+      await enviarMensaje(cliente._id, asunto, mensajeHtml);
       handleCerrar();
       handleCargando();
     } catch (error) {
@@ -83,7 +82,6 @@ const ModalEnviarMensaje = () => {
             <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
-          {/* This element is to trick the browser into centering the modal contents. */}
           <span
             className="hidden sm:inline-block sm:h-screen sm:align-middle"
             aria-hidden="true"

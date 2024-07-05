@@ -29,7 +29,7 @@ const ModalClaseProfePerfilAdmin = () => {
     comprobarAsistencia,
 
     handleModalPagosProfes,
-    modalRegistrarPagoProfe,
+
     idPagoProfe,
     setIdPagoProfe,
     actualizo,

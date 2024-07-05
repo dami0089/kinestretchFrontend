@@ -18,6 +18,7 @@ import Cargando from "../Cargando";
 import ModalVerClase from "./ModalVerClase";
 import ModalMostrarClaseCliente from "./ModalMostrarClaseCliente";
 import Swal from "sweetalert2";
+import ModalCancelarClaseAdmin from "./ModalCancelarClaseAdmin";
 
 const ClasesPorCliente = () => {
   const { setIdClienteEditar, modalVerClaseCliente, handleVerClase, cliente } =
@@ -30,27 +31,33 @@ const ClasesPorCliente = () => {
     cancelarClaseCliente,
     eliminarDeClaseACliente,
     setActualizoClasesCliente,
+    modalCancelarClaseACliente,
+    handleModalCancelarClaseACliente,
+    idClaseCancelar,
+    setIdClaseCancelar,
   } = useClases();
 
   const { handleCargando } = useAuth();
 
   const handleCancelar = async (e, id) => {
     e.preventDefault();
-    Swal.fire({
-      title: "Inasistencia de cliente",
-      text: "Se marcara como inasistente al cliente en la proxima clase",
-      icon: "question",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await cancelarClaseCliente(cliente._id, id);
-        setActualizoClasesCliente(true);
-      }
-    });
+    setIdClaseCancelar(id);
+    handleModalCancelarClaseACliente();
+    // Swal.fire({
+    //   title: "Inasistencia de clienteeee",
+    //   text: "Se marcara como inasistente al cliente en la proxima clase",
+    //   icon: "question",
+    //   showCancelButton: true,
+    //   cancelButtonText: "No",
+    //   confirmButtonColor: "#3085d6",
+    //   cancelButtonColor: "#d33",
+    //   confirmButtonText: "Si",
+    // }).then(async (result) => {
+    //   if (result.isConfirmed) {
+    //     await cancelarClaseCliente(cliente._id, id);
+    //     setActualizoClasesCliente(true);
+    //   }
+    // });
   };
 
   const handleEliminar = async (e, id) => {
@@ -226,6 +233,7 @@ const ClasesPorCliente = () => {
         <Cargando />
         {/* {modalVerClaseCliente ? <ModalVerClase /> : ""} */}
         {modalVerClaseCliente ? <ModalMostrarClaseCliente /> : ""}
+        {modalCancelarClaseACliente ? <ModalCancelarClaseAdmin /> : null}
       </div>
     </>
   );

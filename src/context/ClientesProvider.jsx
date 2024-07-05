@@ -56,6 +56,13 @@ const ClientesProvider = ({ children }) => {
   const [modalRecuperoAdmin, setModalRecuperoAdmin] = useState(false);
   const [medioPago, setMedioPago] = useState("");
   const [refrescarListado, setRefrescarListado] = useState(false);
+  const [comentarioPago, setComentarioPago] = useState("");
+  const [idClientePago, setIdClientePago] = useState("");
+  const [modalEditarPagoProfe, setModalEditarPagoProfe] = useState(false);
+
+  const handleModalEditarPagoProfe = () => {
+    setModalEditarPagoProfe(!modalEditarPagoProfe);
+  };
 
   const handleModalRecuperoAdmin = () => {
     setModalRecuperoAdmin(!modalRecuperoAdmin);
@@ -439,12 +446,20 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const registrarPago = async (id, importe, usuario, via, fecha) => {
+  const registrarPago = async (
+    id,
+    importe,
+    usuario,
+    via,
+    fecha,
+    comentario
+  ) => {
     const info = {
       fechaPago: fecha,
       importe: importe,
       usuario: usuario,
       medio: via,
+      comentario: comentario,
     };
 
     try {
@@ -547,11 +562,12 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const editarPago = async (id, fecha, importe, medio) => {
+  const editarPago = async (id, fecha, importe, medio, comentario) => {
     const pago = {
       fechaPago: fecha,
       importe: importe,
       medio: medio,
+      comentario: comentario,
     };
     try {
       const token = localStorage.getItem("token");
@@ -927,6 +943,23 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const eliminarCliente = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.delete(`/clientes/eliminar-cliente/${id}`, config);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClientesContext.Provider
       value={{
@@ -1041,6 +1074,13 @@ const ClientesProvider = ({ children }) => {
         refrescarListado,
         setRefrescarListado,
         eliminarPago,
+        comentarioPago,
+        setComentarioPago,
+        idClientePago,
+        setIdClientePago,
+        handleModalEditarPagoProfe,
+        modalEditarPagoProfe,
+        eliminarCliente,
       }}
     >
       {children}

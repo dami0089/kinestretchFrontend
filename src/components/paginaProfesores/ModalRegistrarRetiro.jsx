@@ -11,7 +11,7 @@ import useProfesores from "@/hooks/useProfesores";
 import Swal from "sweetalert2";
 
 const ModalRegistrarRetiro = () => {
-  const { auth } = useAuth();
+  const { auth, handleCargando } = useAuth();
 
   const { handleRetiro, modalRegistrarRetiro, registrarRetiro } =
     useProfesores();
@@ -47,10 +47,12 @@ const ModalRegistrarRetiro = () => {
       confirmButtonText: "Si",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        handleCargando();
         await registrarRetiro(importePagado, auth._id);
         setImportePagado("");
-        handleRetiro();
         setActualizoClasesCliente(true);
+        handleCargando();
+        handleRetiro();
       }
     });
   };

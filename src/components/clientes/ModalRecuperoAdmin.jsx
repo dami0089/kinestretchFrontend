@@ -24,7 +24,6 @@ const ModalRecuperoAdmin = () => {
     idClaseSeleccionada,
     setIdClaseSeleccionada,
     setActualizoClasesCliente,
-    modalClaseRecupero,
     handleModalClaseRecupero,
     recupero,
     setClasesOrdenadas,
@@ -42,7 +41,7 @@ const ModalRecuperoAdmin = () => {
       if (renderizarClases) {
         handleCargando();
         handleModalClaseRecupero();
-        await obtenerClasesOrdenadas(cliente.sede, diaDeLaSemana);
+        await obtenerClasesOrdenadas(idSede, diaDeLaSemana);
         setRenderizarClases(false);
         handleCargando();
         await handleModalClaseRecupero();

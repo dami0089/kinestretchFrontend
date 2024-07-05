@@ -23,6 +23,7 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { DateTime } from "luxon";
 import ModalEditarDiagnostico from "./ModalEditarDiagnostico";
+import ModalRegistrarPagoProfesor from "./ModalRegistrarPagoProfesor";
 
 const ListadoAlumnosClaseClasesVistaProfe = () => {
   const {
@@ -32,6 +33,8 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     modalEditarDiagnostico,
     actualizarListado,
     setActualizarListado,
+    idClientePago,
+    setIdClientePago,
   } = useClientes();
 
   const {
@@ -45,6 +48,8 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     clase,
     inasist,
     comprobarInasistencia,
+    handleModalPagosProfes,
+    modalRegistrarPagoProfe,
   } = useClases();
 
   const { handleCargando } = useAuth();
@@ -266,6 +271,61 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     });
   };
 
+  const esFechaDelMesEnCurso = (fecha) => {
+    const fechaDada = new Date(fecha);
+    const fechaActual = new Date();
+
+    const mesDado = fechaDada.getMonth();
+    const anoDado = fechaDada.getFullYear();
+
+    const mesActual = fechaActual.getMonth();
+    const anoActual = fechaActual.getFullYear();
+
+    return mesDado === mesActual && anoDado === anoActual;
+  };
+
+  const handleVerPago = (e, pagos, id) => {
+    e.preventDefault();
+    if (pagos) {
+      Swal.fire({
+        title: "Pago",
+        text: `${
+          pagos
+            ? `Fecha de Pago: ${formatearFecha(
+                pagos.fechaPago
+              )} - Observaciones: ${pagos.comentario ? pagos.comentario : "-"}`
+            : "No hay pagos"
+        }`,
+        imageUrl:
+          "https://www.shutterstock.com/image-photo/doctor-medical-office-reviewing-data-600nw-2244599039.jpg",
+        imageWidth: 450,
+        imageHeight: 170,
+        imageAlt: "Diagnostico",
+        confirmButtonText: "Listo",
+        showDenyButton: false,
+        denyButtonColor: "#008eff",
+      });
+    } else {
+      Swal.fire({
+        title: "El cliente no tiene pagos este mes",
+        text: "¿Queres que registremos uno?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí",
+        cancelButtonText: "No",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setIdClientePago(id);
+          handleModalPagosProfes();
+        } else {
+          // Code to execute if the user cancels the action
+        }
+      });
+    }
+  };
+
   return (
     <>
       <div className="  mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
@@ -284,6 +344,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                     "Diagnostico",
                     "Apto Fisico",
                     "Contacto de Emergencia",
+                    "Contable",
                     "Accion",
                   ].map((el) => (
                     <th
@@ -315,6 +376,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                       linkApto,
                       nombreContactoEmergencia,
                       celularContactoEmergencia,
+                      pagos,
                     },
                     key
                   ) => {
@@ -459,9 +521,36 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                                 )
                               }
                             >
+                              <g fill="none" stroke="currentColor">
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="3"
+                                  d="M13.253 5.98L12 13.5l-1.253-7.52a1.27 1.27 0 1 1 2.506 0"
+                                />
+                                <circle cx="12" cy="19" r="1" strokeWidth="2" />
+                              </g>
+                            </svg>
+                          </div>
+                        </td>
+
+                        <td className={className}>
+                          <div className="flex items-center justify-center gap-4">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1em"
+                              height="1em"
+                              viewBox="0 0 56 56"
+                              className={`h-8 w-8 hover:cursor-pointer ${
+                                pagos && esFechaDelMesEnCurso(pagos.fechaPago)
+                                  ? "text-green-500"
+                                  : "text-red-500"
+                              }`}
+                              onClick={(e) => handleVerPago(e, pagos, _id)}
+                            >
                               <path
                                 fill="currentColor"
-                                d="M10.25 21v-5.95L5.1 18.025L3.35 15l5.15-3l-5.15-2.975L5.1 6l5.15 2.975V3h3.5v5.975L18.9 6l1.75 3.025L15.5 12l5.15 3l-1.75 3.025l-5.15-2.975V21z"
+                                d="M28 4c13.255 0 24 10.745 24 24S41.255 52 28 52S4 41.255 4 28S14.745 4 28 4m0 4C16.954 8 8 16.954 8 28s8.954 20 20 20s20-8.954 20-20S39.046 8 28 8m.573 6.286v2.687c3.976.319 6.855 2.704 6.982 6.314h-3.308c-.207-2.004-1.638-3.165-3.674-3.419V26.5l.764.19c4.183.971 6.473 2.689 6.473 6.076c0 3.897-3.181 6.107-7.237 6.394v2.671h-1.797V39.16c-4.04-.303-7.236-2.577-7.347-6.394h3.292c.286 1.861 1.495 3.229 4.055 3.5V29.33l-.652-.16c-4.04-.937-6.218-2.75-6.218-5.979c0-3.563 2.862-5.916 6.87-6.219v-2.687zm0 15.458v6.537c2.72-.207 3.865-1.495 3.865-3.197c0-1.638-.89-2.608-3.865-3.34m-1.797-9.876c-2.29.286-3.499 1.606-3.499 3.054c0 1.447.955 2.512 3.5 3.149z"
                               />
                             </svg>
                           </div>
@@ -494,6 +583,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
         </Card>
       </div>
       {modalEditarDiagnostico ? <ModalEditarDiagnostico /> : null}
+      {modalRegistrarPagoProfe ? <ModalRegistrarPagoProfesor /> : null}
       <Cargando />
     </>
   );

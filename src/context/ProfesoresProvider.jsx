@@ -273,8 +273,8 @@ const ProfesoresProvider = ({ children }) => {
         `/clientes/registros-contables-profesor/${id}`,
         config
       );
-      console.log(data);
-      setRegistrosContablesProfe(data);
+      console.log(data.pagos);
+      setRegistrosContablesProfe(data.pagos);
     } catch (error) {
       console.log(error);
     }

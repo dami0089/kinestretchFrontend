@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 
 Modal.setAppElement("#root"); // Asegúrate de que esto esté configurado correctamente
 
-const ModalRegistrarPagoProfesor = () => {
+const ModalEditarPagoProfe = () => {
   const { handleCargando, auth } = useAuth();
 
   const {
@@ -35,6 +35,10 @@ const ModalRegistrarPagoProfesor = () => {
     setIdClientePago,
     setActualizarListado,
     actualizarListado,
+    editarPago,
+    handleModalEditarPagoProfe,
+    modalEditarPagoProfe,
+    pagoId,
   } = useClientes();
 
   const { handleModalPagosProfes, modalRegistrarPagoProfe } = useClases();
@@ -57,8 +61,7 @@ const ModalRegistrarPagoProfesor = () => {
       return;
     }
     Swal.fire({
-      title: "Imputamos el pago al cliente?",
-      text: "Esta accion marcara en los listados que el cliente tiene el mes pago",
+      title: "Editar el pago del cliente?",
       icon: "question",
       showCancelButton: true,
       cancelButtonText: "No",
@@ -68,15 +71,15 @@ const ModalRegistrarPagoProfesor = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         handleCargando();
-        await registrarPago(
-          idClientePago,
-          importePagado,
-          auth._id,
-          medioPago,
+        await editarPago(
+          pagoId,
           fechaPago,
+          importePagado,
+          medioPago,
           comentarioPago
         );
         setRefrescarListado(true);
+        setFechaPago("");
         setImportePagado("");
         setMedioPago("");
         setIdClientePago("");
@@ -89,12 +92,12 @@ const ModalRegistrarPagoProfesor = () => {
   };
   const handleCerrarModal = () => {
     setImportePagado("");
-    handleModalPagosProfes();
+    handleModalEditarPagoProfe();
   };
 
   return (
     <Modal
-      isOpen={modalRegistrarPagoProfe}
+      isOpen={modalEditarPagoProfe}
       onRequestClose={handleCerrarModal}
       className="fixed inset-0 z-50 flex items-center justify-center"
       overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-75"
@@ -125,7 +128,7 @@ const ModalRegistrarPagoProfesor = () => {
         <div className="sm:flex sm:items-start">
           <div className="mt-3 w-full text-center sm:ml-0 sm:mt-0 sm:text-left">
             <h3 className="text-xl font-bold leading-6 text-gray-900">
-              Registrar Pago
+              Editar Pago
             </h3>
 
             <form className="mx-2 my-2" onSubmit={handleSubmit}>
@@ -218,4 +221,4 @@ const ModalRegistrarPagoProfesor = () => {
   );
 };
 
-export default ModalRegistrarPagoProfesor;
+export default ModalEditarPagoProfe;
