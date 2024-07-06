@@ -7,6 +7,7 @@ import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import Cargando from "../Cargando";
+import Swal from "sweetalert2";
 
 const ClasesSedesPublica = () => {
   const { obtenerClasesSedeDia, clasesDia } = useClases();
@@ -66,6 +67,86 @@ const ClasesSedesPublica = () => {
     traerInfo();
   }, [diaSeleccionado]);
 
+  const handleInscribirse = (e, clase) => {
+    e.preventDefault();
+    const hoy = DateTime.now().setZone("America/Argentina/Buenos_Aires");
+
+    const calcularProximaFecha = (diaDeLaSemana) => {
+      const diasDeLaSemana = [
+        "domingo",
+        "lunes",
+        "martes",
+        "miércoles",
+        "jueves",
+        "viernes",
+        "sábado",
+      ];
+      const indiceDiaClase = diasDeLaSemana.indexOf(
+        diaDeLaSemana.toLowerCase()
+      );
+      const hoyIndice = hoy.weekday % 7; // weekday in Luxon: Monday is 1 and Sunday is 7, adjusting to array index
+
+      let diasHastaClase = indiceDiaClase - hoyIndice;
+      if (diasHastaClase <= 0) {
+        diasHastaClase += 7;
+      }
+
+      return hoy.plus({ days: diasHastaClase });
+    };
+
+    // Asegurarse de que clase.clientes y clase.recupero sean arrays
+    const clientes = Array.isArray(clase.clientes) ? clase.clientes : [];
+    const recupero = Array.isArray(clase.recupero) ? clase.recupero : [];
+
+    const proximaFecha = calcularProximaFecha(clase.diaDeLaSemana);
+    const fechaClaseSiguiente = proximaFecha.plus({ weeks: 1 });
+
+    if (
+      clientes.length < clase.cupo &&
+      clientes.length + recupero.length < clase.cupo
+    ) {
+      Swal.fire({
+        title: "Clase Disponible 😃",
+        text: `Puedes inscribirte en la clase del próximo ${
+          clase.diaDeLaSemana
+        } (${proximaFecha.toLocaleString(
+          DateTime.DATE_SHORT
+        )}). Por favor escribinos por whatsapp para agendarte.`,
+        icon: "Success",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Lógica para inscribir al cliente en la clase
+          console.log("Inscribiendo al cliente en la clase...");
+        }
+      });
+    } else if (
+      clientes.length < clase.cupo &&
+      clientes.length + recupero.length >= clase.cupo
+    ) {
+      Swal.fire({
+        title: "⚠️ Cupo disponible la siguiente semana ⚠️",
+        text: `Puedes inscribirte en la clase a partir del siguiente ${
+          clase.diaDeLaSemana
+        } (${fechaClaseSiguiente.toLocaleString(
+          DateTime.DATE_SHORT
+        )}). Por favor escribinos por whatsapp para agendarte.`,
+        icon: "info",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Lógica para manejar la inscripción futura
+          console.log("Manejando inscripción futura...");
+        }
+      });
+    } else {
+      Swal.fire({
+        title: " 😞 Cupo completo 😞",
+        text: "Lamentablemente no hay disponibilidad para esta clase en este día y horario. Por favor, selecciona otra clase.",
+        icon: "warning",
+        confirmButtonText: "Entendido",
+      });
+    }
+  };
+
   return (
     <>
       <Typography className="mt-8 text-center font-bold uppercase">
@@ -98,33 +179,43 @@ const ClasesSedesPublica = () => {
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mx-2 mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md  sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                    className="mx-2 mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md  hover:cursor-pointer sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                    onClick={(e) => handleInscribirse(e, clase)}
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
-                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                      <div className="flex w-4/12 flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
                         <CalendarIcon className="h-8 w-8" />
-                        <div className="text-s">{clase.diaDeLaSemana}</div>
-                        <div className="text-lg font-bold">
-                          {clase.horarioInicio} HS
+                        <div className="mt-1 items-center justify-between md:flex lg:flex-col lg:text-center">
+                          <div className="text-s">{clase.diaDeLaSemana}</div>
+                          <div className="flex text-center text-lg font-bold">
+                            <div className="mr-1">{clase.horarioInicio}</div>
+                            <p>HS</p>
+                          </div>
                         </div>
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
-                      <div className="flex flex-col justify-center p-4">
-                        <div className="text-lg font-medium">
+                      <div className="flex w-6/12 flex-col justify-center p-4 text-start">
+                        <div className=" text-sm font-medium">
                           Profesor {clase.nombreProfe}
                         </div>
                         <div
-                          className={`text-sm text-gray-600 ${
+                          className={` text-gray-600 ${
                             clase.clientes.length < clase.cupo
-                              ? "text-green-600"
-                              : `text-red-600`
+                              ? clase.clientes.length + clase.recupero.length <
+                                clase.cupo
+                                ? "text-sm text-green-600"
+                                : "text-center text-xs text-orange-600"
+                              : "text-sm text-red-600"
                           }`}
                         >
                           {clase.clientes.length < clase.cupo
-                            ? "Hay Disponibilidad"
-                            : `Cupo Completo`}
+                            ? clase.clientes.length + clase.recupero.length <
+                              clase.cupo
+                              ? "Hay Disponibilidad Inmediata"
+                              : "Disponibilidad para la semana siguiente"
+                            : "Cupo Completo"}
                         </div>
                       </div>
                     </div>
@@ -146,33 +237,43 @@ const ClasesSedesPublica = () => {
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mx-2 mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md  sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                    className="mx-2 mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md  hover:cursor-pointer sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                    onClick={(e) => handleInscribirse(e, clase)}
                   >
                     <div className="flex">
                       {/* Columna del Horario */}
-                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                      <div className="flex w-4/12 flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
                         <CalendarIcon className="h-8 w-8" />
-                        <div className="text-s">{clase.diaDeLaSemana}</div>
-                        <div className="text-lg font-bold">
-                          {clase.horarioInicio} HS
+                        <div className="mt-1 items-center justify-between md:flex lg:flex-col lg:text-center">
+                          <div className="text-s">{clase.diaDeLaSemana}</div>
+                          <div className="flex text-center text-lg font-bold">
+                            <div className="mr-1">{clase.horarioInicio}</div>
+                            <p>HS</p>
+                          </div>
                         </div>
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
-                      <div className="flex flex-col justify-center p-4">
-                        <div className="text-lg font-medium">
+                      <div className="flex w-6/12 flex-col justify-center p-4 text-start">
+                        <div className=" text-sm font-medium">
                           Profesor {clase.nombreProfe}
                         </div>
                         <div
-                          className={`text-sm text-gray-600 ${
+                          className={` text-gray-600 ${
                             clase.clientes.length < clase.cupo
-                              ? "text-green-600"
-                              : `text-red-600`
+                              ? clase.clientes.length + clase.recupero.length <
+                                clase.cupo
+                                ? "text-sm text-green-600"
+                                : "text-center text-xs text-orange-600"
+                              : "text-sm text-red-600"
                           }`}
                         >
                           {clase.clientes.length < clase.cupo
-                            ? "Hay Disponibilidad"
-                            : `Cupo Completo`}
+                            ? clase.clientes.length + clase.recupero.length <
+                              clase.cupo
+                              ? "Hay Disponibilidad Inmediata"
+                              : "Disponibilidad para la semana siguiente"
+                            : "Cupo Completo"}
                         </div>
                       </div>
                     </div>

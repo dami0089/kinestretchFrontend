@@ -50,6 +50,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     comprobarInasistencia,
     handleModalPagosProfes,
     modalRegistrarPagoProfe,
+    obtenerInasistentesClase,
   } = useClases();
 
   const { handleCargando } = useAuth();
@@ -87,6 +88,8 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
         handleCargando();
         await obtenerClientesClaseVer(id);
         await obtenerAsistenciasClase(id);
+        await obtenerInasistentesClase(id);
+
         await comprobarInasistencia(id);
 
         setActualizarListado(false);
@@ -148,6 +151,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
         handleCargando();
         await registrarInasistenciaPaginaProfe(_id, id);
         setActualizarListado(true);
+        handleCargando();
         toast.success("Inasistencia registrada", {
           position: "top-right",
           autoClose: 2000,
@@ -158,8 +162,6 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
           progress: undefined,
           theme: "light",
         });
-
-        handleCargando();
       }
     });
   };
@@ -208,6 +210,10 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
       );
     } else {
       handleCargando();
+      console.log("ID CLASE");
+      console.log(id);
+      console.log("ID CLIENTE");
+      console.log(_id);
       await asistencia(id, _id);
       setActualizarListado(true);
       handleCargando();
@@ -365,7 +371,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                 {clientesClaseVer.map(
                   (
                     {
-                      _id,
+                      id,
                       nombre,
                       apellido,
                       email,
@@ -388,7 +394,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
 
                     return (
                       <tr
-                        key={_id}
+                        key={id}
                         className={`${
                           esRecupero
                             ? "bg-yellow-100"
@@ -405,11 +411,11 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                               height="1em"
                               viewBox="0 0 16 16"
                               className={`h-8 w-8  ${
-                                asistencias.includes(_id)
+                                asistencias.includes(id)
                                   ? "text-green-500"
                                   : "hover:cursor-pointer"
                               }`}
-                              onClick={(e) => registrarAsistencia(e, _id)}
+                              onClick={(e) => registrarAsistencia(e, id)}
                             >
                               <path
                                 fill="currentColor"
@@ -426,13 +432,13 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                               height="1em"
                               viewBox="0 0 24 24"
                               className={`h-8 w-8  ${
-                                inasist.includes(_id)
+                                inasist.includes(id)
                                   ? "text-red-500"
-                                  : asistencias.includes(_id)
+                                  : asistencias.includes(id)
                                   ? ""
                                   : "hover:cursor-pointer"
                               }`}
-                              onClick={(e) => handleInasistencia(e, _id)}
+                              onClick={(e) => handleInasistencia(e, id)}
                             >
                               <path
                                 fill="currentColor"
@@ -466,7 +472,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                                 diagnostico ? "text-green-500" : "text-red-500"
                               }`}
                               onClick={(e) =>
-                                handleDiagnostico(e, diagnostico, _id)
+                                handleDiagnostico(e, diagnostico, id)
                               }
                             >
                               <path
@@ -546,7 +552,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                                   ? "text-green-500"
                                   : "text-red-500"
                               }`}
-                              onClick={(e) => handleVerPago(e, pagos, _id)}
+                              onClick={(e) => handleVerPago(e, pagos, id)}
                             >
                               <path
                                 fill="currentColor"
@@ -564,7 +570,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                               height="1em"
                               viewBox="0 0 256 256"
                               className="h-8 w-8 hover:cursor-pointer"
-                              onClick={(e) => handleEliminar(e, _id)}
+                              onClick={(e) => handleEliminar(e, id)}
                             >
                               <path
                                 fill="currentColor"

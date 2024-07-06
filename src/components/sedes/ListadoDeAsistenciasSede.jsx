@@ -234,7 +234,10 @@ const ListadoDeAsistenciasSede = () => {
                   </thead>
                   <tbody>
                     {currentItems.map(
-                      ({ _id, fechaClase, clase, clientes }, key) => {
+                      (
+                        { _id, fechaClase, horaInicio, clase, clientes },
+                        key
+                      ) => {
                         const className = `py-3 px-5 ${
                           key === projectsTableData.length - 1
                             ? ""
@@ -260,7 +263,7 @@ const ListadoDeAsistenciasSede = () => {
                                   variant="small"
                                   className={`$ text-xs  font-medium`}
                                 >
-                                  {clase ? clase.horaInicio : "-"}
+                                  {clase ? `${clase.horarioInicio} hs` : "-"}
                                 </Typography>
                               </div>
                             </td>
@@ -287,7 +290,9 @@ const ListadoDeAsistenciasSede = () => {
                                   variant="small"
                                   className="text-xs font-medium text-blue-gray-600"
                                 >
-                                  {clientes ? clientes.length : `-`}
+                                  {clientes
+                                    ? `${clientes[0].nombre} ${clientes[0].apellido}`
+                                    : `-`}
                                 </Typography>
                               </div>
                             </td>

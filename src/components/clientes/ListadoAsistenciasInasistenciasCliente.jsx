@@ -35,46 +35,6 @@ const ListadoAsistenciasInasistenciasCliente = () => {
 
   const { handleCargando } = useAuth();
 
-  const handleCancelar = async (e, id) => {
-    e.preventDefault();
-    Swal.fire({
-      title: "Inasistencia de cliente",
-      text: "Se marcara como inasistente al cliente en la proxima clase",
-      icon: "question",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await cancelarClaseCliente(cliente._id, id);
-        setActualizoClasesCliente(true);
-      }
-    });
-  };
-
-  const handleEliminar = async (e, id) => {
-    e.preventDefault();
-    Swal.fire({
-      title: "Eliminamos al cliente de la clase?",
-      text: "Esta accion lo eliminara de todos los listados",
-      icon: "question",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        handleCargando();
-        await eliminarDeClaseACliente(id, cliente._id);
-        setActualizoClasesCliente(true);
-        handleCargando();
-      }
-    });
-  };
-
   return (
     <>
       <Typography className="ml-4 text-start font-bold uppercase text-blue-gray-700">
@@ -103,7 +63,7 @@ const ListadoAsistenciasInasistenciasCliente = () => {
               </thead>
               <tbody>
                 {asistenciasInasistenciasCliente.map(
-                  ({ _id, fecha, diaClase, tipo }, key) => {
+                  ({ _id, fecha, diaClase, tipo, fechaFormateada }, key) => {
                     const className = `py-3 px-5 ${
                       tipo === "inasistencia" ? "bg-red-50" : "bg-green-50"
                     }`;
@@ -117,7 +77,7 @@ const ListadoAsistenciasInasistenciasCliente = () => {
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {fecha}{" "}
+                              {fechaFormateada}{" "}
                             </Typography>
                           </div>
                         </td>

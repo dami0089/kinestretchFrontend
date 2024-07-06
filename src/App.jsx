@@ -145,6 +145,9 @@ function App() {
           {/* Clases Routes */}
           <Route path="/clases" element={<RutaProtegida />}>
             <Route index element={<Clases />} />
+            <Route path="listado-clases" element={<ListadoDeClases />} />
+            <Route path="listado-feriados" element={<ListadoDeFeriados />} />
+            <Route path="listado-alumnos-clase/:id" element={<ClasesProfe />} />
           </Route>
         </>
       ) : (

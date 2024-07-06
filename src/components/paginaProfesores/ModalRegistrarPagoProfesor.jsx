@@ -72,7 +72,7 @@ const ModalRegistrarPagoProfesor = () => {
           idClientePago,
           importePagado,
           auth._id,
-          medioPago,
+          "Efectivo",
           fechaPago,
           comentarioPago
         );
@@ -175,14 +175,10 @@ const ModalRegistrarPagoProfesor = () => {
                   id="dia"
                   className="mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
                   value={medioPago}
+                  disabled
                   onChange={(e) => setMedioPago(e.target.value)}
                 >
-                  <option value="">--Seleccionar--</option>
                   <option value="Efectivo">Efectivo</option>
-                  <option value="Transferencia Bancaria">
-                    Transferencia Bancaria
-                  </option>
-                  <option value="Mercado Pago">Mercado Pago</option>
                 </select>
               </div>
 

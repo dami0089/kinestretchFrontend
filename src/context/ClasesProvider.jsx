@@ -512,6 +512,7 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
+      console.log(data);
       setClientesClase(data);
     } catch (error) {
       console.log(error);
@@ -536,6 +537,7 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
+      console.log(data);
       setClase(data);
     } catch (error) {
       console.log(error);

@@ -184,10 +184,21 @@ const ModalClaseSede = () => {
                     fechaUltimoPago,
                     importeUltimoPago,
                     asistioHoy,
+                    esRecupero,
+                    esPrimeraClase,
                   },
                   key
                 ) => (
-                  <div key={id} className="card mb-4 border p-4">
+                  <div
+                    key={id}
+                    className={`card mb-4 border p-4 ${
+                      esRecupero
+                        ? "bg-orange-200"
+                        : esPrimeraClase
+                        ? "bg-yellow-200"
+                        : ""
+                    }`}
+                  >
                     <div className="mb-2 flex items-center justify-between">
                       <Typography
                         variant="small"
@@ -195,7 +206,7 @@ const ModalClaseSede = () => {
                       >
                         Nombre:{" "}
                         <p className="ml-4 text-xl font-bold text-blue-gray-800">
-                          {nombre} {apellido}
+                          {nombre} {apellido} {esRecupero ? "- RECUPERO" : ""}
                         </p>
                       </Typography>
 

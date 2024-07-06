@@ -22,7 +22,7 @@ const RutaProtegida = () => {
 
   return (
     <>
-      {auth._id && auth.rol === "admin" ? (
+      {(auth._id && auth.rol === "admin") || auth.rol === "secretaria" ? (
         <div className="flex min-h-screen flex-col bg-blue-gray-50/50">
           <Sidenav
             routes={routes}
