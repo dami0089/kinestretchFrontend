@@ -15,9 +15,15 @@ import useClases from "@/hooks/useClases";
 import ModalClaseRecupero from "@/components/paginaClientes/ModalClaseRecupero";
 import Cargando from "@/components/Cargando";
 import ModalCancelarClase from "@/components/paginaClientes/ModalCancelarClase";
+import ModalAceptarTerminos from "@/components/paginaClientes/ModalAceptarTerminos";
 
 export function PaginaClientes() {
-  const { auth } = useAuth();
+  const {
+    auth,
+    consultarTerminos,
+    handleModalAceptarTerminos,
+    modalAceptarTerminos,
+  } = useAuth();
   const { obtenerCliente, cliente } = useClientes();
   const {
     modalClaseRecupero,
@@ -30,6 +36,7 @@ export function PaginaClientes() {
   useEffect(() => {
     const dataCliente = async () => {
       await obtenerCliente(auth.cliente);
+      await consultarTerminos(auth._id);
     };
     dataCliente();
   }, []);
@@ -122,6 +129,7 @@ export function PaginaClientes() {
       </section>
       {modalClaseRecupero ? <ModalClaseRecupero /> : ""}
       {modalCancelarClase ? <ModalCancelarClase /> : ""}
+      {modalAceptarTerminos ? <ModalAceptarTerminos /> : ""}
       <Cargando />
     </>
   );

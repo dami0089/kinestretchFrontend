@@ -350,7 +350,7 @@ const ClasesProvider = ({ children }) => {
         theme: "light",
       });
     } catch (error) {
-      toast.error(error, {
+      toast.error(error.response.data.msg, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,

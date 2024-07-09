@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import clienteAxios from "@/configs/clinteAxios";
+import Swal from "sweetalert2";
 
 const AuthContext = createContext();
 
@@ -11,6 +12,13 @@ const AuthProvider = ({ children }) => {
   const [modalQr, setModalQr] = useState(false);
   const [autenticado, setAutenticado] = useState("");
   const [cargandoModal, setCargandoModal] = useState(false);
+  const [content, setContent] = useState("");
+  const [estado, setEstado] = useState("");
+  const [modalAceptarTerminos, setModalAceptarTerminos] = useState(false);
+
+  const handleModalAceptarTerminos = () => {
+    setModalAceptarTerminos(!modalAceptarTerminos);
+  };
 
   const handleModalQr = () => {
     setModalQr(!modalQr);
@@ -113,6 +121,121 @@ const AuthProvider = ({ children }) => {
       console.log(error);
     }
   };
+
+  const nuevosTerminos = async (texto, estado) => {
+    const info = {
+      texto,
+      estado,
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/usuarios/nuevos-terminos`,
+        info,
+        config
+      );
+      Swal.fire({
+        icon: "success",
+        title: data.msg,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: error.response.data.msg,
+      });
+    }
+  };
+
+  const obtenerTerminos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(`/usuarios/obtener-terminos`, config);
+      console.log(data);
+      setContent(data[0].texto);
+      setEstado(data[0].estado);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const consultarTerminos = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/usuarios/consultar-terminos/${id}`,
+        {},
+        config
+      );
+
+      if (data && !data.aceptado) {
+        handleModalAceptarTerminos();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const aceptarTerminos = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/usuarios/aceptar-terminos/${id}`,
+        {},
+        config
+      );
+      Swal.fire({
+        icon: "success",
+        title: data.msg,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: error.response.data.msg,
+      });
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -131,6 +254,16 @@ const AuthProvider = ({ children }) => {
         handleCargando,
         dataDash,
         datosParaDash,
+        nuevosTerminos,
+        content,
+        setContent,
+        estado,
+        setEstado,
+        obtenerTerminos,
+        consultarTerminos,
+        handleModalAceptarTerminos,
+        modalAceptarTerminos,
+        aceptarTerminos,
       }}
     >
       {children}

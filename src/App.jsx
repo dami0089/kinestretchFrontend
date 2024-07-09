@@ -32,6 +32,7 @@ import PerfilProfesorPagina from "./components/paginaProfesores/PerfilProfesor";
 import ClasesProfe from "./pages/inicio/clasesProfesor";
 import Encuesta from "./components/clientes/Encuesta";
 import ListadoDeFeriados from "./components/clases/ListadoDeFeriados";
+import Terminos from "./pages/inicio/terminos";
 
 function App() {
   const { auth } = useAuth();
@@ -82,6 +83,10 @@ function App() {
             <Route path="listado-clases" element={<ListadoDeClases />} />
             <Route path="listado-feriados" element={<ListadoDeFeriados />} />
             <Route path="listado-alumnos-clase/:id" element={<ClasesProfe />} />
+          </Route>
+
+          <Route path="/terminos-condiciones" element={<RutaProtegida />}>
+            <Route index element={<Terminos />} />
           </Route>
         </>
       ) : auth.rol === "cliente" ? (
