@@ -195,7 +195,7 @@ const AuthProvider = ({ children }) => {
         {},
         config
       );
-
+      console.log(data);
       if (data && !data.aceptado) {
         handleModalAceptarTerminos();
       }
