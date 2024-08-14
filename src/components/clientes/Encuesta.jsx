@@ -30,13 +30,6 @@ const Encuesta = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(
-      gustoClase,
-      diferenciaPostClase,
-      acompanamiento,
-      comentarios,
-      id
-    );
 
     try {
       handleCargando();
@@ -48,7 +41,6 @@ const Encuesta = () => {
         id
       );
       handleCargando();
-      console.log("Encuesta enviada");
     } catch (error) {
       console.log(error);
     }

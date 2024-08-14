@@ -33,10 +33,8 @@ const ListadoClasesCliente = () => {
     clasesCliente,
     actualizoClasesCliente,
     setActualizoClasesCliente,
-    registrarInasistenciaCliente,
     inasistencias,
     handleModalCancelarClase,
-    idClaseCancelar,
     setIdClaseCancelar,
     inasistenciaRecupero,
   } = useClases();
@@ -97,7 +95,6 @@ const ListadoClasesCliente = () => {
           handleCargando();
           await inasistenciaRecupero(auth._id, clase);
           setActualizoClasesCliente(true);
-          // window.location.reload();
           handleCargando();
         }
       });

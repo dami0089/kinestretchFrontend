@@ -210,10 +210,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
       );
     } else {
       handleCargando();
-      console.log("ID CLASE");
-      console.log(id);
-      console.log("ID CLIENTE");
-      console.log(_id);
+
       await asistencia(id, _id);
       setActualizarListado(true);
       handleCargando();

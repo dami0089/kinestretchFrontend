@@ -237,7 +237,6 @@ const ClasesProvider = ({ children }) => {
         `/clases/obtener-clases-mes/${id}`,
         config
       );
-      console.log(data);
       setClaseClienteFecha(data);
     } catch (error) {
       console.log(error);
@@ -270,7 +269,6 @@ const ClasesProvider = ({ children }) => {
       const { data } = await clienteAxios.post(`/clases/obtener-dia/${id}`, {
         dia,
       });
-      console.log(data);
       setClasesDia(data);
     } catch (error) {
       console.log(error);
@@ -439,7 +437,6 @@ const ClasesProvider = ({ children }) => {
         `/clases/obtener-clases-cliente2/${id}`,
         config
       );
-      console.log(data);
       setClasesCliente(data);
     } catch (error) {
       console.log(error);
@@ -462,7 +459,6 @@ const ClasesProvider = ({ children }) => {
         { dia },
         config
       );
-      console.log(data);
       setClasesOrdenadas(data);
     } catch (error) {
       console.log(error);
@@ -487,7 +483,6 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
-      console.log(data);
       setClasesOrdenadasInicio(data);
     } catch (error) {
       console.log(error);
@@ -512,7 +507,6 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
-      console.log(data);
       setClientesClase(data);
     } catch (error) {
       console.log(error);
@@ -537,7 +531,6 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
-      console.log(data);
       setClase(data);
     } catch (error) {
       console.log(error);
@@ -607,7 +600,6 @@ const ClasesProvider = ({ children }) => {
         { cliente },
         config
       );
-      console.log(data);
 
       setInasistenciaCliente(data);
     } catch (error) {
@@ -821,7 +813,6 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
-      console.log(data);
       setInasistencias(data);
     } catch (error) {
       console.log(error);
@@ -964,7 +955,6 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
-      console.log(data);
       setClientesClaseVer(data);
     } catch (error) {
       console.log(error);
@@ -1014,7 +1004,6 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
-      console.log(data);
       setAsistenciasClase(data);
     } catch (error) {
       console.log(error);
@@ -1070,7 +1059,6 @@ const ClasesProvider = ({ children }) => {
         `/clases/consultar-asistencias/${id}`,
         config
       );
-      console.log(data);
       setAsistencias(data);
     } catch (error) {
       console.log(error);
@@ -1179,7 +1167,6 @@ const ClasesProvider = ({ children }) => {
     id
   ) => {
     try {
-      console.log("En enviar encuesta", id);
       await clienteAxios.post(`/clases/encuesta-recibida/${id}`, {
         pregunta1,
         pregunta2,
@@ -1262,7 +1249,6 @@ const ClasesProvider = ({ children }) => {
         `/clases/obtener-registros-asistencia/${id}`,
         config
       );
-      console.log(data);
       setAsistenciasInasistenciasCliente(data);
     } catch (error) {
       console.log(error);

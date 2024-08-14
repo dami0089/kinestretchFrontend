@@ -198,8 +198,6 @@ const ProfesoresProvider = ({ children }) => {
       };
 
       const { data } = await clienteAxios(`/clientes/obtener/${id}`, config);
-      console.log("obteniendo cliente");
-      console.log(data);
       setEditarCliente(data.cliente);
       setTipo(data.cliente.tipo);
       setNombre(data.cliente.nombre);
@@ -214,7 +212,6 @@ const ProfesoresProvider = ({ children }) => {
   };
 
   const desactivarCliente = async (cliente) => {
-    console.log(cliente);
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -273,7 +270,6 @@ const ProfesoresProvider = ({ children }) => {
         `/clientes/registros-contables-profesor/${id}`,
         config
       );
-      console.log(data.pagos);
       setRegistrosContablesProfe(data.pagos);
     } catch (error) {
       console.log(error);

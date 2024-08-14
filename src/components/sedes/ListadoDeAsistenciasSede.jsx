@@ -93,7 +93,7 @@ const ListadoDeAsistenciasSede = () => {
     const obtener = async () => {
       handleCargando();
       const fechaHoy = new Date().toISOString().split("T")[0]; // Obtener la fecha de hoy en formato YYYY-MM-DD
-      console.log(idVerSede, fechaHoy);
+
       await obtenerAsistenciasFecha(idVerSede, fechaHoy);
       handleCargando();
     };
@@ -102,7 +102,7 @@ const ListadoDeAsistenciasSede = () => {
 
   const handleAsist = async (fecha) => {
     handleCargando();
-    console.log(fecha);
+
     await obtenerAsistenciasFecha(idVerSede, fecha);
     handleCargando();
   };

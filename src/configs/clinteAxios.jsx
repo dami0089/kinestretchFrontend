@@ -6,7 +6,7 @@ const clienteAxios = axios.create({
 });
 
 clienteAxios.interceptors.request.use((config) => {
-  console.log(`Realizando consulta a: ${config.url}`);
+  // console.log(`Realizando consulta a: ${config.url}`);
   return config;
 });
 

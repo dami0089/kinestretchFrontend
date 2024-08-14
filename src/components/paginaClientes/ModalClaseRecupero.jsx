@@ -17,12 +17,10 @@ const ModalClaseRecupero = () => {
   const {
     diaDeLaSemana,
     setDiaDeLaSemana,
-
     obtenerClasesOrdenadas,
     clasesOrdenadas,
     idClaseSeleccionada,
     setIdClaseSeleccionada,
-
     setActualizoClasesCliente,
     modalClaseRecupero,
     handleModalClaseRecupero,
@@ -63,6 +61,22 @@ const ModalClaseRecupero = () => {
 
     if ([diaDeLaSemana, idClaseSeleccionada].includes("")) {
       toast("⚠️ Todos los campos son obligatorios", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    console.log(idClaseSeleccionada);
+
+    if (idClaseSeleccionada == 1) {
+      toast("⚠️ FERIADO!", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -258,8 +272,13 @@ const ModalClaseRecupero = () => {
                         {clasesOrdenadas
                           ? clasesOrdenadas.map((clase) => (
                               <option key={clase._id} value={clase._id}>
-                                {clase.nombreProfe} - {clase.horarioInicio}:00
-                                hs
+                                {clase.nombreProfe}{" "}
+                                {clase.horarioInicio !== "FERIADO"
+                                  ? `- ${clase.horarioInicio}`
+                                  : ""}{" "}
+                                {clase.horarioInicio !== "FERIADO"
+                                  ? ":00 hs"
+                                  : ""}
                               </option>
                             ))
                           : ""}

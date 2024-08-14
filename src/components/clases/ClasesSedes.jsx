@@ -42,9 +42,6 @@ const ClasesSedes = () => {
     )
   );
 
-  useEffect(() => {
-    console.log(diaActual);
-  }, []);
   const seleccionarDia = (dia) => {
     setDiaSeleccionado(dia);
   };

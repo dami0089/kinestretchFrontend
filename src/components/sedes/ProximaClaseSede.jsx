@@ -75,7 +75,6 @@ const ProximaClaseSede = () => {
 
   const handleVer = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
     e.preventDefault();
-    console.log(_id);
     setIdVerClase(_id);
     setDiaClase(diaDeLaSemana);
     setHoraClase(horarioInicio);

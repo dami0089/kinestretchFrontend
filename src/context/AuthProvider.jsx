@@ -86,7 +86,7 @@ const AuthProvider = ({ children }) => {
         `/usuarios/consultar-autenticacion`,
         config
       );
-      console.log(data.autenticacion);
+
       if (data.autenticacion == 1) {
         setAutenticado("1");
       }
@@ -171,7 +171,6 @@ const AuthProvider = ({ children }) => {
       };
 
       const { data } = await clienteAxios(`/usuarios/obtener-terminos`, config);
-      console.log(data);
       setContent(data[0].texto);
       setEstado(data[0].estado);
     } catch (error) {
@@ -195,7 +194,6 @@ const AuthProvider = ({ children }) => {
         {},
         config
       );
-      console.log(data);
       if (data && !data.aceptado) {
         handleModalAceptarTerminos();
       }

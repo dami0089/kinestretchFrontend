@@ -42,10 +42,10 @@ export function PaginaClientes() {
   }, []);
 
   useEffect(() => {
-    const inasistencias = async () => {
+    const inasis = async () => {
       await obtenerInasistencias(auth.cliente);
     };
-    inasistencias();
+    inasis();
   }, []);
 
   const handleReservarRecupero = async (e) => {

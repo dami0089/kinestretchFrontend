@@ -135,8 +135,6 @@ const ModalClaseProfe = () => {
       );
     } else {
       handleCargando();
-      console.log(idVerClase);
-      console.log(id);
       await asistencia(idVerClase, id);
       setComprobar(true);
       setActualizo(true);

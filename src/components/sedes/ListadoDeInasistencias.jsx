@@ -107,7 +107,6 @@ const ListadoDeInasistencias = () => {
 
   const handleAsist = async (fecha) => {
     handleCargando();
-    console.log(fecha);
     await obtenerinasistenciasSede(idVerSede, fecha);
     handleCargando();
   };

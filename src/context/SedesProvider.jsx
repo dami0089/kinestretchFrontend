@@ -178,7 +178,6 @@ const SedesProvider = ({ children }) => {
   };
 
   const desactivarCliente = async (cliente) => {
-    console.log(cliente);
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -368,7 +367,6 @@ const SedesProvider = ({ children }) => {
       };
 
       const { data } = await clienteAxios(`/sedes/obtener-cajas/${id}`, config);
-      console.log(data);
       setCajasSede(data);
     } catch (error) {
       console.log(error);
@@ -413,7 +411,6 @@ const SedesProvider = ({ children }) => {
         { fecha },
         config
       );
-      console.log(data);
       setAsistenciasSede(data);
     } catch (error) {
       console.log(error);
@@ -437,7 +434,6 @@ const SedesProvider = ({ children }) => {
         { fecha },
         config
       );
-      console.log(data);
       setInasistenciasSede(data);
     } catch (error) {
       console.log(error);
