@@ -960,6 +960,30 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const [clientesSede, setClientesSede] = useState([]);
+
+  const obtenerClientesPorSede = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clientes/clientes-por-sede/${id}`,
+        config
+      );
+      //guarda los datos de los clientes
+      setClientesSede(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClientesContext.Provider
       value={{
@@ -1081,6 +1105,8 @@ const ClientesProvider = ({ children }) => {
         handleModalEditarPagoProfe,
         modalEditarPagoProfe,
         eliminarCliente,
+        clientesSede,
+        obtenerClientesPorSede,
       }}
     >
       {children}

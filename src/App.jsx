@@ -131,6 +131,10 @@ function App() {
           <Route path="/inicio" element={<RutaProtegida />}>
             <Route index element={<ProfileSedeSecretariaSocio />} />
           </Route>
+
+          <Route path="/clientes/perfil" element={<RutaProtegida />}>
+            <Route index element={<ProfileCliente />} />
+          </Route>
         </>
       ) : (
         ""
