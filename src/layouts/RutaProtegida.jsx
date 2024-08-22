@@ -22,7 +22,7 @@ const RutaProtegida = () => {
 
   return (
     <>
-      {(auth._id && auth.rol === "admin") || auth.rol === "secretaria" ? (
+      {auth._id && auth.rol === "admin" ? (
         <div className="flex min-h-screen flex-col bg-blue-gray-50/50">
           <Sidenav
             routes={routes}
@@ -86,6 +86,19 @@ const RutaProtegida = () => {
             <Outlet />
           </div>
         </div>
+      ) : auth.rol === "secretaria" || auth.rol === "socio" ? (
+        <>
+          <div className="flex flex-1 flex-col p-4 ">
+            <DashboardNavbar />
+
+            <div className="flex-1">
+              <Outlet />
+            </div>
+            <div className="mt-auto text-blue-gray-600">
+              <Footer />
+            </div>
+          </div>
+        </>
       ) : (
         <Navigate to="/" />
       )}

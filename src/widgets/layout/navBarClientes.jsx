@@ -60,7 +60,6 @@ export function DashboardNavbarClientes() {
         handleCargando();
         cerrarSesionAuth();
         setUsuarioAutenticado("");
-        localStorage.removeItem("token");
         navigate("/");
         handleCargando();
       }

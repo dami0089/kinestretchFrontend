@@ -27,12 +27,14 @@ import ListadoProfesoresInactivos from "./components/profesores/ListadoProfesore
 import ListadoSecretarias from "./components/sedes/ListadoSecretarias";
 import ClasesSedesPublica from "./components/clases/ClasesSedesPublica";
 import ListadoDeClases from "./components/clases/ListadoDeClases";
-import ListadoAlumnosClaseClases from "./components/clases/ListadoAlumnosClaseClases";
 import PerfilProfesorPagina from "./components/paginaProfesores/PerfilProfesor";
 import ClasesProfe from "./pages/inicio/clasesProfesor";
 import Encuesta from "./components/clientes/Encuesta";
 import ListadoDeFeriados from "./components/clases/ListadoDeFeriados";
 import Terminos from "./pages/inicio/terminos";
+import Configuracion from "./pages/inicio/configuracion";
+import ListadoDeUsuariosApp from "./components/configuracion/ListadoDeUsuariosApp";
+import ProfileSedeSecretariaSocio from "./components/secretariasSocios/ProfileSedeSecretariaSocio";
 
 function App() {
   const { auth } = useAuth();
@@ -85,8 +87,14 @@ function App() {
             <Route path="listado-alumnos-clase/:id" element={<ClasesProfe />} />
           </Route>
 
-          <Route path="/terminos-condiciones" element={<RutaProtegida />}>
-            <Route index element={<Terminos />} />
+          {/* Configuracion Routes */}
+          <Route path="/configuracion" element={<RutaProtegida />}>
+            <Route index element={<Configuracion />} />
+            <Route path="terminos-condiciones" element={<Terminos />} />
+            <Route
+              path="listado-usuarios-app"
+              element={<ListadoDeUsuariosApp />}
+            />
           </Route>
         </>
       ) : auth.rol === "cliente" ? (
@@ -118,41 +126,10 @@ function App() {
             <Route index element={<ClasesProfe />} />
           </Route>
         </>
-      ) : auth.rol === "secretaria" ? (
+      ) : auth.rol === "secretaria" || auth.rol === "socio" ? (
         <>
           <Route path="/inicio" element={<RutaProtegida />}>
-            <Route index element={<Home />} />
-          </Route>
-          {/* Clientes Routes */}
-          <Route path="/clientes" element={<RutaProtegida />}>
-            <Route index element={<Clientes />} />
-            <Route path="activos" element={<ListadodeClientes />} />
-            <Route path="inactivos" element={<ListadoClientesInactivos />} />
-            <Route path="perfil" element={<ProfileCliente />} />
-          </Route>
-          {/* Profesores Routes */}
-          <Route path="/profesores" element={<RutaProtegida />}>
-            <Route index element={<Profesores />} />
-            <Route path="activos" element={<ListadoProfesoresActivos />} />
-            <Route path="perfil-profesor" element={<PerfilProfesor />} />
-            <Route path="inactivos" element={<ListadoProfesoresInactivos />} />
-          </Route>
-          {/* Sedes Routes */}
-          <Route path="/sedes" element={<RutaProtegida />}>
-            <Route index element={<Sedes />} />
-            <Route path="activas" element={<ListadoDeSedes />} />
-            <Route path="profile-sede" element={<ProfileSede />} />
-            <Route
-              path="listado-secretarias"
-              element={<ListadoSecretarias />}
-            />
-          </Route>
-          {/* Clases Routes */}
-          <Route path="/clases" element={<RutaProtegida />}>
-            <Route index element={<Clases />} />
-            <Route path="listado-clases" element={<ListadoDeClases />} />
-            <Route path="listado-feriados" element={<ListadoDeFeriados />} />
-            <Route path="listado-alumnos-clase/:id" element={<ClasesProfe />} />
+            <Route index element={<ProfileSedeSecretariaSocio />} />
           </Route>
         </>
       ) : (

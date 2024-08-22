@@ -69,7 +69,6 @@ export function DashboardNavbar() {
         handleCargando();
         cerrarSesionAuth();
         setUsuarioAutenticado("");
-        localStorage.removeItem("token");
         navigate("/");
         handleCargando();
       }
