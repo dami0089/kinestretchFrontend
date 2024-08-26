@@ -19,6 +19,7 @@ import ModalVerClase from "./ModalVerClase";
 import ModalMostrarClaseCliente from "./ModalMostrarClaseCliente";
 import Swal from "sweetalert2";
 import ModalCancelarClaseAdmin from "./ModalCancelarClaseAdmin";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ClasesPorCliente = () => {
   const { setIdClienteEditar, modalVerClaseCliente, handleVerClase, cliente } =
@@ -150,7 +151,7 @@ const ClasesPorCliente = () => {
                               variant="small"
                               className="text-xs font-medium text-blue-gray-600"
                             >
-                              {horarioInicio}:00 hs
+                              {convertirHora(horarioInicio)} hs
                             </Typography>
                           </div>
                         </td>

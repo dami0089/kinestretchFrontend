@@ -11,6 +11,7 @@ import Cargando from "../Cargando";
 import Swal from "sweetalert2";
 import { Transition } from "@headlessui/react";
 import { ToastContainer } from "react-toastify";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ModalVerClase = () => {
   const { handleModalClasesProfe, modalClasesProfe } = useProfesores();
@@ -116,8 +117,8 @@ const ModalVerClase = () => {
                     as="h3"
                     className="text-xl font-bold leading-6 text-gray-900"
                   >
-                    Clase del {clase.diaDeLaSemana}-{clase.horarioInicio}hs en{" "}
-                    {clase.nombreSede}
+                    Clase del {clase.diaDeLaSemana}-
+                    {convertirHora(clase.horarioInicio)}hs en {clase.nombreSede}
                   </Dialog.Title>
 
                   <form>

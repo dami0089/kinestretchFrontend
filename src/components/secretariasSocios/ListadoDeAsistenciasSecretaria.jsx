@@ -19,6 +19,7 @@ import useSedes from "@/hooks/useSedes";
 import ModalEditarPagoProfe from "../paginaProfesores/ModalEditarPagoProfe";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ListadoDeAsistenciasSecretaria = () => {
   const { modalEditarPagoProfe } = useClientes();
@@ -229,7 +230,9 @@ const ListadoDeAsistenciasSecretaria = () => {
                                   variant="small"
                                   className={`$ text-xs  font-medium`}
                                 >
-                                  {clase ? `${clase.horarioInicio} hs` : "-"}
+                                  {clase
+                                    ? `${convertirHora(clase.horarioInicio)} hs`
+                                    : "-"}
                                 </Typography>
                               </div>
                             </td>

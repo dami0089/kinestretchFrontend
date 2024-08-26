@@ -10,6 +10,7 @@ import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
 import Swal from "sweetalert2";
 import Cargando from "../Cargando";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ModalMostrarClaseCliente = () => {
   const { handleVerClase, modalVerClaseCliente, cliente } = useClientes();
@@ -146,8 +147,8 @@ const ModalMostrarClaseCliente = () => {
                     as="h3"
                     className="text-center text-xl font-bold leading-6 text-gray-900"
                   >
-                    Clase del {clase.diaDeLaSemana}-{clase.horarioInicio}hs en{" "}
-                    {clase.nombreSede}
+                    Clase del {clase.diaDeLaSemana}-
+                    {convertirHora(clase.horarioInicio)}hs en {clase.nombreSede}
                   </Dialog.Title>
 
                   <form className="mx-2 my-2 text-center">

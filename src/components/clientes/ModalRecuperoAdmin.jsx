@@ -8,6 +8,7 @@ import useAuth from "@/hooks/useAuth";
 import useSedes from "@/hooks/useSedes";
 import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ModalRecuperoAdmin = () => {
   const { handleCargando } = useAuth();
@@ -281,7 +282,8 @@ const ModalRecuperoAdmin = () => {
 
                         {clasesOrdenadas.map((clase) => (
                           <option key={clase._id} value={clase._id}>
-                            {clase.nombreProfe} - {clase.horarioInicio}:00 hs
+                            {clase.nombreProfe} -{" "}
+                            {convertirHora(clase.horarioInicio)} hs
                           </option>
                         ))}
                       </select>

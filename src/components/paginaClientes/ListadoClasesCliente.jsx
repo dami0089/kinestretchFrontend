@@ -1,29 +1,14 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  Progress,
-  Tooltip,
-  Typography,
-} from "@material-tailwind/react";
+import { Typography } from "@material-tailwind/react";
 
 import React, { useEffect } from "react";
-import { projectsTableData } from "@/data";
 import useClientes from "@/hooks/useClientes";
-import { formatearFecha } from "@/helpers/formatearFecha";
 import { useNavigate } from "react-router-dom";
-import { setOpenConfigurator } from "@/context";
-import {
-  ArrowLeftCircleIcon,
-  CalendarIcon,
-  UserIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/solid";
+import { CalendarIcon, UserIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import useClases from "@/hooks/useClases";
 import useAuth from "@/hooks/useAuth";
 import Swal from "sweetalert2";
 import { ToastContainer } from "react-toastify";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ListadoClasesCliente = () => {
   const { obtenerCliente, cliente } = useClientes();
@@ -218,7 +203,7 @@ const ListadoClasesCliente = () => {
                     <div className="text-s">{clase.diaDeLaSemana}</div>
                     <div className="text-lg font-bold">
                       {clase.fechaCompleta ? `${clase.fechaCompleta} - ` : ""}
-                      {clase.horarioInicio} HS
+                      {convertirHora(clase.horarioInicio)} HS
                     </div>
                   </div>
 

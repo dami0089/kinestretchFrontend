@@ -17,6 +17,7 @@ import ListadoAlumnosAusenteClaseProfe from "@/components/paginaProfesores/Lista
 import ListadoAlumnosAsistenteClaseProfe from "@/components/paginaProfesores/ListadoAlumnosAsistenteClaseProfe";
 import ModalEnviarMensajeClase from "@/components/clases/ModalEnviarMensajeClase";
 import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegistrarPagoProfesor";
+import { convertirHora } from "@/helpers/convertirHora";
 
 export function ClasesProfe() {
   const { auth, handleCargando } = useAuth();
@@ -86,7 +87,8 @@ export function ClasesProfe() {
               </div>
               <div className="my-8 text-center">
                 <Typography variant="h2" color="blue-gray" className="mb-2">
-                  Clase del {clase.diaDeLaSemana} - {clase.horarioInicio}:00 HS
+                  Clase del {clase.diaDeLaSemana} -{" "}
+                  {convertirHora(clase.horarioInicio)} HS
                 </Typography>
               </div>
 

@@ -8,25 +8,15 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { HomeIcon, CalendarDaysIcon } from "@heroicons/react/24/solid";
-
 import { useEffect, useState } from "react";
-
 import { ToastContainer } from "react-toastify";
 import useSedes from "@/hooks/useSedes";
 import { ProfileInfoCard } from "@/widgets/cards";
-
 import useClases from "@/hooks/useClases";
-
 import { useNavigate } from "react-router-dom";
-
 import useAuth from "@/hooks/useAuth";
 import ProximaClaseSede from "../sedes/ProximaClaseSede";
 import ClasesManana from "../sedes/ClasesManana";
-import ClasesSedes from "../clases/ClasesSedes";
-import ListadoCobrosSede from "../sedes/ListadoCobrosSede";
-import ListadoDeCajasSede from "../sedes/ListadoDeCajasSede";
-import ListadoDeAsistenciasSede from "../sedes/ListadoDeAsistenciasSede";
-import ListadoDeInasistencias from "../sedes/ListadoDeInasistencias";
 import Cargando from "../Cargando";
 import ModalEnviarMensajeSedeSecretaria from "./ModalEnviarMensajeSedeSecretaria";
 import ModalNuevaClaseSecretaria from "./ModalNuevaClaseSecretaria";
@@ -70,12 +60,13 @@ export function ProfileSedeSecretariaSocio() {
   useEffect(() => {
     const traerData = async () => {
       handleCargando();
-      setIdSedeSeleccionada(auth.sedes[0]);
+      setIdSedeSeleccionada(auth.sede[0]);
       await obtenerSedesUserPantalla(auth._id);
-      await obtenerSede(auth.sedes[0]);
-      await obtenerClasesSede(auth.sedes[0]);
-      handleCargando();
+      await obtenerSede(auth.sede[0]);
+      await obtenerClasesSede(auth.sede[0]);
     };
+    handleCargando();
+
     traerData();
   }, []);
 

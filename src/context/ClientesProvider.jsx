@@ -114,7 +114,8 @@ const ClientesProvider = ({ children }) => {
     celularContactoEmergencia,
     creador,
     fechaApto,
-    linkApto
+    linkApto,
+    sede
   ) => {
     const cliente = {
       nombre,
@@ -130,6 +131,7 @@ const ClientesProvider = ({ children }) => {
       creador,
       fechaApto,
       linkApto,
+      sede,
     };
     try {
       const token = localStorage.getItem("token");

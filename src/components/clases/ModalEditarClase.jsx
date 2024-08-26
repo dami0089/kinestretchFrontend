@@ -233,19 +233,35 @@ const ModalEditarClase = () => {
                         onChange={(e) => setHoraInicio(e.target.value)}
                       >
                         <option value="">--Seleccionar--</option>
-                        <option value="8">8 hs</option>
-                        <option value="9">9 hs</option>
-                        <option value="10">10 hs</option>
-                        <option value="11">11 hs</option>
-                        <option value="12">12 hs</option>
-                        <option value="13">13 hs</option>
-                        <option value="14">14 hs</option>
-                        <option value="15">15 hs</option>
-                        <option value="16">16 hs</option>
-                        <option value="17">17 hs</option>
-                        <option value="18">18 hs</option>
-                        <option value="19">19 hs</option>
-                        <option value="20">20 hs</option>
+                        <option value="8">8:00 hs</option>
+                        <option value="8.5">8:30 hs</option>
+                        <option value="9">9:00 hs</option>
+                        <option value="9.5">9:30 hs</option>
+                        <option value="10">10:00 hs</option>
+                        <option value="10.5">10:30 hs</option>
+                        <option value="11">11:00 hs</option>
+                        <option value="11.5">11:30 hs</option>
+                        <option value="12">12:00 hs</option>
+                        <option value="12.5">12:30 hs</option>
+                        <option value="13">13:00 hs</option>
+                        <option value="13.5">13:30 hs</option>
+                        <option value="14">14:00 hs</option>
+                        <option value="14.5">14:30 hs</option>
+                        <option value="15">15:00 hs</option>
+                        <option value="15.5">15:30 hs</option>
+                        <option value="16">16:00 hs</option>
+                        <option value="16.5">16:30 hs</option>
+                        <option value="17">17:00 hs</option>
+                        <option value="17.5">17:30 hs</option>
+                        <option value="18">18:00 hs</option>
+                        <option value="18.5">18:30 hs</option>
+                        <option value="19">19:00 hs</option>
+                        <option value="19.5">19:30 hs</option>
+                        <option value="20">20:00 hs</option>
+                        <option value="20.5">20:30 hs</option>
+                        <option value="21">21:00 hs</option>
+                        <option value="21.5">21:30 hs</option>
+                        <option value="22">22:00 hs</option>
                       </select>
                     </div>
                     <div>

@@ -242,7 +242,8 @@ const ModalAsignarClaseACliente = () => {
 
                         {clasesOrdenadas.map((clase) => (
                           <option key={clase._id} value={clase._id}>
-                            {clase.nombreProfe} - {clase.horarioInicio}:00 hs
+                            {clase.nombreProfe} -{" "}
+                            {convertirHora(clase.horarioInicio)} hs
                           </option>
                         ))}
                       </select>

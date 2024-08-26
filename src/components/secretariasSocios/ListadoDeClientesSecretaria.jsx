@@ -18,6 +18,7 @@ import { ArrowLeftCircleIcon, EyeIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import useClases from "@/hooks/useClases";
+import ModalNuevoClienteSecretaria from "./ModalNuevoClienteSecretaria";
 
 const ListadoDeClientesSecretaria = () => {
   const {
@@ -28,6 +29,8 @@ const ListadoDeClientesSecretaria = () => {
     setCliente,
     clientesSede,
     obtenerClientesPorSede,
+    handleModalNuevoCliente,
+    modalNuevoCliente,
   } = useClientes();
 
   const { setClasesCliente } = useClases();
@@ -109,7 +112,7 @@ const ListadoDeClientesSecretaria = () => {
             <Typography className="ml-4  font-bold">
               Listado de Clientes
             </Typography>
-
+            <Button onClick={handleModalNuevoCliente}>Nuevo Cliente</Button>
             <div className="mr-5 flex items-center space-x-4">
               <input
                 className="mb-4 mt-2 rounded-md border-2 p-2 placeholder-gray-400"
@@ -309,6 +312,7 @@ const ListadoDeClientesSecretaria = () => {
         </Button>
       </div>
       <Cargando />
+      {modalNuevoCliente ? <ModalNuevoClienteSecretaria /> : null}
     </>
   );
 };

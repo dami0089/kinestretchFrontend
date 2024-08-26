@@ -16,6 +16,7 @@ import React, { useEffect } from "react";
 import { DateTime } from "luxon";
 import Swal from "sweetalert2";
 import useAuth from "@/hooks/useAuth";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ProximaClaseSedeSecretaria = () => {
   const {
@@ -162,7 +163,7 @@ const ProximaClaseSedeSecretaria = () => {
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {horarioInicio}:00 hs
+                              {convertirHora(horarioInicio)} hs
                             </Typography>
                           </div>
                         </td>

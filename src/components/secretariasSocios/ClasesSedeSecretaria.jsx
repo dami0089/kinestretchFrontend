@@ -5,6 +5,7 @@ import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import { CalendarIcon } from "@heroicons/react/24/solid";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ClasesSedeSecretaria = () => {
   const {
@@ -115,7 +116,7 @@ const ClasesSedeSecretaria = () => {
                         <CalendarIcon className="h-8 w-8" />
                         <div className="text-s">{clase.diaDeLaSemana}</div>
                         <div className="text-lg font-bold">
-                          {clase.horarioInicio} HS
+                          {convertirHora(clase.horarioInicio)} HS
                         </div>
                       </div>
 
@@ -167,7 +168,7 @@ const ClasesSedeSecretaria = () => {
                         <CalendarIcon className="h-8 w-8" />
                         <div className="text-s">{clase.diaDeLaSemana}</div>
                         <div className="text-lg font-bold">
-                          {clase.horarioInicio} HS
+                          {convertirHora(clase.horarioInicio)} HS
                         </div>
                       </div>
 

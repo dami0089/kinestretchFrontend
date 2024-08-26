@@ -23,6 +23,7 @@ import ModalEditarPago from "../clientes/ModalEditarPago";
 import ModalEditarPagoProfe from "../paginaProfesores/ModalEditarPagoProfe";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ListadoDeAsistenciasSede = () => {
   const {
@@ -263,7 +264,9 @@ const ListadoDeAsistenciasSede = () => {
                                   variant="small"
                                   className={`$ text-xs  font-medium`}
                                 >
-                                  {clase ? `${clase.horarioInicio} hs` : "-"}
+                                  {clase
+                                    ? `${convertirHora(horaInicio)} hs`
+                                    : "-"}
                                 </Typography>
                               </div>
                             </td>

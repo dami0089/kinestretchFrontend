@@ -21,6 +21,7 @@ import Swal from "sweetalert2";
 
 import useClases from "@/hooks/useClases";
 import ModalEditarClase from "./ModalEditarClase";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ListadoDeClases = () => {
   const { setIdClienteEditar, setCliente } = useClientes();
@@ -222,7 +223,7 @@ const ListadoDeClases = () => {
                               variant="small"
                               className="text-xs font-medium text-blue-gray-600"
                             >
-                              {horarioInicio} : 00 hs
+                              {convertirHora(horarioInicio)} hs
                             </Typography>
                           </div>
                         </td>

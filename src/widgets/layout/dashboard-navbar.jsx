@@ -1,36 +1,20 @@
 import { useLocation, Link } from "react-router-dom";
 import {
   Navbar,
-  Typography,
   Button,
   IconButton,
-  Breadcrumbs,
-  Input,
   Menu,
   MenuHandler,
-  MenuList,
-  MenuItem,
   Avatar,
 } from "@material-tailwind/react";
 import {
   UserCircleIcon,
-  Cog6ToothIcon,
-  BellIcon,
-  ClockIcon,
-  CreditCardIcon,
   Bars3Icon,
   ArrowLeftOnRectangleIcon,
-  QrCodeIcon,
 } from "@heroicons/react/24/solid";
-import {
-  useMaterialTailwindController,
-  setOpenConfigurator,
-  setOpenSidenav,
-} from "@/context";
-import io from "socket.io-client";
+import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 import { useEffect } from "react";
-import { QRCode } from "qrcode";
-
+import logo from "/img/Logo-en-Blanco.png";
 import useAuth from "@/hooks/useAuth";
 import Swal from "sweetalert2";
 
@@ -90,36 +74,6 @@ export function DashboardNavbar() {
     }
   }, [autenticado]);
 
-  // useEffect(() => {
-  //   // const socket = io("http://localhost:3000");
-  //   // const socket = io("http://34.235.146.116:3000");
-  //   const socket = io("https://postural.com.ar");
-
-  //   socket.on("connection-successful", () => {
-  //     console.log("Connection with WhatsApp is successful!");
-  //     // Aquí puedes realizar cualquier otra lógica que necesites una vez conectado.
-  //   });
-
-  //   socket.on("authentication-status", async (status) => {
-  //     if (status === "authenticated") {
-  //       setAutenticado("1");
-  //     } else if (status === "requires-authentication") {
-  //       setAutenticado("2");
-
-  //       // Espera a que el evento "qr" sea emitido por el backend.
-  //       socket.on("qr", async (qrText) => {
-  //         // Genera la imagen QR a partir de la cadena recibida
-  //         const qrImageUrl = await QRCode.toDataURL(qrText);
-  //         setQr(qrImageUrl);
-  //       });
-  //     }
-  //   });
-
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
-
   return (
     <Navbar
       color={"white"}
@@ -131,9 +85,11 @@ export function DashboardNavbar() {
     >
       <div className="flex flex-col-reverse justify-center gap-6 md:flex-row md:items-center md:justify-between">
         <div className="items-center text-center capitalize">
-          <div className="mr-auto md:mr-4 md:w-56">
-            {/* <Input label="Buscar cliente" /> */}
-          </div>
+          {auth.rol === "socio" || auth.rol === "secretaria" ? (
+            <div className="mr-auto md:mr-4 md:w-56">
+              <Avatar src={logo} className="h-25 w-20 text-center" />
+            </div>
+          ) : null}
         </div>
         <div className="flex items-center text-center">
           {/* <QrCodeIcon

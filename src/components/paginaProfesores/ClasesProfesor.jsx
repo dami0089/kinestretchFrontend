@@ -8,6 +8,7 @@ import useProfesores from "@/hooks/useProfesores";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import Cargando from "../Cargando";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ClasesProfesor = () => {
   const {
@@ -151,7 +152,7 @@ const ClasesProfesor = () => {
                         <CalendarIcon className="h-8 w-8" />
                         <div className="text-s">{clase.diaDeLaSemana}</div>
                         <div className="text-lg font-bold">
-                          {clase.horarioInicio} HS
+                          {convertirHora(clase.horarioInicio)} HS
                         </div>
                       </div>
 
@@ -198,7 +199,7 @@ const ClasesProfesor = () => {
                         <CalendarIcon className="h-8 w-8" />
                         <div className="text-s">{clase.diaDeLaSemana}</div>
                         <div className="text-lg font-bold">
-                          {clase.horarioInicio} HS
+                          {convertirHora(clase.horarioInicio)} HS
                         </div>
                       </div>
 

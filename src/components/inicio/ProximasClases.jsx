@@ -1,4 +1,5 @@
 import { projectsTableData } from "@/data";
+import { convertirHora } from "@/helpers/convertirHora";
 import useClases from "@/hooks/useClases";
 import { EllipsisVerticalIcon, EyeIcon } from "@heroicons/react/24/solid";
 import {
@@ -104,7 +105,7 @@ const ProximasClases = () => {
                           color="blue-gray"
                           className="font-bold"
                         >
-                          {diaDeLaSemana} {horarioInicio} hs
+                          {diaDeLaSemana} {convertirHora(horarioInicio)} hs
                         </Typography>
                       </div>
                     </td>

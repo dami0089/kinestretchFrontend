@@ -5,6 +5,7 @@ import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import useProfesores from "@/hooks/useProfesores";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ClasesProfesorPerfil = () => {
   const {
@@ -163,7 +164,7 @@ const ClasesProfesorPerfil = () => {
                     <div className="flex">
                       {/* Columna del Horario */}
                       <div className="w-1/4 flex-shrink-0 bg-blue-gray-500 p-4 text-center text-white">
-                        {clase.horarioInicio} AM
+                        {convertirHora(clase.horarioInicio)} AM
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
@@ -206,7 +207,7 @@ const ClasesProfesorPerfil = () => {
                     <div className="flex">
                       {/* Columna del Horario */}
                       <div className="w-1/4 flex-shrink-0 bg-blue-gray-500 p-4 text-center text-white">
-                        {clase.horarioInicio} PM
+                        {convertirHora(clase.horarioInicio)} PM
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}

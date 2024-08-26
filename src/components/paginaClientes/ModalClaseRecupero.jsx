@@ -8,6 +8,7 @@ import useAuth from "@/hooks/useAuth";
 import useSedes from "@/hooks/useSedes";
 import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ModalClaseRecupero = () => {
   const { handleCargando } = useAuth();
@@ -274,11 +275,9 @@ const ModalClaseRecupero = () => {
                               <option key={clase._id} value={clase._id}>
                                 {clase.nombreProfe}{" "}
                                 {clase.horarioInicio !== "FERIADO"
-                                  ? `- ${clase.horarioInicio}`
+                                  ? `- ${convertirHora(clase.horarioInicio)}`
                                   : ""}{" "}
-                                {clase.horarioInicio !== "FERIADO"
-                                  ? ":00 hs"
-                                  : ""}
+                                {clase.horarioInicio !== "FERIADO" ? " hs" : ""}
                               </option>
                             ))
                           : ""}

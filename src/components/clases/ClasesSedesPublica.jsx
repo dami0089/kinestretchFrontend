@@ -8,6 +8,7 @@ import useAuth from "@/hooks/useAuth";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import Cargando from "../Cargando";
 import Swal from "sweetalert2";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ClasesSedesPublica = () => {
   const { obtenerClasesSedeDia, clasesDia } = useClases();
@@ -175,7 +176,7 @@ const ClasesSedesPublica = () => {
             </Typography>
             <div className="flex flex-wrap">
               {clasesDia
-                .filter((clase) => clase.horarioInicio <= 12)
+                .filter((clase) => clase.horarioInicio <= 12.5)
                 .map((clase) => (
                   <div
                     key={clase._id}
@@ -189,7 +190,9 @@ const ClasesSedesPublica = () => {
                         <div className="mt-1 items-center justify-between md:flex lg:flex-col lg:text-center">
                           <div className="text-s">{clase.diaDeLaSemana}</div>
                           <div className="flex text-center text-lg font-bold">
-                            <div className="mr-1">{clase.horarioInicio}</div>
+                            <div className="mr-1">
+                              {convertirHora(clase.horarioInicio)}
+                            </div>
                             <p>HS</p>
                           </div>
                         </div>
@@ -232,7 +235,7 @@ const ClasesSedesPublica = () => {
               {clasesDia
                 .filter(
                   (clase) =>
-                    clase.horarioInicio >= 13 && clase.horarioInicio <= 20
+                    clase.horarioInicio >= 13 && clase.horarioInicio <= 22
                 )
                 .map((clase) => (
                   <div
@@ -247,7 +250,9 @@ const ClasesSedesPublica = () => {
                         <div className="mt-1 items-center justify-between md:flex lg:flex-col lg:text-center">
                           <div className="text-s">{clase.diaDeLaSemana}</div>
                           <div className="flex text-center text-lg font-bold">
-                            <div className="mr-1">{clase.horarioInicio}</div>
+                            <div className="mr-1">
+                              {convertirHora(clase.horarioInicio)}
+                            </div>
                             <p>HS</p>
                           </div>
                         </div>

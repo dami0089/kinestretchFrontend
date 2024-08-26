@@ -24,6 +24,7 @@ import { DateTime } from "luxon";
 import ModalVerClase from "../clientes/ModalVerClase";
 import ModalClaseSede from "./ModalClaseSede";
 import Swal from "sweetalert2";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ClasesManana = () => {
   const {
@@ -164,7 +165,7 @@ const ClasesManana = () => {
                             color="blue-gray"
                             className="font-bold"
                           >
-                            {horarioInicio}:00 hs
+                            {convertirHora(horarioInicio)} hs
                           </Typography>
                         </div>
                       </td>
