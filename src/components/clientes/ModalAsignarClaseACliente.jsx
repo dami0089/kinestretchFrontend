@@ -8,6 +8,7 @@ import useAuth from "@/hooks/useAuth";
 import useSedes from "@/hooks/useSedes";
 import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
+import { convertirHora } from "@/helpers/convertirHora";
 
 const ModalAsignarClaseACliente = () => {
   const { obtenerSedes, sedes } = useSedes();
