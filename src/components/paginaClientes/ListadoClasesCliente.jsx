@@ -1,4 +1,4 @@
-import { Typography } from "@material-tailwind/react";
+import { Button, Typography } from "@material-tailwind/react";
 
 import React, { useEffect } from "react";
 import useClientes from "@/hooks/useClientes";
@@ -233,13 +233,19 @@ const ListadoClasesCliente = () => {
                       {esClaseCancelada(clase._id, clase.fechaCompleta) ? (
                         ""
                       ) : (
-                        <XCircleIcon
-                          title="Cancelar clase"
-                          className="h-8 w-8 text-red-300 hover:cursor-pointer"
+                        <Button
+                          className="bg-red-500 p-1 hover:bg-red-600"
                           onClick={(e) =>
                             handleCancelarClases(e, clase._id, clase.esRecupero)
                           }
-                        />
+                        >
+                          Cancelar Clase
+                        </Button>
+                        // <XCircleIcon
+                        //   title="Cancelar clase"
+                        //   className="h-8 w-8 text-red-300 hover:cursor-pointer"
+
+                        // />
                       )}
                     </div>
                   </div>
