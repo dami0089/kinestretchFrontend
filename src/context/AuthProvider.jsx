@@ -255,6 +255,8 @@ const AuthProvider = ({ children }) => {
     rol,
     sedes
   ) => {
+    console.log(sedes);
+
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -334,6 +336,118 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const [usuarioCliente, setUsuarioCliente] = useState([]);
+
+  const obtenerUsuarioCliente = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/usuarios/obtener-usuario-del-cliente/${id}`,
+        config
+      );
+
+      setUsuarioCliente(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const nuevoUsuairoPerfilAdmin = async (id, email) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/usuarios/nuevo-usuario-perfil-admin/${id}`,
+        { email },
+        config
+      );
+      Swal.fire({
+        icon: "success",
+        title: data.msg,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: error.response.data.msg,
+      });
+    }
+  };
+
+  const eliminarUsuario = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/usuarios/eliminar-usuario-perfil-admin/${id}`,
+        {},
+        config
+      );
+      Swal.fire({
+        icon: "success",
+        title: data.msg,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: error.response.data.msg,
+      });
+    }
+  };
+
+  const [usuariosSistema, setUsuariosSistema] = useState([]);
+
+  const obtenerUsuariosSistema = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/usuarios/listado-todos-usuarios`,
+        config
+      );
+
+      setUsuariosSistema(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -373,6 +487,12 @@ const AuthProvider = ({ children }) => {
         obtenerSedesUserPantalla,
         idSedeSeleccionada,
         setIdSedeSeleccionada,
+        usuarioCliente,
+        obtenerUsuarioCliente,
+        nuevoUsuairoPerfilAdmin,
+        eliminarUsuario,
+        usuariosSistema,
+        obtenerUsuariosSistema,
       }}
     >
       {children}

@@ -17,6 +17,8 @@ import { Button } from "@material-tailwind/react";
 import ModalCertificadoMedico from "./ModalCertificadoMedico";
 import ModalRecuperoAdmin from "./ModalRecuperoAdmin";
 import ListadoAsistenciasInasistenciasCliente from "./ListadoAsistenciasInasistenciasCliente";
+import HistorialCreditosCliente from "./HistorialCreditosCliente";
+import UsuarioCliente from "./UsuarioCliente";
 
 const ProfileCliente = () => {
   const {
@@ -47,7 +49,6 @@ const ProfileCliente = () => {
     pagosCliente,
     activarCliente,
     otorgarCreditos,
-    creditosCliente,
     setCreditosCliente,
     fechaApto,
     setFechaApto,
@@ -60,6 +61,8 @@ const ProfileCliente = () => {
     handleModalRecuperoAdmin,
     refrescarListado,
     setRefrescarListado,
+    creditosCliente,
+    obtenerCreditosCliente,
   } = useClientes();
   const { handleCargando, cargando } = useAuth();
 
@@ -82,6 +85,7 @@ const ProfileCliente = () => {
     const pagos = async () => {
       handleCargando();
       await obtenerPagos(idClienteEditar);
+      await obtenerCreditosCliente(idClienteEditar);
       handleCargando();
     };
     pagos();
@@ -113,6 +117,7 @@ const ProfileCliente = () => {
       if (actualizoClasesCliente) {
         handleCargando();
         await obtenerCliente(idClienteEditar);
+        await obtenerCreditosCliente(idClienteEditar);
         handleCargando();
         setActualizoClasesCliente(false);
       }
@@ -175,10 +180,10 @@ const ProfileCliente = () => {
     handleModalAsignarClaseACliente();
   };
 
-  const recupero = (e) => {
-    e.preventDefault();
-    handleModalRecuperoAdmin();
-  };
+  // const recupero = (e) => {
+  //   e.preventDefault();
+  //   handleModalRecuperoAdmin();
+  // };
 
   const handleDesactivar = async (e) => {
     e.preventDefault();
@@ -246,38 +251,62 @@ const ProfileCliente = () => {
 
   const creditos = (e) => {
     e.preventDefault();
-    Swal.fire({
-      title: `Otorgamos 1 credito al cliente?`,
-      text: "Se le agregara ese credito a su cuenta",
-      icon: "question",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await otorgarCreditos(idClienteEditar);
-        setActualizoClasesCliente(true);
-      }
-    });
-  };
 
-  const restarCredito = (e) => {
-    e.preventDefault();
+    // Calculamos la fecha de 30 días después de hoy
+    const hoy = new Date();
+    const fechaPorDefecto = new Date(hoy.setDate(hoy.getDate() + 30))
+      .toISOString()
+      .split("T")[0]; // Convertimos a formato YYYY-MM-DD
+
     Swal.fire({
-      title: `Restamos 1 credito al cliente?`,
-      text: "Se le restara ese credito a su cuenta",
+      title: `¿Otorgamos 1 crédito al cliente?`,
+      text: "Se le agregará ese crédito a su cuenta",
       icon: "question",
       showCancelButton: true,
       cancelButtonText: "No",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
+      confirmButtonText: "Sí",
+      html: `
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label for="fechaVencimiento">Fecha de vencimiento</label>
+          <input id="fechaVencimiento" type="date" value="${fechaPorDefecto}" min="${
+        new Date().toISOString().split("T")[0]
+      }" class="swal2-input" />
+        </div>
+        <div>
+          <label for="tipoCredito">Tipo de crédito</label>
+          <select id="tipoCredito" class="swal2-input">
+            <option value="recupero">Recupero de clase</option>
+            <option value="extra">Clase Extra</option>
+            <option value="suelta">Clase Suelta</option>
+            <option value="otros">Otros</option>
+          </select>
+        </div>
+      </div>
+    `,
+      preConfirm: () => {
+        const fechaVencimiento =
+          document.getElementById("fechaVencimiento").value;
+        const tipoCredito = document.getElementById("tipoCredito").value;
+
+        if (!fechaVencimiento || !tipoCredito) {
+          Swal.showValidationMessage(
+            "Por favor, selecciona una fecha y un tipo de crédito"
+          );
+          return null;
+        }
+
+        return { fechaVencimiento, tipoCredito };
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await quitarCredito(idClienteEditar);
+        handleCargando();
+        const { fechaVencimiento, tipoCredito } = result.value; // Accede a la fecha y el tipo seleccionados
+        await otorgarCreditos(idClienteEditar, fechaVencimiento, tipoCredito);
         setActualizoClasesCliente(true);
+        handleCargando();
       }
     });
   };
@@ -285,6 +314,11 @@ const ProfileCliente = () => {
   const handleCertificado = (e) => {
     e.preventDefault();
     handleModalCertificado();
+  };
+
+  const handleVerHistorial = (e) => {
+    e.preventDefault();
+    setSelectPerfil(4);
   };
 
   return (
@@ -295,27 +329,15 @@ const ProfileCliente = () => {
           <div class="order-last mt-20 grid grid-cols-2 text-center md:order-first md:mt-0">
             <div>
               <p class="text-xl font-bold text-gray-700">
-                {cliente.creditos ? cliente.creditos : "0"}
+                {creditosCliente && creditosCliente.length > 0
+                  ? creditosCliente.length
+                  : "0"}
               </p>
               <p class="p-1 text-gray-400">Creditos Disponibles</p>
             </div>
-            <div className="w-full">
+            <div className="w-full flex-col items-center text-center">
               <p class="text-xl font-bold text-gray-700">← Creditos</p>
-              <div className="flex justify-between">
-                {cliente.creditos > 0 ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                    onClick={(e) => restarCredito(e)}
-                    className="mb-4 h-[35px] w-[35px] text-[#C5CAE8] hover:cursor-pointer"
-                  >
-                    <title>Restar Credito</title>
-
-                    <path fill="currentColor" d="M19 13H5v-2h14z" />
-                  </svg>
-                ) : null}
+              <div className="flex items-center justify-between align-middle hover:cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1em"
@@ -330,24 +352,13 @@ const ProfileCliente = () => {
                     d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
                   />
                 </svg>
-                {cliente.creditos > 0 ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="0.76em"
-                    height="1em"
-                    viewBox="0 0 456 604"
-                    className="mb-4 h-[35px] w-[35px] text-[#C5CAE8] hover:cursor-pointer"
-                    onClick={(e) => recupero(e)}
-                  >
-                    <title>Asignar Clase Recupero</title>
 
-                    <path
-                      fill="currentColor"
-                      d="M46 0h364v1h4v1h3v1l6 2v1h2l5 6l3 2c12.983 19.155 4.316 65.868 9 94v30c2.722 9.717.483 24.526 1 36l2 44v28c1.8 6.413.9 16.938 1 25v5h1v40c1.99 7.1.606 18.26 1 27v3h1v32l3 82l1 64c1.979 7.1.606 18.256 1 27c.233 5.16 2.828 16.7 1 23h-1v5h-1v3h-1v2l-9 12h-2l-1 2h-2l-1 2c-7.484 4.7-19.9 4-32 4H52c-6.813 0-15.8.563-21-1h-5v-1h-3v-1h-2l-12-9v-2l-2-1v-2l-2-1v-2H4v-2H3v-3H2v-5H1c-1.945-6.754.867-18.257 1-24c.195-8.388-.892-19.265 1-26v-9c.008-9.5-1.186-22.216 1-30v-30c1.634-5.8 1-15.564 1-23l1-28v-19c2.189-7.781.992-20.5 1-30v-9h1v-30c3.083-10.96-1.088-26.507 1-39c.916-5.482 1-13.975 1-21v-10h1v-14c0-8.028-.787-18.63 1-25v-30h1v-9c.008-9.5-1.185-22.216 1-30l2-81c0-6.259-.316-14.321 1-19c1.377-4.9-.7-10.022 1-14h1v-2h1v-3l2-1l1-4l2-1l6-7h2V5l6-2V2h3V1h4zm293 12v46c-2.937 1.709-2.863 2.891-8 3a21.9 21.9 0 0 0-4-5V12h-58c.085 15.168 1.451 33.546-1 47c-2.449 1.091-3.225 1.813-7 2l-3-4h-1V12h-58v45c-3.146 1.873-2.838 3.7-8 4c-1.72-2.135-2.033-.566-3-4c-1.812-2.048-1-8.3-1-12V12h-58v33c0 4.206.763 10.318-1 13h-1c-2.066 2.518-2.221 2.919-7 3a20 20 0 0 0-3-3V12H47c-2.324.741-4.921 2.382-8 3l-5 6l-2 1l-4 12l-2 95c-2.191 7.779-.992 20.5-1 30v9c-1.9 6.733-.8 17.614-1 26v4h-1v12c0 9.535.313 21.063-1 29c-1.546 9.345 1.225 21.106-1 29v9c-.008 9.5 1.192 22.222-1 30v30h-1v9c-.009 9.8 1.272 22.94-1 31v18l-1 28c0 7.435.635 17.2-1 23v30c-2.512 8.98-.869 23.257-1 34l-1 22v13c-.892 3.2-2.407 24.644-1 29h1v3h1v2h1v2l2 1v2l2 1c7.353 7.635 15.147 7 30 7h375v-1h3v-1h2v-1l4-1l3-4h1v-2l2-1c3.21-5.107 3-12.7 3-21v-15h-1v-30h-1v-37c-.463-5.344-1-13.176-1-20v-12h-1v-10c0-9.2 1.114-21.506-1-29v-30h-1v-40c-1.642-5.811-.976-15.558-1-23l-1-25v-17c-1-4.037-1-14.716-1-23v-11h-1v-36c-1-4.036-1-14.717-1-23v-11h-1v-17l-3-95c-.284-12.4 1.074-26.446-4-34l-4-3c-1.91-1.9-1.771-3.144-5-4c-3.9-3.871-14.158-3-22-3zM166 514h81c14.582 0 32.111-1.314 45 1l1 3h1c.943 1.683-1.787 6.883-2 7h-2c-1.7 1.491-5.808 1-9 1h-83c-11.132 0-24.485.741-34-1l-1-3c-3.133-3.4 1.434-6.153 3-8"
-                      className="cls-1"
-                    />
-                  </svg>
-                ) : null}
+                <p
+                  className="text-blue-gray-500"
+                  onClick={(e) => handleVerHistorial(e)}
+                >
+                  Historial de creditos
+                </p>
               </div>
             </div>
           </div>
@@ -648,7 +659,21 @@ const ProfileCliente = () => {
               <path d="M3.5 12.25h9a1 1 0 0 0 1-1v-5" />
             </g>
           </svg>
-          {/* Placeholder para el segundo ícono */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            viewBox="0 0 1024 1024"
+            className="mb-4 h-[35px] w-[35px] text-[#C5CAE8] hover:cursor-pointer"
+            onClick={(e) => setSelectPerfil(5)}
+          >
+            <title>Ver usuario</title>
+
+            <path
+              fill="currentColor"
+              d="M512 512a192 192 0 1 0 0-384a192 192 0 0 0 0 384m0 64a256 256 0 1 1 0-512a256 256 0 0 1 0 512m320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0"
+            />
+          </svg>
         </div>
         {selectPerfil === 1 ? (
           <div class="mt-4 flex flex-col justify-center">
@@ -680,6 +705,14 @@ const ProfileCliente = () => {
                 <button class="">El cliente no tiene registros</button>
               </div>
             )}
+          </div>
+        ) : selectPerfil === 4 ? (
+          <div class="mt-4 flex flex-col justify-center">
+            <HistorialCreditosCliente />
+          </div>
+        ) : selectPerfil === 5 ? (
+          <div class="mt-4 flex flex-col justify-center">
+            <UsuarioCliente />
           </div>
         ) : null}
       </div>

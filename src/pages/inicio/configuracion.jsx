@@ -40,6 +40,11 @@ export function Configuracion() {
     navigate("/configuracion/terminos-condiciones");
   };
 
+  const handleListado = (e) => {
+    e.preventDefault();
+    navigate("/configuracion/listado-usuarios-app-sistema");
+  };
+
   return (
     <>
       <>
@@ -47,7 +52,7 @@ export function Configuracion() {
           <ToastContainer pauseOnFocusLoss={false} />
 
           <div
-            className="w-full p-2 hover:cursor-pointer md:w-1/2"
+            className="w-full p-2 hover:cursor-pointer md:w-1/3"
             onClick={(e) => handleNavigate(e)}
           >
             <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
@@ -74,14 +79,14 @@ export function Configuracion() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-lg font-medium text-gray-600 dark:text-white">
-                    Usuarios Sistema
+                    Usuarios Backoffice
                   </span>
                 </div>
               </div>
             </div>
           </div>
           <div
-            className="w-full p-2 hover:cursor-pointer md:w-1/2"
+            className="w-full p-2 hover:cursor-pointer md:w-1/3"
             onClick={(e) => handleTerminos(e)}
           >
             <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
@@ -110,7 +115,42 @@ export function Configuracion() {
               </div>
             </div>
           </div>
+          <div
+            className="w-full p-2 hover:cursor-pointer md:w-1/3"
+            onClick={(e) => handleListado(e)}
+          >
+            <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
+              <div className="flex flex-row items-center justify-between gap-4">
+                <div className="flex-shrink-0">
+                  <a href="#" className="relative block">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M21 20c0-1.742-1.67-3.223-4-3.773M15 20c0-2.21-2.686-4-6-4s-6 1.79-6 4m12-7a4 4 0 0 0 0-8m-6 8a4 4 0 1 1 0-8a4 4 0 0 1 0 8"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-lg font-medium text-gray-600 dark:text-white">
+                    Usuarios Aplicacion
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
         <div className="my-4 mt-10 h-0.5 bg-gray-300 shadow-md"></div>
       </>
 

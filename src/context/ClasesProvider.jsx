@@ -58,6 +58,9 @@ const ClasesProvider = ({ children }) => {
   const [motivoFeriado, setMotivoFeriado] = useState("");
   const [modalCancelarClaseACliente, setModalCancelarClaseACliente] =
     useState(false);
+  const [tipoCreditoAsignar, setTipoCreditoAsignar] = useState("");
+  const [idCreditoAsignar, setIdCreditoAsignar] = useState("");
+  const [actualizarHistorial, setActualizarHistorial] = useState(false);
 
   const handleModalCancelarClaseACliente = () => {
     setModalCancelarClaseACliente((prev) => !prev);
@@ -1449,6 +1452,46 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const recuperoAdmin = async (id, idClase, tipo, idCredito) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clases/asignar-recupero-admin/${id}`,
+        { idClase, tipo, idCredito },
+        config
+      );
+      toast.success("Asignado correctamente", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(error.response.data.msg, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -1592,6 +1635,13 @@ const ClasesProvider = ({ children }) => {
         modalCancelarClaseACliente,
         handleModalCancelarClaseACliente,
         registrarInasistenciaClienteLadoAdmin,
+        tipoCreditoAsignar,
+        setTipoCreditoAsignar,
+        idCreditoAsignar,
+        setIdCreditoAsignar,
+        recuperoAdmin,
+        actualizarHistorial,
+        setActualizarHistorial,
       }}
     >
       {children}

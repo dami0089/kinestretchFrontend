@@ -22,10 +22,10 @@ import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { DateTime } from "luxon";
-import ModalEditarDiagnostico from "./ModalEditarDiagnostico";
-import ModalRegistrarPagoProfesor from "./ModalRegistrarPagoProfesor";
+import ModalEditarDiagnostico from "../paginaProfesores/ModalEditarDiagnostico";
+import ModalRegistrarPagoProfesor from "../paginaProfesores/ModalRegistrarPagoProfesor";
 
-const ListadoAlumnosClaseClasesVistaProfe = () => {
+const ListadoDeAlumnosClaseVistaSede = () => {
   const {
     setDiagnosticoEditar,
     setIdCliente,
@@ -169,48 +169,30 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
   const registrarAsistencia = async (e, _id) => {
     e.preventDefault();
     if (asistencias.includes(_id)) {
-      toast.error("Ya registraste esta asistencia", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+      Swal.fire({
+        title: "Ya registraste una asistencia",
+        icon: "error",
+        confirmButtonText: "Ok",
       });
       return;
     }
     if (inasist.includes(_id)) {
-      toast.error("Ya registraste una inasistencia", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+      Swal.fire({
+        title: "Ya registraste una inasistencia",
+        icon: "error",
+        confirmButtonText: "Ok",
       });
       return;
     }
     if (clase.diaDeLaSemana !== diaActual) {
-      toast.error(
-        "No se puede marcar una asistencia a un dia que no es el de hoy",
-        {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        }
-      );
+      Swal.fire({
+        title: "No se puede marcar una asistencia a un dia que no es el de hoy",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+      return;
     } else {
       handleCargando();
-
       await asistencia(id, _id);
       setActualizarListado(true);
       handleCargando();
@@ -331,7 +313,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
 
   return (
     <>
-      <div className="mt-10  grid  grid-cols-1 gap-6  xl:grid-cols-3">
+      <div className="z-50 mt-10  grid  grid-cols-1 gap-6  xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-3">
           <div className=" flex items-center justify-between text-black">
             <div className="mr-5 flex items-center space-x-4"></div>
@@ -592,4 +574,4 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
   );
 };
 
-export default ListadoAlumnosClaseClasesVistaProfe;
+export default ListadoDeAlumnosClaseVistaSede;

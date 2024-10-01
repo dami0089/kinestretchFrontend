@@ -108,12 +108,6 @@ export function ClasesProfe() {
               </div>
             ) : null}
 
-            {/* {asistenciasClase.length > 0 ? (
-              <div className="align-middle ">
-                <ListadoAlumnosAsistenteClaseProfe />
-              </div>
-            ) : null} */}
-
             <Cargando />
           </div>
           {modalClasesProfe ? <ModalClaseProfe /> : ""}

@@ -6,6 +6,7 @@ import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { convertirHora } from "@/helpers/convertirHora";
+import { useNavigate } from "react-router-dom";
 
 const ClasesSedes = () => {
   const {
@@ -17,6 +18,7 @@ const ClasesSedes = () => {
     setSedeClase,
   } = useClases();
   const { handleCargando } = useAuth();
+  const navigate = useNavigate();
   const { idVerSede, handleModalVerClase } = useSedes();
   const diasDeLaSemana = [
     "Lunes",
@@ -60,14 +62,14 @@ const ClasesSedes = () => {
     traerInfo();
   }, [diaSeleccionado]);
 
-  const handleVerClase = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
+  const handleVerClase = (e, _id) => {
     e.preventDefault();
-
-    setIdVerClase(_id);
-    setDiaClase(diaDeLaSemana);
-    setHoraClase(horarioInicio);
-    setSedeClase(nombreSede);
-    handleModalVerClase();
+    // setIdVerClase(_id);
+    // setDiaClase(diaDeLaSemana);
+    // setHoraClase(horarioInicio);
+    // setSedeClase(nombreSede);
+    // handleModalVerClase();
+    navigate(`/sedes/vista-clase/${_id}`);
   };
 
   return (

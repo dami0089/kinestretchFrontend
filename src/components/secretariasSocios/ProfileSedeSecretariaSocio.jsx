@@ -28,6 +28,8 @@ import ListadoDeCajasSecretaria from "./ListadoDeCajasSecretaria";
 import ListadoDeCobrosSedeSecretaria from "./ListadoDeCobrosSedeSecretaria";
 import ProximaClaseSedeSecretaria from "./ProximaClaseSedeSecretaria";
 import ListadoDeClientesSecretaria from "./ListadoDeClientesSecretaria";
+import { id } from "date-fns/locale";
+import ListadoClientesInactivosSecretaria from "./ListadoClientesInactivosSecretaria";
 
 export function ProfileSedeSecretariaSocio() {
   const {
@@ -60,23 +62,33 @@ export function ProfileSedeSecretariaSocio() {
   useEffect(() => {
     const traerData = async () => {
       handleCargando();
-      setIdSedeSeleccionada(auth.sede[0]);
+      setIdSedeSeleccionada(auth.sedes[0]);
       await obtenerSedesUserPantalla(auth._id);
-      await obtenerSede(auth.sede[0]);
+      await obtenerSede(auth.sedes[0]);
       await obtenerClasesSede(auth.sede[0]);
+      handleCargando();
     };
-    handleCargando();
 
     traerData();
   }, []);
 
   useEffect(() => {
     const traerData = async () => {
-      handleCargando();
       await obtenerSedesUserPantalla(idSedeSeleccionada);
       await obtenerSede(idSedeSeleccionada);
       await obtenerClasesSede(idSedeSeleccionada);
-      handleCargando();
+    };
+    traerData();
+  }, [idSedeSeleccionada]);
+
+  useEffect(() => {
+    const traerData = async () => {
+      if (idSedeSeleccionada === "") {
+        setIdSedeSeleccionada(auth.sedes[0]);
+        await obtenerSedesUserPantalla(auth._id);
+        await obtenerSede(auth.sedes[0]);
+        await obtenerClasesSede(auth.sede[0]);
+      }
     };
     traerData();
   }, [idSedeSeleccionada]);
@@ -224,6 +236,30 @@ export function ProfileSedeSecretariaSocio() {
                       <p>Clientes</p>
                     </div>
                   </Tab>
+                  <Tab
+                    value="clientesInact"
+                    onClick={(e) => setValueProfile(7)}
+                  >
+                    <div className="flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1em"
+                        height="1em"
+                        viewBox="0 0 24 24"
+                        className="-mt-0.5 mr-2  inline-block h-5 w-5"
+                      >
+                        <g fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <circle cx="12" cy="6" r="4" />
+                          <path d="M15 13.327A13.6 13.6 0 0 0 12 13c-4.418 0-8 2.015-8 4.5S4 22 12 22c5.687 0 7.331-1.018 7.807-2.5" />
+                          <path
+                            strokeLinejoin="round"
+                            d="M15.172 18.828a4 4 0 1 0 5.657-5.657m-5.658 5.657a4 4 0 0 1 5.657-5.657m-5.656 5.657l5.656-5.656"
+                          />
+                        </g>
+                      </svg>
+                      <p>Clientes Inactivos</p>
+                    </div>
+                  </Tab>
                 </TabsHeader>
               </Tabs>
             </div>
@@ -309,6 +345,10 @@ export function ProfileSedeSecretariaSocio() {
           ) : valueProfile == 6 ? (
             <>
               <ListadoDeClientesSecretaria />
+            </>
+          ) : valueProfile == 7 ? (
+            <>
+              <ListadoClientesInactivosSecretaria />
             </>
           ) : (
             ""

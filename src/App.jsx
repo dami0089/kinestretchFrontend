@@ -35,6 +35,9 @@ import Terminos from "./pages/inicio/terminos";
 import Configuracion from "./pages/inicio/configuracion";
 import ListadoDeUsuariosApp from "./components/configuracion/ListadoDeUsuariosApp";
 import ProfileSedeSecretariaSocio from "./components/secretariasSocios/ProfileSedeSecretariaSocio";
+import ListadoUsuariosClientes from "./components/configuracion/ListadoUsuariosClientes";
+import ListadoDeClientesSinClaseAsignada from "./components/clientes/ListadoDeClientesSinClaseAsignada";
+import ListadoDeAlumnosClaseVistaSede from "./components/sedes/ListadoDeAlumnosClaseVistaSede";
 
 function App() {
   const { auth } = useAuth();
@@ -61,6 +64,10 @@ function App() {
             <Route path="activos" element={<ListadodeClientes />} />
             <Route path="inactivos" element={<ListadoClientesInactivos />} />
             <Route path="perfil" element={<ProfileCliente />} />
+            <Route
+              path="sin-clase"
+              element={<ListadoDeClientesSinClaseAsignada />}
+            />
           </Route>
           {/* Profesores Routes */}
           <Route path="/profesores" element={<RutaProtegida />}>
@@ -74,6 +81,10 @@ function App() {
             <Route index element={<Sedes />} />
             <Route path="activas" element={<ListadoDeSedes />} />
             <Route path="profile-sede" element={<ProfileSede />} />
+            <Route
+              path="vista-clase/:id"
+              element={<ListadoDeAlumnosClaseVistaSede />}
+            />
             <Route
               path="listado-secretarias"
               element={<ListadoSecretarias />}
@@ -94,6 +105,10 @@ function App() {
             <Route
               path="listado-usuarios-app"
               element={<ListadoDeUsuariosApp />}
+            />
+            <Route
+              path="listado-usuarios-app-sistema"
+              element={<ListadoUsuariosClientes />}
             />
           </Route>
         </>
@@ -131,6 +146,7 @@ function App() {
           <Route path="/inicio" element={<RutaProtegida />}>
             <Route index element={<ProfileSedeSecretariaSocio />} />
           </Route>
+          <Route path="/listado-alumnos-clase/:id" element={<ClasesProfe />} />
 
           <Route path="/clientes/perfil" element={<RutaProtegida />}>
             <Route index element={<ProfileCliente />} />

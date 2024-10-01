@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { Button } from "@material-tailwind/react";
 import useAuth from "@/hooks/useAuth";
+import Swal from "sweetalert2";
 
 // Asegúrate de que el modal se vincule con el div #root del HTML
 Modal.setAppElement("#root");
@@ -25,7 +26,14 @@ const ModalAceptarTerminos = () => {
   }, []);
 
   const handleCerrar = () => {
-    handleModalAceptarTerminos();
+    Swal.fire({
+      title: "Debes aceptar los terminos y condiciones para continuar",
+      icon: "warning",
+      showCancelButton: false,
+      showConfirmButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    });
   };
 
   const handleAceptar = async (e) => {
@@ -47,7 +55,7 @@ const ModalAceptarTerminos = () => {
     >
       <div className="max-h-[80vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-white p-6 shadow-xl">
         <div className="flex justify-end">
-          <button
+          {/* <button
             type="button"
             className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             onClick={handleCerrar}
@@ -65,7 +73,7 @@ const ModalAceptarTerminos = () => {
                 clipRule="evenodd"
               />
             </svg>
-          </button>
+          </button> */}
         </div>
         <h3 className="mb-4 text-center text-xl font-bold leading-6 text-gray-900">
           Aceptar Términos y Condiciones
@@ -83,12 +91,12 @@ const ModalAceptarTerminos = () => {
           >
             Aceptar
           </Button>
-          <Button
+          {/* <Button
             className="w-full bg-blue-500 hover:bg-blue-400"
             onClick={handleCerrar}
           >
             Más tarde
-          </Button>
+          </Button> */}
         </div>
       </div>
     </Modal>

@@ -40,6 +40,11 @@ export function Clientes() {
     navigate("/clientes/inactivos");
   };
 
+  const handleSinClase = (e) => {
+    e.preventDefault();
+    navigate("/clientes/sin-clase");
+  };
+
   return (
     <>
       <>
@@ -153,6 +158,37 @@ export function Clientes() {
           </div>
         </div>
         <div className="my-4 mt-10 h-0.5 bg-gray-300 shadow-md"></div>
+        <div
+          className="w-full p-2 hover:cursor-pointer md:w-1/3"
+          onClick={(e) => handleSinClase(e)}
+        >
+          <div className="rounded-2xl bg-white p-4 shadow-lg dark:bg-gray-800">
+            <div className="flex flex-row items-center justify-between gap-4">
+              <div className="flex-shrink-0">
+                <a href="#" className="relative block">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    class="icon icon-tabler icon-tabler-octagon-minus"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M7.5 16.5H9V15h6v1.5h1.5V15H15v-1.5H9V15H7.5ZM8 12h1.5V9.5H8Zm6.5 0H16V9.5h-1.5ZM2 20V4h8l2 2h10v14Zm2-2h16V8H4Zm0 0V8Z"
+                    />
+                  </svg>
+                </a>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg font-medium text-gray-600 dark:text-white">
+                  Clientes sin clase asignada
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </>
 
       <Cargando />

@@ -11,7 +11,7 @@ import { ToastContainer } from "react-toastify";
 import { convertirHora } from "@/helpers/convertirHora";
 
 const ListadoClasesCliente = () => {
-  const { obtenerCliente, cliente } = useClientes();
+  const { obtenerCliente, cliente, obtenerCreditosCliente } = useClientes();
 
   const {
     obtenerClasesCliente,
@@ -30,6 +30,7 @@ const ListadoClasesCliente = () => {
     const obtenerInfo = async () => {
       handleCargando();
       await obtenerClasesCliente(auth._id);
+
       handleCargando();
     };
     obtenerInfo();
@@ -38,27 +39,16 @@ const ListadoClasesCliente = () => {
   useEffect(() => {
     const dataCliente = async () => {
       if (actualizoClasesCliente) {
+        handleCargando();
         await obtenerCliente(auth.cliente);
+        await obtenerCreditosCliente(auth.cliente);
+        await obtenerClasesCliente(auth._id);
         setActualizoClasesCliente(false);
+        handleCargando();
       }
     };
     dataCliente();
   }, [actualizoClasesCliente]);
-
-  useEffect(() => {
-    const obtenerInfo = async () => {
-      if (actualizoClasesCliente) {
-        handleCargando();
-        await obtenerClasesCliente(auth._id);
-        await obtenerCliente(cliente._id);
-        setActualizoClasesCliente(false);
-        handleCargando();
-      }
-    };
-    obtenerInfo();
-  }, [actualizoClasesCliente]);
-
-  const navigate = useNavigate();
 
   const handleCancelarClases = (e, clase, esRecupero) => {
     e.preventDefault();

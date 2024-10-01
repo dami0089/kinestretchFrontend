@@ -440,6 +440,29 @@ const SedesProvider = ({ children }) => {
     }
   };
 
+  const [clientesSede, setClientesSede] = useState([]);
+
+  const obtenerClientesSede = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/sedes/listado-clientes/${id}`,
+        config
+      );
+      setClientesSede(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SedesContext.Provider
       value={{
@@ -493,6 +516,8 @@ const SedesProvider = ({ children }) => {
         setAsistInasist,
         inasistenciasSede,
         obtenerinasistenciasSede,
+        clientesSede,
+        obtenerClientesSede,
       }}
     >
       {children}

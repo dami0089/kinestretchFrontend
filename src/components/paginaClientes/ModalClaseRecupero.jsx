@@ -74,8 +74,6 @@ const ModalClaseRecupero = () => {
       return;
     }
 
-    console.log(idClaseSeleccionada);
-
     if (idClaseSeleccionada == 1) {
       toast("⚠️ FERIADO!", {
         position: "top-right",

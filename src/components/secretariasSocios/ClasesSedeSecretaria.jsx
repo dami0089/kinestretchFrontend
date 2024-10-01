@@ -6,6 +6,7 @@ import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { convertirHora } from "@/helpers/convertirHora";
+import { useNavigate } from "react-router-dom";
 
 const ClasesSedeSecretaria = () => {
   const {
@@ -18,6 +19,7 @@ const ClasesSedeSecretaria = () => {
   } = useClases();
   const { handleCargando, idSedeSeleccionada } = useAuth();
   const { idVerSede, handleModalVerClase } = useSedes();
+  const navigate = useNavigate();
   const diasDeLaSemana = [
     "Lunes",
     "Martes",
@@ -62,12 +64,13 @@ const ClasesSedeSecretaria = () => {
 
   const handleVerClase = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
     e.preventDefault();
+    navigate(`/listado-alumnos-clase/${_id}`);
 
-    setIdVerClase(_id);
-    setDiaClase(diaDeLaSemana);
-    setHoraClase(horarioInicio);
-    setSedeClase(nombreSede);
-    handleModalVerClase();
+    // setIdVerClase(_id);
+    // // setDiaClase(diaDeLaSemana);
+    // // setHoraClase(horarioInicio);
+    // // setSedeClase(nombreSede);
+    // handleModalVerClase();
   };
 
   return (

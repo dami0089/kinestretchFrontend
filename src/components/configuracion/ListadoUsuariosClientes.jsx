@@ -1,15 +1,12 @@
 import { Button, Card, CardBody, Typography } from "@material-tailwind/react";
-
 import React, { useEffect, useState } from "react";
-import { projectsTableData } from "@/data";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import ModalNuevoUsuario from "./ModalNuevoUsuario";
-import { set } from "date-fns";
 import Swal from "sweetalert2";
 
-const ListadoDeUsuariosApp = () => {
+const ListadoUsuariosClientes = () => {
   const {
     handleCargando,
     modalAgregarUsuarioApp,
@@ -18,13 +15,17 @@ const ListadoDeUsuariosApp = () => {
     obtenerUsuariosApp,
     actualizarList,
     setActualizarList,
+    usuariosSistema,
+    obtenerUsuariosSistema,
     eliminarUsuario,
   } = useAuth();
+
+  const [searchTerm, setSearchTerm] = useState(""); // Nuevo estado para el término de búsqueda
 
   useEffect(() => {
     const obtenerInfo = async () => {
       handleCargando();
-      await obtenerUsuariosApp();
+      await obtenerUsuariosSistema();
       handleCargando();
     };
     obtenerInfo();
@@ -34,7 +35,7 @@ const ListadoDeUsuariosApp = () => {
     const obtenerInfo = async () => {
       if (actualizarList) {
         handleCargando();
-        await obtenerUsuariosApp();
+        await obtenerUsuariosSistema();
         handleCargando();
         setActualizarList(false);
       }
@@ -47,11 +48,24 @@ const ListadoDeUsuariosApp = () => {
   // Paginación
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(usuariosApp.length / itemsPerPage);
+
+  // Filtrar usuarios según el término de búsqueda
+  const filteredUsers = usuariosSistema.filter(
+    ({ nombre, apellido, email, dni, rol }) => {
+      const fullName = `${nombre} ${apellido}`.toLowerCase();
+      return (
+        fullName.includes(searchTerm.toLowerCase()) ||
+        email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        dni.toString().includes(searchTerm.toLowerCase()) ||
+        rol.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+  );
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-  const currentItems = usuariosApp.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -68,14 +82,12 @@ const ListadoDeUsuariosApp = () => {
   const handleEliminar = async (e, id) => {
     e.preventDefault();
     Swal.fire({
-      title: "Eliminamos al usuario?",
-      text: "Esta accion es irrecuperable",
-      icon: "question",
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esto",
+      icon: "warning",
       showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         handleCargando();
@@ -88,24 +100,26 @@ const ListadoDeUsuariosApp = () => {
 
   return (
     <>
-      <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
+      <div className="mb-4 mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-3">
           <div className="mb-3 mt-8 flex items-center justify-between text-black">
-            <Typography className="ml-4  font-bold">
-              Listado de Usuarios BackOffice
+            <Typography className="ml-4 font-bold">
+              Listado de Usuarios clientes / profesores
             </Typography>
-
-            <div className="mr-5 flex items-center space-x-4">
-              <Button onClick={(e) => handleAgregarUsuarioApp()}>
-                Agregar
-              </Button>
-            </div>
+            {/* Input para buscar */}
+            <input
+              type="text"
+              placeholder="Buscar por rol, DNI, email, nombre o apellido"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="ml-4 mr-4 rounded-lg border border-gray-300 p-2"
+            />
           </div>
           <CardBody className="overflow-x-scroll px-0 pb-2 pt-0">
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Nombre", "Email", "Sede", "Rol", "Accion"].map((el) => (
+                  {["Nombre", "Email", "Dni", "Rol", "Accion"].map((el) => (
                     <th
                       key={el}
                       className="border-b border-blue-gray-50 px-6 py-3 text-center"
@@ -122,9 +136,9 @@ const ListadoDeUsuariosApp = () => {
               </thead>
               <tbody>
                 {currentItems.map(
-                  ({ _id, nombre, apellido, email, nombreSede, rol }, key) => {
+                  ({ _id, nombre, apellido, email, dni, rol }, key) => {
                     const className = `py-3 px-5 ${
-                      key === projectsTableData.length - 1
+                      key === filteredUsers.length - 1
                         ? ""
                         : "border-b border-blue-gray-50"
                     }`;
@@ -159,7 +173,7 @@ const ListadoDeUsuariosApp = () => {
                               variant="small"
                               className="text-xs font-medium text-blue-gray-600"
                             >
-                              {nombreSede ? nombreSede : "Sin asignar"}
+                              {dni}
                             </Typography>
                           </div>
                         </td>
@@ -174,21 +188,24 @@ const ListadoDeUsuariosApp = () => {
                             </Typography>
                           </div>
                         </td>
+
                         <td className={className}>
                           <div className="flex items-center justify-center gap-4">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 256 256"
-                              className="h-8 w-8 hover:cursor-pointer"
-                              onClick={(e) => handleEliminar(e, _id)}
-                            >
-                              <path
-                                fill="currentColor"
-                                d="M216 50H40a6 6 0 0 0 0 12h10v146a14 14 0 0 0 14 14h128a14 14 0 0 0 14-14V62h10a6 6 0 0 0 0-12m-22 158a2 2 0 0 1-2 2H64a2 2 0 0 1-2-2V62h132ZM82 24a6 6 0 0 1 6-6h80a6 6 0 0 1 0 12H88a6 6 0 0 1-6-6"
-                              />
-                            </svg>
+                            <div title="Eliminar">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1em"
+                                height="1em"
+                                viewBox="0 0 24 24"
+                                className="h-8 w-8 hover:cursor-pointer"
+                                onClick={(e) => handleEliminar(e, _id)}
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="m9.4 16.5l2.6-2.6l2.6 2.6l1.4-1.4l-2.6-2.6L16 9.9l-1.4-1.4l-2.6 2.6l-2.6-2.6L8 9.9l2.6 2.6L8 15.1zM7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21z"
+                                />
+                              </svg>
+                            </div>
                           </div>
                         </td>
                       </tr>
@@ -227,4 +244,4 @@ const ListadoDeUsuariosApp = () => {
   );
 };
 
-export default ListadoDeUsuariosApp;
+export default ListadoUsuariosClientes;

@@ -70,7 +70,7 @@ const ModalNuevoUsuario = () => {
 
     // Verificación y asignación de sedes seleccionadas
     let sedesFinales = [];
-    if (rol === "Socios" || rol === "Secretarias") {
+    if (rol === "socio" || rol === "secretaria") {
       if (tipoSede === "una" && sedeSeleccionada) {
         sedesFinales = [sedeSeleccionada];
       } else if (tipoSede === "multiple" && sedesSeleccionadas.length > 0) {
@@ -92,10 +92,10 @@ const ModalNuevoUsuario = () => {
     await nuevoUsuarioBackOffice(
       nombreCliente,
       apellidoCliente,
-      "", // Asigna un DNI si lo tienes o maneja este campo adecuadamente
-      "passwordTemporal", // Puedes cambiarlo o generar uno dinámico si es necesario
+      "",
+      "passwordTemporal",
       emailCliente,
-      "", // Asigna el número de teléfono si lo tienes en tu estado
+      "",
       rol,
       sedesFinales
     );
@@ -257,7 +257,7 @@ const ModalNuevoUsuario = () => {
                     </div>
 
                     {/* Campos dinámicos según el rol */}
-                    {rol === "Socios" || rol === "Secretarias" ? (
+                    {rol === "socio" || rol === "secretaria" ? (
                       <>
                         <div className="mb-1">
                           <label

@@ -24,7 +24,8 @@ export function PaginaClientes() {
     handleModalAceptarTerminos,
     modalAceptarTerminos,
   } = useAuth();
-  const { obtenerCliente, cliente } = useClientes();
+  const { obtenerCliente, cliente, obtenerCreditosCliente, creditosCliente } =
+    useClientes();
   const {
     modalClaseRecupero,
     handleModalClaseRecupero,
@@ -37,15 +38,10 @@ export function PaginaClientes() {
     const dataCliente = async () => {
       await obtenerCliente(auth.cliente);
       await consultarTerminos(auth._id);
-    };
-    dataCliente();
-  }, []);
-
-  useEffect(() => {
-    const inasis = async () => {
+      await obtenerCreditosCliente(auth.cliente);
       await obtenerInasistencias(auth.cliente);
     };
-    inasis();
+    dataCliente();
   }, []);
 
   const handleReservarRecupero = async (e) => {
@@ -86,11 +82,13 @@ export function PaginaClientes() {
                     class="mt-5 flex-1 font-light text-gray-600 hover:cursor-pointer"
                     onClick={(e) => handleReservarRecupero(e)}
                   >
-                    {cliente.creditos ? (
+                    {creditosCliente.length > 0 ? (
                       <div class="rounded border border-red-500 p-2 text-center">
-                        {cliente.creditos ? (
+                        {creditosCliente.length > 0 ? (
                           <>
-                            <p>Tenes {cliente.creditos} credito disponibles </p>
+                            <p>
+                              Tenes {creditosCliente.length} credito disponibles{" "}
+                            </p>
                             <strong>Reserva tu clase haciendo clic aqui</strong>
                           </>
                         ) : (

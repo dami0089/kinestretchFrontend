@@ -39,7 +39,7 @@ const ClientesProvider = ({ children }) => {
   const [modalVerClaseCliente, setModalVerClaseCliente] = useState(false);
   const [modalEditarDatosPerfilCliente, setModalEditarDatosPerfilCliente] =
     useState(false);
-  const [creditosCliente, setCreditosCliente] = useState(0);
+
   const [fechaApto, setFechaApto] = useState("");
   const [linkApto, setLinkApto] = useState("");
   const [primerClase, setPrimerClase] = useState("si");
@@ -741,7 +741,7 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
-  const otorgarCreditos = async (id) => {
+  const otorgarCreditos = async (id, fechaVencimiento, tipo) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -752,7 +752,11 @@ const ClientesProvider = ({ children }) => {
         },
       };
 
-      await clienteAxios.post(`/clientes/otorgar-creditos/${id}`, {}, config);
+      await clienteAxios.post(
+        `/clientes/otorgar-creditos/${id}`,
+        { fechaVencimiento, tipo },
+        config
+      );
 
       toast.success("Credito Asignado Correctamente", {
         position: "top-right",
@@ -775,6 +779,57 @@ const ClientesProvider = ({ children }) => {
         progress: undefined,
         theme: "light",
       });
+    }
+  };
+
+  const [creditosCliente, setCreditosCliente] = useState([]);
+
+  const obtenerCreditosCliente = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clientes/creditos-activos/${id}`,
+
+        config
+      );
+
+      console.log(data);
+
+      setCreditosCliente(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [historialCreditos, setHistorialCreditos] = useState([]);
+
+  const obtenerHistorialCreditosCliente = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clientes/historial-creditos/${id}`,
+        config
+      );
+
+      setHistorialCreditos(data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -986,6 +1041,53 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const [clientesInactivosSede, setClientesInactivosSede] = useState([]);
+
+  const obtenerClientesInactivosPorSede = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clientes/clientes-inactivos-por-sede/${id}`,
+        config
+      );
+      //guarda los datos de los clientes
+      setClientesInactivosSede(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [clientesSinClase, setClientesSinClase] = useState([]);
+
+  const obtenerClientesSinClase = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios(
+        `/clientes/clientes-sin-clases`,
+        config
+      );
+
+      setClientesSinClase(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClientesContext.Provider
       value={{
@@ -1109,6 +1211,14 @@ const ClientesProvider = ({ children }) => {
         eliminarCliente,
         clientesSede,
         obtenerClientesPorSede,
+        creditosCliente,
+        obtenerCreditosCliente,
+        historialCreditos,
+        obtenerHistorialCreditosCliente,
+        clientesSinClase,
+        obtenerClientesSinClase,
+        clientesInactivosSede,
+        obtenerClientesInactivosPorSede,
       }}
     >
       {children}

@@ -25,6 +25,7 @@ import ModalVerClase from "../clientes/ModalVerClase";
 import ModalClaseSede from "./ModalClaseSede";
 import Swal from "sweetalert2";
 import { convertirHora } from "@/helpers/convertirHora";
+import { useNavigate } from "react-router-dom";
 
 const ClasesManana = () => {
   const {
@@ -41,6 +42,7 @@ const ClasesManana = () => {
   const { idVerSede } = useSedes();
 
   const { modalVerClase, handleModalVerClase } = useSedes();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const traerData = async () => {
@@ -71,13 +73,14 @@ const ClasesManana = () => {
   ];
   const diaSemanaActual = diasDeLaSemanaOrden[diaActual.weekday];
 
-  const handleVer = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
+  const handleVer = (e, _id) => {
     e.preventDefault();
-    setIdVerClase(_id);
-    setDiaClase(diaDeLaSemana);
-    setHoraClase(horarioInicio);
-    setSedeClase(nombreSede);
-    handleModalVerClase();
+    // setIdVerClase(_id);
+    // setDiaClase(diaDeLaSemana);
+    // setHoraClase(horarioInicio);
+    // setSedeClase(nombreSede);
+    // handleModalVerClase();
+    navigate(`/sedes/vista-clase/${_id}`);
   };
 
   const handleEliminar = async (e, id) => {
