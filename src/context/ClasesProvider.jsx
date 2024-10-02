@@ -958,6 +958,8 @@ const ClasesProvider = ({ children }) => {
         {},
         config
       );
+      console.log(data);
+
       setClientesClaseVer(data);
     } catch (error) {
       console.log(error);

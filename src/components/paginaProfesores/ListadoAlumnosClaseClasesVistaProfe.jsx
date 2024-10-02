@@ -331,7 +331,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
 
   return (
     <>
-      <div className="mt-10  grid  grid-cols-1 gap-6  xl:grid-cols-3">
+      <div className="mt-10  grid  max-h-screen grid-cols-1  gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-3">
           <div className=" flex items-center justify-between text-black">
             <div className="mr-5 flex items-center space-x-4"></div>
@@ -380,6 +380,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                       nombreContactoEmergencia,
                       celularContactoEmergencia,
                       pagos,
+                      tipoCredito,
                     },
                     key
                   ) => {
@@ -452,8 +453,12 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                               className="font-bold"
                             >
                               {nombre} {apellido}{" "}
-                              {esRecupero ? "(Recupero)" : null}
-                              {esPrimeraClase ? "(Primer Clase)" : null}
+                              {tipoCredito && (
+                                <span className="uppercase">
+                                  ({tipoCredito.toString()})
+                                </span>
+                              )}{" "}
+                              {esPrimeraClase && "(Primer Clase)"}
                             </Typography>
                           </div>
                         </td>

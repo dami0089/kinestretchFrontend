@@ -14,14 +14,6 @@ const ClasesProfesor = () => {
   const {
     clasesProfe,
     obtenerClasesProfeDia,
-    idVerClase,
-    setIdVerClase,
-    diaClase,
-    setDiaClase,
-    horaClase,
-    setHoraClase,
-    sedeClase,
-    setSedeClase,
     limpiarAsistencias,
     diaSeleccionado,
     setDiaSeleccionado,
@@ -69,9 +61,11 @@ const ClasesProfesor = () => {
 
   useEffect(() => {
     const traerInfo = async () => {
-      handleCargando();
-      await obtenerClasesProfeDia(auth._id, diaSeleccionado);
-      handleCargando();
+      if (diaSeleccionado !== "") {
+        handleCargando();
+        await obtenerClasesProfeDia(auth._id, diaSeleccionado);
+        handleCargando();
+      }
     };
     traerInfo();
   }, [diaSeleccionado]);

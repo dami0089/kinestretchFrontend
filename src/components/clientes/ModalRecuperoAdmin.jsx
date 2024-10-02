@@ -102,12 +102,12 @@ const ModalRecuperoAdmin = () => {
         tipoCreditoAsignar,
         idCreditoAsignar
       );
+      setActualizarHistorial(true);
       setDiaDeLaSemana("");
       setIdCreditoAsignar("");
       setTipoCreditoAsignar("");
       setIdClaseSeleccionada("");
       setActualizoClasesCliente(true);
-      setActualizarHistorial(true);
       handleCargando();
     } catch (error) {
       toast.error(error.response.data.msg, {

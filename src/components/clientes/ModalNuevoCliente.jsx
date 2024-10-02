@@ -57,7 +57,12 @@ const ModalResumen = () => {
         },
       };
 
-      await clienteAxios.post(`/clientes/comprobar`, { dni }, config);
+      const { verificacion } = await clienteAxios.post(
+        `/clientes/comprobar`,
+        { dni, emailCliente },
+        config
+      );
+
       handleCargando();
       handleModalNuevoCliente();
       await nuevoCliente(
@@ -75,7 +80,6 @@ const ModalResumen = () => {
         fechaApto,
         linkApto
       );
-      handleCargando();
 
       setNombreCliente("");
       setApellidoCliente("");
@@ -89,6 +93,7 @@ const ModalResumen = () => {
       setCelularContactoEmergencia("");
       setFechaApto("");
       setLinkApto("");
+      handleCargando();
 
       Swal.fire({
         title: "Queres entrar al perfil del cliente?",
@@ -109,15 +114,10 @@ const ModalResumen = () => {
         }
       });
     } catch (error) {
-      toast.error(error.response.data.msg, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${error.response.data.msg}`,
       });
     }
   };
@@ -145,12 +145,40 @@ const ModalResumen = () => {
     await consultarBase(dniCliente);
   };
 
+  const handleClose = (e) => {
+    Swal.fire({
+      title: "Estas seguro?",
+      text: "Si cierras se perderan los datos ingresados",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, cerrar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setNombreCliente("");
+        setApellidoCliente("");
+        setDniCliente("");
+        setEmailCliente("");
+        setCelularCliente("");
+        setFechaNacimientoCliente("");
+        setDiagnosticoCliente("");
+        setAptoFisicoCliente("");
+        setNombreContactoEmergencia("");
+        setCelularContactoEmergencia("");
+        setFechaApto("");
+        setLinkApto("");
+        handleModalNuevoCliente();
+      }
+    });
+  };
+
   return (
     <Transition.Root show={modalNuevoCliente} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={handleModalNuevoCliente}
+        onClose={handleClose}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <ToastContainer pauseOnFocusLoss={false} />
@@ -189,7 +217,7 @@ const ModalResumen = () => {
                 <button
                   type="button"
                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={handleModalNuevoCliente}
+                  onClick={handleClose}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg

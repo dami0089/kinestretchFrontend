@@ -62,10 +62,11 @@ export function ProfileSedeSecretariaSocio() {
   useEffect(() => {
     const traerData = async () => {
       handleCargando();
+
       setIdSedeSeleccionada(auth.sedes[0]);
       await obtenerSedesUserPantalla(auth._id);
       await obtenerSede(auth.sedes[0]);
-      await obtenerClasesSede(auth.sede[0]);
+      await obtenerClasesSede(auth.sedes[0]);
       handleCargando();
     };
 
@@ -74,9 +75,11 @@ export function ProfileSedeSecretariaSocio() {
 
   useEffect(() => {
     const traerData = async () => {
-      await obtenerSedesUserPantalla(idSedeSeleccionada);
+      handleCargando();
+      await obtenerSedesUserPantalla(auth._id);
       await obtenerSede(idSedeSeleccionada);
       await obtenerClasesSede(idSedeSeleccionada);
+      handleCargando();
     };
     traerData();
   }, [idSedeSeleccionada]);
@@ -84,10 +87,12 @@ export function ProfileSedeSecretariaSocio() {
   useEffect(() => {
     const traerData = async () => {
       if (idSedeSeleccionada === "") {
+        handleCargando();
         setIdSedeSeleccionada(auth.sedes[0]);
         await obtenerSedesUserPantalla(auth._id);
         await obtenerSede(auth.sedes[0]);
-        await obtenerClasesSede(auth.sede[0]);
+        await obtenerClasesSede(auth.sedes[0]);
+        handleCargando();
       }
     };
     traerData();
