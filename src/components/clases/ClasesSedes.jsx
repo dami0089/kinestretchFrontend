@@ -64,11 +64,6 @@ const ClasesSedes = () => {
 
   const handleVerClase = (e, _id) => {
     e.preventDefault();
-    // setIdVerClase(_id);
-    // setDiaClase(diaDeLaSemana);
-    // setHoraClase(horarioInicio);
-    // setSedeClase(nombreSede);
-    // handleModalVerClase();
     navigate(`/sedes/vista-clase/${_id}`);
   };
 
@@ -82,7 +77,7 @@ const ClasesSedes = () => {
             className={`mx-1 rounded-md px-3 py-2 ${
               diaSeleccionado === dia
                 ? "bg-blue-gray-500 text-white hover:bg-blue-gray-600"
-                : "bg-gray-200  hover:bg-gray-300"
+                : "bg-gray-200 hover:bg-gray-300"
             }`}
           >
             {dia}
@@ -91,8 +86,9 @@ const ClasesSedes = () => {
       </div>
       {clasesDia && clasesDia.length !== 0 ? (
         <>
-          <div className="mb-5 flex">
-            <div className="flex-1 border-r p-4">
+          <div className="mb-5 flex flex-wrap">
+            {/* Turno Mañana */}
+            <div className="w-full border-r p-4 md:w-1/2">
               <Typography className="mb-5 text-center uppercase">
                 Turno Mañana
               </Typography>
@@ -101,20 +97,22 @@ const ClasesSedes = () => {
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mb-5 ml-10 w-96  overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer"
-                    onClick={(e) =>
-                      handleVerClase(
-                        e,
-                        clase._id,
-                        clase.diaDeLaSemana,
-                        clase.horarioInicio,
-                        clase.nombreSede
-                      )
-                    }
+                    className="mx-auto mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer sm:w-[90%] md:w-[80%]"
                   >
-                    <div className="flex">
+                    <div className="flex justify-between">
                       {/* Columna del Horario */}
-                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                      <div
+                        className="flex w-3/12 flex-col items-center justify-center bg-blue-gray-500 p-4 text-white"
+                        onClick={(e) =>
+                          handleVerClase(
+                            e,
+                            clase._id,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.nombreSede
+                          )
+                        }
+                      >
                         <CalendarIcon className="h-8 w-8" />
                         <div className="text-s">{clase.diaDeLaSemana}</div>
                         <div className="text-lg font-bold">
@@ -123,7 +121,18 @@ const ClasesSedes = () => {
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
-                      <div className="flex flex-col justify-center p-4">
+                      <div
+                        className="flex w-7/12 flex-col justify-center p-4"
+                        onClick={(e) =>
+                          handleVerClase(
+                            e,
+                            clase._id,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.nombreSede
+                          )
+                        }
+                      >
                         <div className="text-lg font-medium">
                           Profesor {clase.nombreProfe}
                         </div>
@@ -136,12 +145,18 @@ const ClasesSedes = () => {
                               " Alumnos inscriptos"}
                         </div>
                       </div>
+                      <div className="mr-2 mt-2 ">
+                        <p className="rounded-full border bg-red-500 p-2 text-white">
+                          x
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
             </div>
 
-            <div className="flex-1 p-4">
+            {/* Turno Tarde */}
+            <div className="w-full p-4 md:w-1/2">
               <Typography className="mb-5 text-center uppercase">
                 Turno Tarde
               </Typography>
@@ -153,20 +168,22 @@ const ClasesSedes = () => {
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mb-5 ml-10 w-96 overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer"
-                    onClick={(e) =>
-                      handleVerClase(
-                        e,
-                        clase._id,
-                        clase.diaDeLaSemana,
-                        clase.horarioInicio,
-                        clase.nombreSede
-                      )
-                    }
+                    className="mx-auto mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer sm:w-[90%] md:w-[80%]"
                   >
-                    <div className="flex">
+                    <div className="flex justify-between">
                       {/* Columna del Horario */}
-                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                      <div
+                        className="flex w-3/12 flex-col items-center justify-center bg-blue-gray-500 p-4 text-white"
+                        onClick={(e) =>
+                          handleVerClase(
+                            e,
+                            clase._id,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.nombreSede
+                          )
+                        }
+                      >
                         <CalendarIcon className="h-8 w-8" />
                         <div className="text-s">{clase.diaDeLaSemana}</div>
                         <div className="text-lg font-bold">
@@ -175,7 +192,18 @@ const ClasesSedes = () => {
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
-                      <div className="flex flex-col justify-center p-4">
+                      <div
+                        className="flex w-7/12 flex-col justify-center p-4"
+                        onClick={(e) =>
+                          handleVerClase(
+                            e,
+                            clase._id,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.nombreSede
+                          )
+                        }
+                      >
                         <div className="text-lg font-medium">
                           Profesor {clase.nombreProfe}
                         </div>
@@ -187,6 +215,11 @@ const ClasesSedes = () => {
                               clase.cupo +
                               " Alumnos inscriptos"}
                         </div>
+                      </div>
+                      <div className="mr-2 mt-2">
+                        <p className="rounded-full border bg-red-500 p-2 text-white">
+                          x
+                        </p>
                       </div>
                     </div>
                   </div>

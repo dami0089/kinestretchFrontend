@@ -141,17 +141,72 @@ const ListadoDeClases = () => {
     handleModalEditarClase();
   };
 
+  // Filtrado
+  const [searchCriteria, setSearchCriteria] = useState("nombreSede"); // criterio de filtrado
+  const [searchTerm, setSearchTerm] = useState(""); // término de búsqueda
+
+  const handleSearch = () => {
+    return clases.filter((clase) => {
+      if (searchCriteria === "nombreSede") {
+        return clase.nombreSede
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      } else if (searchCriteria === "nombreProfe") {
+        return clase.nombreProfe
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      } else if (searchCriteria === "diaDeLaSemana") {
+        return clase.diaDeLaSemana
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      }
+      return true;
+    });
+  };
+
+  const filteredItems = handleSearch().slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <>
-      <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
+      <div className="mb-4 mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-3">
           <div className="mb-3 mt-8 flex items-center justify-between text-black">
-            <Typography className="ml-4  font-bold">
+            <Typography className="ml-4 font-bold">
               Listado de Clases
             </Typography>
 
-            <div className="mr-5 flex items-center space-x-4"></div>
+            {/* Filtro de búsqueda */}
+            <div className="mr-5 flex items-center space-x-4">
+              <select
+                className="rounded border p-2"
+                value={searchCriteria}
+                onChange={(e) => setSearchCriteria(e.target.value)}
+              >
+                <option value="nombreSede">Nombre Sede</option>
+                <option value="nombreProfe">Nombre Profesor</option>
+                <option value="diaDeLaSemana">Día de la Semana</option>
+              </select>
+              <input
+                type="text"
+                className="rounded border p-2"
+                placeholder="Buscar..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+              />
+              {/* <button
+                className="rounded bg-blue-500 p-2 text-white"
+                onClick={handleSearch}
+              >
+                Buscar
+              </button> */}
+            </div>
           </div>
+
           <CardBody className="overflow-x-scroll px-0 pb-2 pt-0">
             <table className="w-full min-w-[640px] table-auto">
               <thead>
@@ -174,7 +229,7 @@ const ListadoDeClases = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map(
+                {filteredItems.map(
                   (
                     {
                       _id,

@@ -1494,6 +1494,51 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const suspenderClaseAdmin = async (id, motivo) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clases/suspender-clase/${id}`,
+        { motivo },
+        config
+      );
+
+      toast.success("Clase suspendida correctamente", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      const errorMsg =
+        error.response && error.response.data && error.response.data.msg
+          ? error.response.data.msg
+          : "Error al cancelar la clase.";
+      toast.error(errorMsg, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{

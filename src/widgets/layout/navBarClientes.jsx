@@ -77,7 +77,7 @@ export function DashboardNavbarClientes() {
         <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
           <div></div>
           {/* Secciones del medio */}
-          <div className="hidden justify-center space-x-4 md:flex md:space-x-6">
+          <div className="hidden justify-center space-x-4 md:flex md:space-x-6 ">
             <Link to="/inicio" className="text-white hover:text-gray-300">
               Inicio
             </Link>
@@ -121,11 +121,17 @@ export function DashboardNavbarClientes() {
 
         {/* Menú desplegable para móviles */}
         {isMenuOpen && (
-          <div className="mt-2 flex flex-col items-start space-y-2 md:hidden">
-            <Link to="/inicio" className="text-white hover:text-gray-300">
+          <div className="mt-2 flex w-40 flex-col items-start space-y-2 rounded-xl bg-white p-5 md:hidden">
+            <Link
+              to="/inicio"
+              className="font-bold uppercase text-black hover:text-gray-300"
+            >
               Inicio
             </Link>
-            <Link to="/perfil" className="text-white hover:text-gray-300">
+            <Link
+              to="/perfil"
+              className="hover:text-gray-300e font-bold uppercase text-black"
+            >
               Mi perfil
             </Link>
             {/* <Link to="/pagos" className="text-white hover:text-gray-300">
