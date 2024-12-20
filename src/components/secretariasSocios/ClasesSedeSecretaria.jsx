@@ -7,18 +7,32 @@ import useAuth from "@/hooks/useAuth";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { convertirHora } from "@/helpers/convertirHora";
 import { useNavigate } from "react-router-dom";
+import ModalCancelarClaseAdmin from "../clases/ModalCancelarClaseAdmin";
+import ModalEditarClase from "../clases/ModalEditarClase";
+import ModalEnviarMensajeClase from "../clases/ModalEnviarMensajeClase";
 
 const ClasesSedeSecretaria = () => {
   const {
     obtenerClasesSedeDia,
     clasesDia,
-    setIdVerClase,
-    setDiaClase,
-    setHoraClase,
-    setSedeClase,
+    modalCancelarClase,
+    setClaseCancelarAdmin,
+    handleModalCancelarClase,
+    modalEditarClase,
+
+    setIdClaseEditar,
+    setIdClaseVer,
+    setIdSede,
+    setDiaDeLaSemana,
+    setHoraInicio,
+    setIdProfesor,
+    setCupo,
+    handleModalEditarClase,
+    modalEnviarMensajeClase,
+    claseEditada,
+    setClaseEditada,
   } = useClases();
   const { handleCargando, idSedeSeleccionada } = useAuth();
-  const { idVerSede, handleModalVerClase } = useSedes();
   const navigate = useNavigate();
   const diasDeLaSemana = [
     "Lunes",
@@ -62,15 +76,40 @@ const ClasesSedeSecretaria = () => {
     traerInfo();
   }, [diaSeleccionado]);
 
+  useEffect(() => {
+    const traerInfo = async () => {
+      if (claseEditada) {
+        handleCargando();
+        await obtenerClasesSedeDia(idSedeSeleccionada, diaSeleccionado);
+        setClaseEditada(false);
+        handleCargando();
+      }
+    };
+    traerInfo();
+  }, [claseEditada]);
+
   const handleVerClase = (e, _id, diaDeLaSemana, horarioInicio, nombreSede) => {
     e.preventDefault();
     navigate(`/listado-alumnos-clase/${_id}`);
+  };
 
-    // setIdVerClase(_id);
-    // // setDiaClase(diaDeLaSemana);
-    // // setHoraClase(horarioInicio);
-    // // setSedeClase(nombreSede);
-    // handleModalVerClase();
+  const cancelarClase = (e, id) => {
+    e.preventDefault();
+
+    setClaseCancelarAdmin(id);
+    handleModalCancelarClase();
+  };
+
+  const editarClase = (e, id, idSede, dia, hora, profe, cupo) => {
+    e.preventDefault();
+    setIdClaseEditar(id);
+    setIdClaseVer(id);
+    setIdSede(idSede);
+    setDiaDeLaSemana(dia);
+    setHoraInicio(hora);
+    setIdProfesor(profe);
+    setCupo(cupo);
+    handleModalEditarClase();
   };
 
   return (
@@ -98,24 +137,29 @@ const ClasesSedeSecretaria = () => {
                 Turno Mañana
               </Typography>
               {clasesDia
-                .filter((clase) => clase.horarioInicio <= 12)
+                .filter(
+                  (clase) =>
+                    clase.horarioInicio >= 13 && clase.horarioInicio <= 22
+                )
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mb-5 ml-10 w-96  overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer"
-                    onClick={(e) =>
-                      handleVerClase(
-                        e,
-                        clase._id,
-                        clase.diaDeLaSemana,
-                        clase.horarioInicio,
-                        clase.nombreSede
-                      )
-                    }
+                    className="mx-auto mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer sm:w-[90%] md:w-[80%]"
                   >
-                    <div className="flex">
+                    <div className="flex justify-between">
                       {/* Columna del Horario */}
-                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                      <div
+                        className="flex w-3/12 flex-col items-center justify-center bg-blue-gray-500 p-4 text-white"
+                        onClick={(e) =>
+                          handleVerClase(
+                            e,
+                            clase._id,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.nombreSede
+                          )
+                        }
+                      >
                         <CalendarIcon className="h-8 w-8" />
                         <div className="text-s">{clase.diaDeLaSemana}</div>
                         <div className="text-lg font-bold">
@@ -124,7 +168,18 @@ const ClasesSedeSecretaria = () => {
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
-                      <div className="flex flex-col justify-center p-4">
+                      <div
+                        className="flex w-7/12 flex-col justify-center p-4"
+                        onClick={(e) =>
+                          handleVerClase(
+                            e,
+                            clase._id,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.nombreSede
+                          )
+                        }
+                      >
                         <div className="text-lg font-medium">
                           Profesor {clase.nombreProfe}
                         </div>
@@ -136,6 +191,56 @@ const ClasesSedeSecretaria = () => {
                               clase.cupo +
                               " Alumnos inscriptos"}
                         </div>
+                      </div>
+                      <div
+                        className="mr-2 mt-2 items-center"
+                        onClick={(e) =>
+                          editarClase(
+                            e,
+                            clase._id,
+                            clase.sede,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.profesor,
+                            clase.cupo
+                          )
+                        }
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1em"
+                          height="1em"
+                          viewBox="0 0 24 24"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="M3 21h18M12.222 5.828L15.05 3L20 7.95l-2.828 2.828m-4.95-4.95l-5.607 5.607a1 1 0 0 0-.293.707v4.536h4.536a1 1 0 0 0 .707-.293l5.607-5.607m-4.95-4.95l4.95 4.95"
+                          />
+                        </svg>
+                      </div>
+                      <div
+                        className="mr-2 mt-2"
+                        onClick={(e) => cancelarClase(e, clase._id)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1em"
+                          height="1em"
+                          viewBox="0 0 20 20"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            fill="currentColor"
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 0 1 1.414 0L10 8.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L8.586 10L4.293 5.707a1 1 0 0 1 0-1.414"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                       </div>
                     </div>
                   </div>
@@ -149,25 +254,27 @@ const ClasesSedeSecretaria = () => {
               {clasesDia
                 .filter(
                   (clase) =>
-                    clase.horarioInicio >= 13 && clase.horarioInicio <= 20
+                    clase.horarioInicio >= 13 && clase.horarioInicio <= 22
                 )
                 .map((clase) => (
                   <div
                     key={clase._id}
-                    className="mb-5 ml-10 w-96 overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer"
-                    onClick={(e) =>
-                      handleVerClase(
-                        e,
-                        clase._id,
-                        clase.diaDeLaSemana,
-                        clase.horarioInicio,
-                        clase.nombreSede
-                      )
-                    }
+                    className="mx-auto mb-5 w-full overflow-hidden rounded-lg border bg-white shadow-md hover:cursor-pointer sm:w-[90%] md:w-[80%]"
                   >
-                    <div className="flex">
+                    <div className="flex justify-between">
                       {/* Columna del Horario */}
-                      <div className="w-4/10 flex flex-col items-center justify-center bg-blue-gray-500 p-4 text-white">
+                      <div
+                        className="flex w-3/12 flex-col items-center justify-center bg-blue-gray-500 p-4 text-white"
+                        onClick={(e) =>
+                          handleVerClase(
+                            e,
+                            clase._id,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.nombreSede
+                          )
+                        }
+                      >
                         <CalendarIcon className="h-8 w-8" />
                         <div className="text-s">{clase.diaDeLaSemana}</div>
                         <div className="text-lg font-bold">
@@ -176,7 +283,18 @@ const ClasesSedeSecretaria = () => {
                       </div>
 
                       {/* Columna del Profesor y Alumnos */}
-                      <div className="flex flex-col justify-center p-4">
+                      <div
+                        className="flex w-7/12 flex-col justify-center p-4"
+                        onClick={(e) =>
+                          handleVerClase(
+                            e,
+                            clase._id,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.nombreSede
+                          )
+                        }
+                      >
                         <div className="text-lg font-medium">
                           Profesor {clase.nombreProfe}
                         </div>
@@ -189,6 +307,56 @@ const ClasesSedeSecretaria = () => {
                               " Alumnos inscriptos"}
                         </div>
                       </div>
+                      <div
+                        className="mr-2 mt-2 items-center"
+                        onClick={(e) =>
+                          editarClase(
+                            e,
+                            clase._id,
+                            clase.sede,
+                            clase.diaDeLaSemana,
+                            clase.horarioInicio,
+                            clase.profesor,
+                            clase.cupo
+                          )
+                        }
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1em"
+                          height="1em"
+                          viewBox="0 0 24 24"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="M3 21h18M12.222 5.828L15.05 3L20 7.95l-2.828 2.828m-4.95-4.95l-5.607 5.607a1 1 0 0 0-.293.707v4.536h4.536a1 1 0 0 0 .707-.293l5.607-5.607m-4.95-4.95l4.95 4.95"
+                          />
+                        </svg>
+                      </div>
+                      <div
+                        className="mr-2 mt-2"
+                        onClick={(e) => cancelarClase(e, clase._id)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1em"
+                          height="1em"
+                          viewBox="0 0 20 20"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            fill="currentColor"
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 0 1 1.414 0L10 8.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L8.586 10L4.293 5.707a1 1 0 0 1 0-1.414"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -200,6 +368,9 @@ const ClasesSedeSecretaria = () => {
           <button class="">No hay clases para este dia</button>
         </div>
       )}
+      {modalCancelarClase ? <ModalCancelarClaseAdmin /> : null}
+      {modalEditarClase ? <ModalEditarClase /> : null}
+      {modalEnviarMensajeClase ? <ModalEnviarMensajeClase /> : null}
     </>
   );
 };

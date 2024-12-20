@@ -1,22 +1,11 @@
 import useClases from "@/hooks/useClases";
 import useSedes from "@/hooks/useSedes";
+import { EyeIcon, TrashIcon } from "@heroicons/react/24/solid";
 import {
-  EllipsisVerticalIcon,
-  EyeIcon,
-  TrashIcon,
-} from "@heroicons/react/24/solid";
-import {
-  Avatar,
   Card,
   CardBody,
   CardHeader,
-  IconButton,
-  Menu,
-  MenuHandler,
-  MenuItem,
-  MenuList,
   Progress,
-  Tooltip,
   Typography,
 } from "@material-tailwind/react";
 import React, { useEffect } from "react";
@@ -25,6 +14,7 @@ import ModalClaseSede from "./ModalClaseSede";
 import Swal from "sweetalert2";
 import { convertirHora } from "@/helpers/convertirHora";
 import { useNavigate } from "react-router-dom";
+import { id } from "date-fns/locale";
 
 const ProximaClaseSede = () => {
   const {
@@ -32,10 +22,6 @@ const ProximaClaseSede = () => {
     clasesSede,
     recargoProximasClases,
     setRecargoProximasClases,
-    setIdVerClase,
-    setDiaClase,
-    setHoraClase,
-    setSedeClase,
     eliminarClase,
   } = useClases();
   const { idVerSede, modalVerClase, handleModalVerClase } = useSedes();
@@ -77,11 +63,7 @@ const ProximaClaseSede = () => {
 
   const handleVer = (e, _id) => {
     e.preventDefault();
-    // setIdVerClase(_id);
-    // setDiaClase(diaDeLaSemana);
-    // setHoraClase(horarioInicio);
-    // setSedeClase(nombreSede);
-    // handleModalVerClase();
+
     navigate(`/sedes/vista-clase/${_id}`);
   };
 
@@ -150,6 +132,7 @@ const ProximaClaseSede = () => {
                       horarioInicio,
                       nombreProfe,
                       clientes,
+                      recupero,
                       nombreSede,
                       _id,
                       cupo,
@@ -193,7 +176,7 @@ const ProximaClaseSede = () => {
                               variant="small"
                               className="mb-1 block text-xs font-medium text-blue-gray-600"
                             >
-                              {clientes.length}/{cupo}
+                              {clientes.length + recupero.legth}/{cupo}
                             </Typography>
                             <Progress
                               value={

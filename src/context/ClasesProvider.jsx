@@ -61,6 +61,8 @@ const ClasesProvider = ({ children }) => {
   const [tipoCreditoAsignar, setTipoCreditoAsignar] = useState("");
   const [idCreditoAsignar, setIdCreditoAsignar] = useState("");
   const [actualizarHistorial, setActualizarHistorial] = useState(false);
+  const [claseCamncelarAdmin, setClaseCancelarAdmin] = useState("");
+  const [claseEditada, setClaseEditada] = useState(false);
 
   const handleModalCancelarClaseACliente = () => {
     setModalCancelarClaseACliente((prev) => !prev);
@@ -240,7 +242,34 @@ const ClasesProvider = ({ children }) => {
         `/clases/obtener-clases-mes/${id}`,
         config
       );
+      console.log(data);
+
       setClaseClienteFecha(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [clasesFecha, setClasesFecha] = useState([]);
+
+  const obtenerClasesConFechaAdmin = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios(
+        `/clases/obtener-clases-mes-por-clase/${id}`,
+        config
+      );
+      console.log(data);
+
+      setClasesFecha(data);
     } catch (error) {
       console.log(error);
     }
@@ -462,6 +491,8 @@ const ClasesProvider = ({ children }) => {
         { dia },
         config
       );
+      console.log(data);
+
       setClasesOrdenadas(data);
     } catch (error) {
       console.log(error);
@@ -1140,15 +1171,11 @@ const ClasesProvider = ({ children }) => {
         config
       );
 
-      toast.success("Mensaje enviado correctamente", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+      Swal.fire({
+        icon: "success",
+        title: "Mensaje enviado correctamente",
+        showConfirmButton: false,
+        timer: 1500,
       });
     } catch (error) {
       toast.error(error, {
@@ -1539,6 +1566,34 @@ const ClasesProvider = ({ children }) => {
     }
   };
 
+  const cancelarClaseGeneral = async (id, fecha) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clases/cancelar-clase-general/${id}`,
+        { fecha },
+        config
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: data.msg,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ClasesContext.Provider
       value={{
@@ -1633,6 +1688,7 @@ const ClasesProvider = ({ children }) => {
         idClaseVer,
         setIdClaseVer,
         clientesClaseVer,
+        setClientesClaseVer,
         obtenerClientesClaseVer,
         eliminarClienteDeClase,
         diaSeleccionado,
@@ -1689,6 +1745,16 @@ const ClasesProvider = ({ children }) => {
         recuperoAdmin,
         actualizarHistorial,
         setActualizarHistorial,
+        setInasistentesClase,
+        setClase,
+        cancelarClaseGeneral,
+        claseCamncelarAdmin,
+        setClaseCancelarAdmin,
+        clasesFecha,
+        obtenerClasesConFechaAdmin,
+        setIdClaseVer,
+        claseEditada,
+        setClaseEditada,
       }}
     >
       {children}

@@ -11,10 +11,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { projectsTableData } from "@/data";
 import useClientes from "@/hooks/useClientes";
-import { formatearFecha } from "@/helpers/formatearFecha";
 import { useNavigate } from "react-router-dom";
-import { setOpenConfigurator } from "@/context";
-import { ArrowLeftCircleIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { EyeIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import Swal from "sweetalert2";
@@ -22,6 +20,8 @@ import Swal from "sweetalert2";
 import useClases from "@/hooks/useClases";
 import ModalEditarClase from "./ModalEditarClase";
 import { convertirHora } from "@/helpers/convertirHora";
+import ModalEnviarMensajeClase from "./ModalEnviarMensajeClase";
+import ModalCancelarClaseAdmin from "./ModalCancelarClaseAdmin";
 
 const ListadoDeClases = () => {
   const { setIdClienteEditar, setCliente } = useClientes();
@@ -31,12 +31,10 @@ const ListadoDeClases = () => {
     clases,
     obtenerClases,
     setIdSede,
-    idClaseVer,
     setIdClaseVer,
     eliminarClase,
     handleModalEditarClase,
     modalEditarClase,
-    idClaseEditar,
     setDiaDeLaSemana,
     setIdClaseEditar,
     setHoraInicio,
@@ -44,6 +42,10 @@ const ListadoDeClases = () => {
     setCupo,
     recargoListado,
     setRecargoListado,
+    modalEnviarMensajeClase,
+    setClaseCancelarAdmin,
+    handleModalCancelarClase,
+    modalCancelarClase,
   } = useClases();
 
   const { handleCargando } = useAuth();
@@ -133,12 +135,20 @@ const ListadoDeClases = () => {
   const editarClase = (e, id, idSede, dia, hora, profe, cupo) => {
     e.preventDefault();
     setIdClaseEditar(id);
+    setIdClaseVer(id);
     setIdSede(idSede);
     setDiaDeLaSemana(dia);
     setHoraInicio(hora);
     setIdProfesor(profe);
     setCupo(cupo);
     handleModalEditarClase();
+  };
+
+  const cancelarClase = (e, id) => {
+    e.preventDefault();
+
+    setClaseCancelarAdmin(id);
+    handleModalCancelarClase();
   };
 
   // Filtrado
@@ -321,6 +331,13 @@ const ListadoDeClases = () => {
                                 d="M5 19h1.425L16.2 9.225L14.775 7.8L5 17.575zm-1 2q-.425 0-.712-.288T3 20v-2.425q0-.4.15-.763t.425-.637L16.2 3.575q.3-.275.663-.425t.762-.15q.4 0 .775.15t.65.45L20.425 5q.3.275.437.65T21 6.4q0 .4-.138.763t-.437.662l-12.6 12.6q-.275.275-.638.425t-.762.15zM19 6.4L17.6 5zm-3.525 2.125l-.7-.725L16.2 9.225z"
                               />
                             </svg>
+                            <p
+                              className="text-2xl hover:cursor-pointer"
+                              title="Cancelar clase"
+                              onClick={(e) => cancelarClase(e, _id)}
+                            >
+                              x
+                            </p>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="1em"
@@ -368,6 +385,8 @@ const ListadoDeClases = () => {
       </div>
       <Cargando />
       {modalEditarClase ? <ModalEditarClase /> : null}
+      {modalEnviarMensajeClase ? <ModalEnviarMensajeClase /> : null}
+      {modalCancelarClase ? <ModalCancelarClaseAdmin /> : null}
     </>
   );
 };

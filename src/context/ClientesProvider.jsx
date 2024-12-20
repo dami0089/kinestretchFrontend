@@ -59,6 +59,11 @@ const ClientesProvider = ({ children }) => {
   const [comentarioPago, setComentarioPago] = useState("");
   const [idClientePago, setIdClientePago] = useState("");
   const [modalEditarPagoProfe, setModalEditarPagoProfe] = useState(false);
+  const [modalComunicarInactivos, setModalComunicarInactivos] = useState(false);
+
+  const handleModalComunicarInactivos = () => {
+    setModalComunicarInactivos(!modalComunicarInactivos);
+  };
 
   const handleModalEditarPagoProfe = () => {
     setModalEditarPagoProfe(!modalEditarPagoProfe);
@@ -1088,6 +1093,73 @@ const ClientesProvider = ({ children }) => {
     }
   };
 
+  const desactivarClientesSinClases = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await clienteAxios.post(
+        `/clientes/desactivar-clientes-sin-clases`,
+        {},
+        config
+      );
+
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Clientes desactivados correctamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const comunicarInactivos = async (mensaje, asunto) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.post(
+        `/clientes/comunicar-inactivos`,
+        { mensaje, asunto },
+        config
+      );
+
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: data.msg,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <ClientesContext.Provider
       value={{
@@ -1219,6 +1291,10 @@ const ClientesProvider = ({ children }) => {
         obtenerClientesSinClase,
         clientesInactivosSede,
         obtenerClientesInactivosPorSede,
+        desactivarClientesSinClases,
+        comunicarInactivos,
+        modalComunicarInactivos,
+        handleModalComunicarInactivos,
       }}
     >
       {children}

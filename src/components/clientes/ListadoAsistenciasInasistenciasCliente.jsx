@@ -23,15 +23,7 @@ const ListadoAsistenciasInasistenciasCliente = () => {
   const { setIdClienteEditar, modalVerClaseCliente, handleVerClase, cliente } =
     useClientes();
 
-  const {
-    clasesCliente,
-    idClasePerfilCliente,
-    setIdClasePerfilCliente,
-    cancelarClaseCliente,
-    eliminarDeClaseACliente,
-    setActualizoClasesCliente,
-    asistenciasInasistenciasCliente,
-  } = useClases();
+  const { asistenciasInasistenciasCliente } = useClases();
 
   const { handleCargando } = useAuth();
 

@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { DateTime } from "luxon";
 import { Typography } from "@material-tailwind/react";
 import useClases from "@/hooks/useClases";
-import useSedes from "@/hooks/useSedes";
 import useAuth from "@/hooks/useAuth";
-import useProfesores from "@/hooks/useProfesores";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import Cargando from "../Cargando";
@@ -19,9 +17,7 @@ const ClasesProfesor = () => {
     setDiaSeleccionado,
   } = useClases();
   const { handleCargando } = useAuth();
-  const { idVerSede, handleModalVerClase } = useSedes();
   const { auth } = useAuth();
-  const { handleModalClasesProfe, profesor } = useProfesores();
   const navigate = useNavigate();
 
   const diasDeLaSemana = [
@@ -72,10 +68,7 @@ const ClasesProfesor = () => {
 
   const handleVerClase = (e, _id, dia, hora, sede) => {
     e.preventDefault();
-
-    handleCargando();
     navigate(`/clase/${_id}`);
-    handleCargando();
   };
 
   return (

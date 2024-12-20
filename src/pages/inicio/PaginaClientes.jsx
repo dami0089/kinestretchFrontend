@@ -1,12 +1,6 @@
-import { Avatar, Typography, Button } from "@material-tailwind/react";
-import {
-  MapPinIcon,
-  BriefcaseIcon,
-  BuildingLibraryIcon,
-} from "@heroicons/react/24/solid";
-import { Footer } from "@/widgets/layout";
+import { Avatar, Typography } from "@material-tailwind/react";
+import { MapPinIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
-import ListadodeClientes from "@/components/clientes/ListadodeClientes";
 import ListadoClasesCliente from "@/components/paginaClientes/ListadoClasesCliente";
 import { ToastContainer } from "react-toastify";
 import useClientes from "@/hooks/useClientes";
@@ -18,18 +12,12 @@ import ModalCancelarClase from "@/components/paginaClientes/ModalCancelarClase";
 import ModalAceptarTerminos from "@/components/paginaClientes/ModalAceptarTerminos";
 
 export function PaginaClientes() {
-  const {
-    auth,
-    consultarTerminos,
-    handleModalAceptarTerminos,
-    modalAceptarTerminos,
-  } = useAuth();
+  const { auth, consultarTerminos, modalAceptarTerminos } = useAuth();
   const { obtenerCliente, cliente, obtenerCreditosCliente, creditosCliente } =
     useClientes();
   const {
     modalClaseRecupero,
     handleModalClaseRecupero,
-    inasistencias,
     obtenerInasistencias,
     modalCancelarClase,
   } = useClases();

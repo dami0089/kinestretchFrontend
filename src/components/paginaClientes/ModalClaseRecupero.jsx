@@ -234,15 +234,17 @@ const ModalClaseRecupero = () => {
                         }
                       >
                         <option value="">--Seleccionar--</option>
-                        {opcionesDias.map((opcion, index) => (
-                          <option
-                            key={index}
-                            value={opcion.nombreDia}
-                            nombreDia={opcion.nombreDia}
-                          >
-                            {opcion.etiqueta}
-                          </option>
-                        ))}
+                        {opcionesDias.map((opcion, index) =>
+                          opcion.cancelada ? null : (
+                            <option
+                              key={index}
+                              value={opcion.nombreDia}
+                              nombreDia={opcion.nombreDia}
+                            >
+                              {opcion.etiqueta}
+                            </option>
+                          )
+                        )}
                       </select>
                     </div>
 
@@ -269,16 +271,16 @@ const ModalClaseRecupero = () => {
                         )}
 
                         {clasesOrdenadas
-                          ? clasesOrdenadas.map((clase) => (
-                              <option key={clase._id} value={clase._id}>
-                                {clase.nombreProfe}{" "}
-                                {clase.horarioInicio !== "FERIADO"
-                                  ? `- ${convertirHora(clase.horarioInicio)}`
-                                  : ""}{" "}
-                                {clase.horarioInicio !== "FERIADO" ? " hs" : ""}
-                              </option>
-                            ))
-                          : ""}
+                          ?.filter((clase) => !clase.cancelada) // Excluir clases canceladas
+                          .map((clase) => (
+                            <option key={clase._id} value={clase._id}>
+                              {clase.nombreProfe}{" "}
+                              {clase.horarioInicio !== "FERIADO"
+                                ? `- ${convertirHora(clase.horarioInicio)}`
+                                : ""}{" "}
+                              {clase.horarioInicio !== "FERIADO" ? " hs" : ""}
+                            </option>
+                          ))}
                       </select>
                     </div>
 

@@ -203,7 +203,7 @@ const ListadoClasesCliente = () => {
                       <UserIcon className="mr-2 h-5 w-5" />
                       Profesor {clase.nombreProfe}
                     </div>
-                    <div className="mt-4 flex items-center justify-between">
+                    <div className=" flex flex-col items-center justify-between">
                       <span
                         className={`text-l text-gray-600 ${
                           esClaseCancelada(clase._id, clase.fechaCompleta)
@@ -224,12 +224,12 @@ const ListadoClasesCliente = () => {
                         ""
                       ) : (
                         <Button
-                          className="bg-red-500 p-1 hover:bg-red-600"
+                          className="mt-2 bg-red-500 p-2 hover:bg-red-600"
                           onClick={(e) =>
                             handleCancelarClases(e, clase._id, clase.esRecupero)
                           }
                         >
-                          Cancelar Clase
+                          Elegi la clase a cancelar
                         </Button>
                         // <XCircleIcon
                         //   title="Cancelar clase"

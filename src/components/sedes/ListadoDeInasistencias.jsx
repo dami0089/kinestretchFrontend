@@ -238,7 +238,16 @@ const ListadoDeInasistencias = () => {
                   </thead>
                   <tbody>
                     {currentItems.map(
-                      ({ _id, clase, cliente, fechaInasistencia }, key) => {
+                      (
+                        {
+                          _id,
+                          clase,
+                          cliente,
+                          fechaInasistencia,
+                          canceloCliente,
+                        },
+                        key
+                      ) => {
                         const className = `py-3 px-5 ${
                           key === projectsTableData.length - 1
                             ? ""
@@ -246,7 +255,10 @@ const ListadoDeInasistencias = () => {
                         }`;
 
                         return (
-                          <tr key={_id}>
+                          <tr
+                            key={_id}
+                            className={`${canceloCliente ? "bg-blue-300" : ""}`}
+                          >
                             <td className={className}>
                               <div className="flex items-center justify-center gap-4">
                                 <Typography
@@ -264,7 +276,7 @@ const ListadoDeInasistencias = () => {
                                   variant="small"
                                   className={`$ text-xs  font-medium`}
                                 >
-                                  {clase ? clase.horarioInicio : "-"}
+                                  {clase ? `${clase.horarioInicio} hs` : "-"}
                                 </Typography>
                               </div>
                             </td>
@@ -284,10 +296,14 @@ const ListadoDeInasistencias = () => {
                               <div className="flex items-center justify-center gap-4">
                                 <Typography
                                   variant="small"
-                                  className="text-xs font-medium text-blue-gray-600"
+                                  className="text-xs font-medium text-black"
                                 >
                                   {cliente
-                                    ? `${cliente.nombre} ${cliente.apellido}`
+                                    ? `${cliente.nombre} ${cliente.apellido} ${
+                                        canceloCliente
+                                          ? " - (Canceló el cliente)"
+                                          : ""
+                                      }`
                                     : `-`}
                                 </Typography>
                               </div>

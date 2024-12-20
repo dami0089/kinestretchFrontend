@@ -11,32 +11,25 @@ import {
 import React, { useEffect, useState } from "react";
 import { projectsTableData } from "@/data";
 import useClientes from "@/hooks/useClientes";
-import { formatearFecha } from "@/helpers/formatearFecha";
 import { useNavigate } from "react-router-dom";
-import { setOpenConfigurator } from "@/context";
-import { ArrowLeftCircleIcon, EyeIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import useClases from "@/hooks/useClases";
 import Swal from "sweetalert2";
+import ModalComunicarInactivos from "../clases/ModalComunicarInactivos";
+import { EyeIcon } from "@heroicons/react/24/solid";
 
 const ListadodeClientes = () => {
   const {
     clientes,
-    setObtenerUs,
-    setSeleccion,
-    handleModalEditarCliente,
-    setCuitEditar,
-    cuitEditar,
-    // obtenerUser,
-    setObtenerUsuario,
-    obtenerClientes,
-    idClienteEditar,
+
     setIdClienteEditar,
     setCliente,
     clientesInactivos,
     obtenerClientesInactivos,
     eliminarCliente,
+    modalComunicarInactivos,
+    handleModalComunicarInactivos,
   } = useClientes();
 
   useEffect(() => {
@@ -131,6 +124,11 @@ const ListadodeClientes = () => {
     });
   };
 
+  const handleCOmunicar = (e) => {
+    e.preventDefault();
+    handleModalComunicarInactivos();
+  };
+
   return (
     <>
       <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
@@ -139,6 +137,8 @@ const ListadodeClientes = () => {
             <Typography className="ml-4  font-bold">
               Listado de Clientes Inactivos
             </Typography>
+
+            <Button onClick={(e) => handleCOmunicar(e)}>Comunicar</Button>
 
             <div className="mr-5 flex items-center space-x-4">
               <input
@@ -365,6 +365,7 @@ const ListadodeClientes = () => {
         </Button>
       </div>
       <Cargando />
+      {modalComunicarInactivos ? <ModalComunicarInactivos /> : null}
     </>
   );
 };

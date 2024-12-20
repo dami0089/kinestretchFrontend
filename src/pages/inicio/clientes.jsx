@@ -9,6 +9,7 @@ import ModalNuevoCliente from "@/components/clientes/ModalNuevoCliente";
 import useClientes from "@/hooks/useClientes";
 
 import Cargando from "@/components/Cargando";
+import ModalComunicarInactivos from "@/components/clases/ModalComunicarInactivos";
 
 export function Clientes() {
   const {
@@ -17,6 +18,7 @@ export function Clientes() {
     obtenerUsuarios,
     actualizoListado,
     modalNuevoCliente,
+    modalComunicarInactivos,
   } = useClientes();
   const navigate = useNavigate();
 
@@ -193,6 +195,7 @@ export function Clientes() {
 
       <Cargando />
       {modalNuevoCliente ? <ModalNuevoCliente /> : ""}
+      {modalComunicarInactivos ? <ModalComunicarInactivos /> : null}
     </>
   );
 }

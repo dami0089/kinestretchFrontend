@@ -1,26 +1,16 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  Progress,
-  Tooltip,
-  Typography,
-} from "@material-tailwind/react";
+import { Card, CardBody, Typography } from "@material-tailwind/react";
 
-import React, { useEffect, useState } from "react";
-import { projectsTableData } from "@/data";
+import React, { useEffect } from "react";
+
 import useClientes from "@/hooks/useClientes";
 import { formatearFecha } from "@/helpers/formatearFecha";
 import { useNavigate } from "react-router-dom";
-import { setOpenConfigurator } from "@/context";
-import { ArrowLeftCircleIcon, EyeIcon } from "@heroicons/react/24/solid";
+
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import useClases from "@/hooks/useClases";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 import { DateTime } from "luxon";
 import ModalEditarDiagnostico from "./ModalEditarDiagnostico";
 import ModalRegistrarPagoProfesor from "./ModalRegistrarPagoProfesor";
@@ -33,7 +23,6 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
     modalEditarDiagnostico,
     actualizarListado,
     setActualizarListado,
-    idClientePago,
     setIdClientePago,
   } = useClientes();
 
@@ -89,9 +78,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
         await obtenerClientesClaseVer(id);
         await obtenerAsistenciasClase(id);
         await obtenerInasistentesClase(id);
-
         await comprobarInasistencia(id);
-
         setActualizarListado(false);
         handleCargando();
       }
@@ -114,10 +101,8 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
       confirmButtonText: "Si",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        handleCargando();
         await eliminarClienteDeClase(_id, id);
         setActualizarListado(true);
-        handleCargando();
       }
     });
   };
@@ -137,6 +122,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
       });
       return;
     }
+
     Swal.fire({
       title: "Registramos la inasistencia?",
       text: "Se marcara al cliente como inasistente",
@@ -148,26 +134,29 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
       confirmButtonText: "Si",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        handleCargando();
-        await registrarInasistenciaPaginaProfe(_id, id);
-        setActualizarListado(true);
-        handleCargando();
-        toast.success("Inasistencia registrada", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        try {
+          await registrarInasistenciaPaginaProfe(_id, id);
+          setActualizarListado(true);
+          toast.success("Inasistencia registrada", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
   };
 
   const registrarAsistencia = async (e, _id) => {
     e.preventDefault();
+
     if (asistencias.includes(_id)) {
       toast.error("Ya registraste esta asistencia", {
         position: "top-right",
@@ -181,6 +170,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
       });
       return;
     }
+
     if (inasist.includes(_id)) {
       toast.error("Ya registraste una inasistencia", {
         position: "top-right",
@@ -194,6 +184,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
       });
       return;
     }
+
     if (clase.diaDeLaSemana !== diaActual) {
       toast.error(
         "No se puede marcar una asistencia a un dia que no es el de hoy",
@@ -208,12 +199,13 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
           theme: "light",
         }
       );
-    } else {
-      handleCargando();
-
+      return;
+    }
+    try {
       await asistencia(id, _id);
       setActualizarListado(true);
-      handleCargando();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -275,38 +267,51 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
   };
 
   const esFechaDelMesEnCurso = (fecha) => {
+    // Asegurarnos de que estamos trabajando en la zona horaria de Buenos Aires
     const fechaDada = new Date(fecha);
     const fechaActual = new Date();
 
-    const mesDado = fechaDada.getMonth();
-    const anoDado = fechaDada.getFullYear();
+    // Ajustamos las fechas a la zona horaria de Buenos Aires
+    const offsetArgentina = -180; // Buenos Aires tiene un UTC offset de -3 horas (180 minutos)
+    fechaDada.setMinutes(
+      fechaDada.getMinutes() + fechaDada.getTimezoneOffset() - offsetArgentina
+    );
+    fechaActual.setMinutes(
+      fechaActual.getMinutes() +
+        fechaActual.getTimezoneOffset() -
+        offsetArgentina
+    );
 
-    const mesActual = fechaActual.getMonth();
-    const anoActual = fechaActual.getFullYear();
-
-    return mesDado === mesActual && anoDado === anoActual;
+    // Comparamos el mes y el año de ambas fechas
+    return (
+      fechaDada.getMonth() === fechaActual.getMonth() &&
+      fechaDada.getFullYear() === fechaActual.getFullYear()
+    );
   };
 
   const handleVerPago = (e, pagos, id) => {
     e.preventDefault();
-    if (pagos) {
+
+    if (pagos && esFechaDelMesEnCurso(pagos.fechaPago)) {
       Swal.fire({
         title: "Pago",
-        text: `${
-          pagos
-            ? `Fecha de Pago: ${formatearFecha(
-                pagos.fechaPago
-              )} - Observaciones: ${pagos.comentario ? pagos.comentario : "-"}`
-            : "No hay pagos"
-        }`,
+        text: `Fecha Ultimo Pago: ${formatearFecha(
+          pagos.fechaPago
+        )} - Observaciones: ${pagos.comentario ? pagos.comentario : "-"}`,
         imageUrl:
           "https://www.shutterstock.com/image-photo/doctor-medical-office-reviewing-data-600nw-2244599039.jpg",
         imageWidth: 450,
         imageHeight: 170,
         imageAlt: "Diagnostico",
-        confirmButtonText: "Listo",
-        showDenyButton: false,
+        confirmButtonText: "Aceptar",
+        showDenyButton: true,
+        denyButtonText: "Cargar otro pago",
         denyButtonColor: "#008eff",
+      }).then((result) => {
+        if (result.isDenied) {
+          setIdClientePago(id);
+          handleModalPagosProfes();
+        }
       });
     } else {
       Swal.fire({
@@ -322,8 +327,6 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
         if (result.isConfirmed) {
           setIdClientePago(id);
           handleModalPagosProfes();
-        } else {
-          // Code to execute if the user cancels the action
         }
       });
     }
@@ -385,7 +388,7 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                     key
                   ) => {
                     const className = `py-3 px-5 ${
-                      key === projectsTableData.length - 1
+                      key === clientesClaseVer.length - 1
                         ? ""
                         : "border-b border-blue-gray-50"
                     }`;
@@ -458,7 +461,10 @@ const ListadoAlumnosClaseClasesVistaProfe = () => {
                                   ({tipoCredito.toString()})
                                 </span>
                               )}{" "}
-                              {esPrimeraClase && "(Primer Clase)"}
+                              {esPrimeraClase && "(PRIMER CLASE)"}
+                              {esRecupero && tipoCredito === null
+                                ? "(RECUPERO)"
+                                : ""}
                             </Typography>
                           </div>
                         </td>

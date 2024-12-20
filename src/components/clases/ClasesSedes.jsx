@@ -7,15 +7,26 @@ import useAuth from "@/hooks/useAuth";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { convertirHora } from "@/helpers/convertirHora";
 import { useNavigate } from "react-router-dom";
+import ModalCancelarClaseAdmin from "./ModalCancelarClaseAdmin";
+import Swal from "sweetalert2";
 
 const ClasesSedes = () => {
   const {
     obtenerClasesSedeDia,
     clasesDia,
-    setIdVerClase,
-    setDiaClase,
-    setHoraClase,
-    setSedeClase,
+
+    handleModalCancelarClase,
+    modalCancelarClase,
+    setClaseCancelarAdmin,
+
+    setIdClaseEditar,
+    setIdClaseVer,
+    setIdSede,
+    setDiaDeLaSemana,
+    setHoraInicio,
+    setIdProfesor,
+    setCupo,
+    handleModalEditarClase,
   } = useClases();
   const { handleCargando } = useAuth();
   const navigate = useNavigate();
@@ -65,6 +76,25 @@ const ClasesSedes = () => {
   const handleVerClase = (e, _id) => {
     e.preventDefault();
     navigate(`/sedes/vista-clase/${_id}`);
+  };
+
+  const cancelarClase = (e, id) => {
+    e.preventDefault();
+
+    setClaseCancelarAdmin(id);
+    handleModalCancelarClase();
+  };
+
+  const editarClase = (e, id, idSede, dia, hora, profe, cupo) => {
+    e.preventDefault();
+    setIdClaseEditar(id);
+    setIdClaseVer(id);
+    setIdSede(idSede);
+    setDiaDeLaSemana(dia);
+    setHoraInicio(hora);
+    setIdProfesor(profe);
+    setCupo(cupo);
+    handleModalEditarClase();
   };
 
   return (
@@ -145,7 +175,10 @@ const ClasesSedes = () => {
                               " Alumnos inscriptos"}
                         </div>
                       </div>
-                      <div className="mr-2 mt-2 ">
+                      <div
+                        className="mr-2 mt-2 "
+                        onClick={(e) => cancelarClase(e, clase._id)}
+                      >
                         <p className="rounded-full border bg-red-500 p-2 text-white">
                           x
                         </p>
@@ -216,7 +249,10 @@ const ClasesSedes = () => {
                               " Alumnos inscriptos"}
                         </div>
                       </div>
-                      <div className="mr-2 mt-2">
+                      <div
+                        className="mr-2 mt-2"
+                        onClick={(e) => cancelarClase(e, clase._id)}
+                      >
                         <p className="rounded-full border bg-red-500 p-2 text-white">
                           x
                         </p>
@@ -232,6 +268,8 @@ const ClasesSedes = () => {
           <button class="">No hay clases para este dia</button>
         </div>
       )}
+
+      {modalCancelarClase ? <ModalCancelarClaseAdmin /> : null}
     </>
   );
 };

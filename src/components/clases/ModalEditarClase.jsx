@@ -1,13 +1,12 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import useClientes from "@/hooks/useClientes";
 import { ToastContainer, toast } from "react-toastify";
-import clienteAxios from "@/configs/clinteAxios";
 import useAuth from "@/hooks/useAuth";
 
 import useSedes from "@/hooks/useSedes";
 import useClases from "@/hooks/useClases";
 import useProfesores from "@/hooks/useProfesores";
+import Swal from "sweetalert2";
 
 const ModalEditarClase = () => {
   const { obtenerSedes, sedes } = useSedes();
@@ -28,16 +27,21 @@ const ModalEditarClase = () => {
     setCupo,
     handleModalEditarClase,
     modalEditarClase,
-    handleModalNuevaClase,
-    modalNuevaClase,
     idClaseEditar,
     setRecargoListado,
+    handleModalEnviarMensajeClase,
+
+    setClaseEditada,
   } = useClases();
   const { usuarioAutenticado, handleCargando } = useAuth();
+  const [nuevoProfe, setNuevoProfe] = useState("");
 
   useEffect(() => {
     const traerSedes = async () => {
       await obtenerSedes();
+      console.log(idProfesor);
+
+      setNuevoProfe(idProfesor);
     };
     traerSedes();
   }, []);
@@ -74,16 +78,35 @@ const ModalEditarClase = () => {
         idSede,
         diaDeLaSemana,
         horaInicio,
-        idProfesor,
+        nuevoProfe,
         usuarioAutenticado,
         cupo
       );
-      setIdSede("");
-      setDiaDeLaSemana("");
-      setHoraInicio("");
-      setIdProfesor("");
-      setCupo(0);
-      setRecargoListado(true);
+
+      setClaseEditada(true);
+
+      if (nuevoProfe !== idProfesor) {
+        Swal.fire({
+          title: "Te gustaria comunicar el cambio a la clase?",
+          showDenyButton: true,
+          confirmButtonText: `Si`,
+          denyButtonText: `No`,
+        }).then((result) => {
+          console.log(result);
+
+          if (result.isConfirmed) {
+            handleModalEnviarMensajeClase();
+          }
+        });
+      } else {
+        setIdSede("");
+        setDiaDeLaSemana("");
+        setHoraInicio("");
+        setIdProfesor("");
+        setCupo(0);
+        setRecargoListado(true);
+      }
+
       handleModalEditarClase();
       handleCargando();
     } catch (error) {
@@ -275,8 +298,8 @@ const ModalEditarClase = () => {
                       <select
                         id="profe"
                         className="mb-3 mt-2 w-full rounded-md border-2 p-2 placeholder-gray-400"
-                        value={idProfesor}
-                        onChange={(e) => setIdProfesor(e.target.value)}
+                        value={nuevoProfe}
+                        onChange={(e) => setNuevoProfe(e.target.value)}
                       >
                         <option value="">--Seleccionar--</option>
 

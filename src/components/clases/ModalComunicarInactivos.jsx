@@ -1,23 +1,21 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import useClientes from "@/hooks/useClientes";
 import useAuth from "@/hooks/useAuth";
-import useClases from "@/hooks/useClases";
 
 // Asegúrate de que el modal se vincule con el div #root del HTML
 Modal.setAppElement("#root");
 
-const ModalEnviarMensajeClase = () => {
+const ModalComunicarInactivos = () => {
   const { handleCargando } = useAuth();
-  const { mensaje, setMensaje } = useClientes();
-
   const {
-    handleModalEnviarMensajeClase,
-    modalEnviarMensajeClase,
-    idClaseVer,
-    enviarMensajeClase,
-  } = useClases();
+    mensaje,
+    setMensaje,
+    comunicarInactivos,
+    modalComunicarInactivos,
+    handleModalComunicarInactivos,
+  } = useClientes();
 
   const [asunto, setAsunto] = useState("");
 
@@ -41,7 +39,7 @@ const ModalEnviarMensajeClase = () => {
     try {
       handleCargando();
       const mensajeHtml = mensaje.replace(/\n/g, "<br>");
-      await enviarMensajeClase(idClaseVer, mensajeHtml, asunto);
+      await comunicarInactivos(mensajeHtml, asunto);
       handleCerrar();
       handleCargando();
     } catch (error) {
@@ -61,14 +59,14 @@ const ModalEnviarMensajeClase = () => {
   const handleCerrar = () => {
     setMensaje("");
     setAsunto("");
-    handleModalEnviarMensajeClase();
+    handleModalComunicarInactivos();
   };
 
   return (
     <Modal
-      isOpen={modalEnviarMensajeClase}
+      isOpen={modalComunicarInactivos}
       onRequestClose={handleCerrar}
-      contentLabel="Enviar Mensaje a la clase"
+      contentLabel="Enviar Mensaje a la sede"
       className="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto"
       overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-75"
     >
@@ -88,14 +86,14 @@ const ModalEnviarMensajeClase = () => {
             >
               <path
                 fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 101.414 1.414L10 11.414l1.293-1.293a1 1 00-1.414-1.414L11.414 10l1.293-1.293a1 1 00-1.414-1.414L10 8.586 8.707 7.293z"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 101.414 1.414L10 11.414l1.293-1.293a1 1 001.414-1.414L11.414 10l1.293-1.293a1 1 00-1.414-1.414L10 8.586 8.707 7.293z"
                 clipRule="evenodd"
               />
             </svg>
           </button>
         </div>
         <h3 className="text-center text-xl font-bold leading-6 text-gray-900">
-          Enviar Mensaje a la clase
+          Enviar Mensaje a los clientes inactivos
         </h3>
         <form className="mt-4" onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -139,4 +137,4 @@ const ModalEnviarMensajeClase = () => {
   );
 };
 
-export default ModalEnviarMensajeClase;
+export default ModalComunicarInactivos;

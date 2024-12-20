@@ -38,6 +38,7 @@ import ListadoDeCajasSede from "./ListadoDeCajasSede";
 import ListadoDeAsistenciasSede from "./ListadoDeAsistenciasSede";
 import ListadoDeInasistencias from "./ListadoDeInasistencias";
 import ListadoClientesSede from "./ListadoClientesSede";
+import ModalCancelarClaseAdmin from "../clases/ModalCancelarClaseAdmin";
 
 export function ProfileSede() {
   const {
@@ -56,6 +57,7 @@ export function ProfileSede() {
     clasesSede,
     modalNuevaClaseSede,
     handleModalNuevaClaseSede,
+    modalCancelarClase,
   } = useClases();
 
   const navigate = useNavigate();
@@ -306,6 +308,8 @@ export function ProfileSede() {
           {modalNuevaClaseSede ? <ModalNuevaClaseSede /> : ""}
           {modalVerClase ? <ModalClaseSede /> : ""}
           {modalEnviarMensajeSede ? <ModalEnviarMensajeSede /> : null}
+          {modalCancelarClase ? <ModalCancelarClaseAdmin /> : null}
+
           <Cargando />
         </CardBody>
       </Card>

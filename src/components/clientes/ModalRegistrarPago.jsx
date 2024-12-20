@@ -68,6 +68,7 @@ const ModalRegistrarPago = () => {
           comentarioPago
         );
         setRefrescarListado(true);
+        setFechaPago("");
         setImportePagado("");
         setMedioPago("");
         setComentarioPago("");
@@ -77,7 +78,10 @@ const ModalRegistrarPago = () => {
     });
   };
   const handleCerrarModal = () => {
+    setFechaPago("");
     setImportePagado("");
+    setMedioPago("");
+    setComentarioPago("");
     handleModalPago();
   };
 

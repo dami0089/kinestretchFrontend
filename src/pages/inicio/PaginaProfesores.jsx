@@ -16,11 +16,19 @@ import ModalRegistrarPagoProfesor from "@/components/paginaProfesores/ModalRegis
 export function PaginaProfesores() {
   const { auth } = useAuth();
   const { modalClasesProfe, obtenerProfesor, profesor } = useProfesores();
-  const { modalRegistrarPagoProfe, limpiarAsistencias } = useClases();
+  const {
+    modalRegistrarPagoProfe,
+    setClientesClaseVer,
+    setInasistentesClase,
+    setClase,
+  } = useClases();
 
   useEffect(() => {
     const obtenerInfo = async () => {
       await obtenerProfesor(auth.profesor);
+      setClientesClaseVer([]);
+      setInasistentesClase([]);
+      setClase([]);
     };
     obtenerInfo();
   }, []);
@@ -69,10 +77,10 @@ export function PaginaProfesores() {
             <div className="align-middle ">
               <ClasesProfesor />
             </div>
-            <Cargando />
           </div>
           {modalClasesProfe ? <ModalClaseProfe /> : ""}
           {modalRegistrarPagoProfe ? <ModalRegistrarPagoProfesor /> : ""}
+          <Cargando />
         </div>
       </section>
     </>

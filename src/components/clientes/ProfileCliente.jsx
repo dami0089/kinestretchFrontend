@@ -180,11 +180,6 @@ const ProfileCliente = () => {
     handleModalAsignarClaseACliente();
   };
 
-  // const recupero = (e) => {
-  //   e.preventDefault();
-  //   handleModalRecuperoAdmin();
-  // };
-
   const handleDesactivar = async (e) => {
     e.preventDefault();
     if (cliente.isActivo) {

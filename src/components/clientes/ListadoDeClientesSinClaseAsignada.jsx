@@ -18,24 +18,16 @@ import { ArrowLeftCircleIcon, EyeIcon } from "@heroicons/react/24/solid";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "../Cargando";
 import useClases from "@/hooks/useClases";
+import Swal from "sweetalert2";
 
 const ListadoDeClientesSinClaseAsignada = () => {
   const {
-    clientes,
-    setObtenerUs,
-    setSeleccion,
-    handleModalEditarCliente,
-    setCuitEditar,
-    cuitEditar,
-    // obtenerUser,
-    setObtenerUsuario,
-    obtenerClientes,
-    idClienteEditar,
     setIdClienteEditar,
     setCliente,
 
     clientesSinClase,
     obtenerClientesSinClase,
+    desactivarClientesSinClases,
   } = useClientes();
 
   const { setClasesCliente } = useClases();
@@ -109,6 +101,23 @@ const ListadoDeClientesSinClaseAsignada = () => {
     }
   };
 
+  const handleDesactivar = (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Estás por inactivar a todos los clientes sin clases asignadas",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, inactivar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await desactivarClientesSinClases();
+      }
+    });
+  };
+
   return (
     <>
       <div className=" mb-4 mt-10 grid grid-cols-1 gap-6  xl:grid-cols-3">
@@ -117,6 +126,10 @@ const ListadoDeClientesSinClaseAsignada = () => {
             <Typography className="ml-4  font-bold">
               Listado de Clientes sin clases asignadas
             </Typography>
+
+            <Button onClick={(e) => handleDesactivar(e)}>
+              Inactivar Clientes
+            </Button>
 
             <div className="mr-5 flex items-center space-x-4">
               <input

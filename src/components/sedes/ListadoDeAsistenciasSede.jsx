@@ -264,9 +264,7 @@ const ListadoDeAsistenciasSede = () => {
                                   variant="small"
                                   className={`$ text-xs  font-medium`}
                                 >
-                                  {clase
-                                    ? `${convertirHora(horaInicio)} hs`
-                                    : "-"}
+                                  {clase ? `${clase.horarioInicio} hs` : "-"}
                                 </Typography>
                               </div>
                             </td>

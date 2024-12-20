@@ -17,9 +17,6 @@ const ModalRegistrarPagoProfesor = () => {
   const { handleCargando, auth } = useAuth();
 
   const {
-    cliente,
-    handleModalPago,
-    modalPago,
     importePagado,
     setImportePagado,
     registrarPago,
@@ -27,14 +24,12 @@ const ModalRegistrarPagoProfesor = () => {
     setMedioPago,
     fechaPago,
     setFechaPago,
-    refrescarListado,
     setRefrescarListado,
     comentarioPago,
     setComentarioPago,
     idClientePago,
     setIdClientePago,
     setActualizarListado,
-    actualizarListado,
   } = useClientes();
 
   const { handleModalPagosProfes, modalRegistrarPagoProfe } = useClases();
@@ -45,6 +40,20 @@ const ModalRegistrarPagoProfesor = () => {
 
     if ([importePagado].includes("")) {
       toast("⚠️ El importe es obligatorio para continuar", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    if ([fechaPago].includes("")) {
+      toast("⚠️ La fecha de pago es obligatoria para continuar", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -67,7 +76,6 @@ const ModalRegistrarPagoProfesor = () => {
       confirmButtonText: "Si",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        handleCargando();
         await registrarPago(
           idClientePago,
           importePagado,
@@ -79,16 +87,18 @@ const ModalRegistrarPagoProfesor = () => {
         setRefrescarListado(true);
         setImportePagado("");
         setMedioPago("");
+        setFechaPago("");
         setIdClientePago("");
         setComentarioPago("");
         setActualizarListado(true);
-        handleCargando();
         handleCerrarModal();
       }
     });
   };
   const handleCerrarModal = () => {
     setImportePagado("");
+    setMedioPago("");
+    setFechaPago("");
     handleModalPagosProfes();
   };
 
